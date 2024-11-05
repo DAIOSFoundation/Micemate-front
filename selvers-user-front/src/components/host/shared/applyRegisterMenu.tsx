@@ -1,0 +1,113 @@
+import { useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { useApplyRegisterGeneralQuery } from "@/api/events/events.query";
+
+const ApplyRegisterMenu = () => {
+  const { id } = useParams();
+  const token = localStorage.getItem("token");
+  const [isOn, setIsOn] = useState(true);
+  const location = useLocation();
+
+  const { data: GeneralData } = useApplyRegisterGeneralQuery({
+    token: token,
+    event_id: id,
+  });
+
+  const toggleDropdown = () => {
+    setIsOn((prev) => !prev);
+  };
+
+  const activeTarget = (url: string) => {
+    if (location.pathname.indexOf(url) >= 0) {
+      return "active";
+    } else {
+      return "";
+    }
+  };
+
+  return (
+    <div>
+      <div className="title_tag">{GeneralData?.data?.title}</div>
+      <ul className="lnb02">
+        <li>
+          <p
+            onClick={toggleDropdown}
+            className={`depth01 ${isOn ? "active" : ""}`}
+            style={{ cursor: "pointer" }}
+          >
+            <Link to={`/host/my/apply-register/edit/${id}/state`}>
+              행사 상세설정
+            </Link>
+            <i className="arrow_b_icon"></i>
+          </p>
+          {isOn && (
+            <div className="depth02_list active">
+              <Link
+                to={`/host/my/apply-register/edit/${id}/general`}
+                className={`depth02 ${activeTarget(
+                  `/host/my/apply-register/edit/${id}/general`
+                )}`}
+              >
+                기본정보
+              </Link>
+              <Link
+                to={`/host/my/apply-register/edit/${id}/detail`}
+                className={`depth02 ${activeTarget(
+                  `/host/my/apply-register/edit/${id}/detail`
+                )}`}
+              >
+                상세페이지
+              </Link>
+              <Link
+                to={`/host/my/apply-register/edit/${id}/information`}
+                className={`depth02 ${activeTarget(
+                  `/host/my/apply-register/edit/${id}/information`
+                )}`}
+              >
+                모집정보
+              </Link>
+              {/* <Link
+                to={`/host/my/apply-register/edit/${id}/survey`}
+                className={`depth02 ${activeTarget(
+                  `/host/my/apply-register/edit/${id}/survey`
+                )}`}
+              >
+                사전설문
+              </Link>
+              <Link
+                to={`/host/my/apply-register/edit/${id}/faq`}
+                className={`depth02 ${activeTarget(
+                  `/host/my/apply-register/edit/${id}/faq`
+                )}`}
+              >
+                FAQ & 문의
+              </Link> */}
+            </div>
+          )}
+        </li>
+        <li>
+          <Link
+            to={`/host/my/event/${id}/party`}
+            className={`depth01 ${
+              location.pathname === `/host/my/event/${id}/party` ? "active" : ""
+            }`}
+          >
+            참가자 관리
+          </Link>
+        </li>
+        <li>
+          <Link
+            to={`/host/my/event/${id}/party-company`}
+            className={`depth01 ${activeTarget(
+              `/host/my/event/${id}/party-company`
+            )}`}
+          >
+            참가기업 관리
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+export default ApplyRegisterMenu;

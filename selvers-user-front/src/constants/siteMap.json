@@ -1,0 +1,149 @@
+{
+  "main": [
+    { "id": 1, "gubun": "메인", "name": "메인페이지", "link": "/" },
+    {
+      "id": 2,
+      "gubun": "메인",
+      "name": "메인페이지 > 검색",
+      "link": "/event-list"
+    }
+  ],
+  "loginJoin": [
+    { "id": 3, "gubun": "로그인&회원가입", "name": "로그인", "link": "/login" },
+    {
+      "id": 4,
+      "gubun": "로그인&회원가입",
+      "name": "로그인 > 비밀번호 찾기",
+      "link": "/login/password-find"
+    },
+    {
+      "id": 5,
+      "gubun": "로그인&회원가입",
+      "name": "회원가입",
+      "link": "/join"
+    },
+    {
+      "id": 6,
+      "gubun": "로그인&회원가입",
+      "name": "회원가입 > 이메일 회원가입",
+      "link": "/join/form"
+    }
+  ],
+  "myPage": [
+    {
+      "id": 7,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 참여 행사관리 > 신청 행사",
+      "link": "/mypage/apply-list"
+    },
+    {
+      "id": 8,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 참여 행사관리 > 신청 행사 > 부스 선택",
+      "link": "/mypage/apply-list/booth-select/01"
+    },
+    {
+      "id": 9,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 참여 행사관리 > 신청 행사 > AI 추천 부스 받기",
+      "link": "/mypage/apply-list/booth-check/01"
+    },
+    {
+      "id": 10,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 참여 행사관리 > 취소 내역",
+      "link": "/mypage/cancel-list"
+    },
+    {
+      "id": 11,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 참여 행사관리 > 관심 행사",
+      "link": "/mypage/wish-list"
+    },
+    {
+      "id": 12,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 참여 행사관리 > 지난 행사",
+      "link": "/mypage/past-list"
+    },
+    {
+      "id": 13,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 내 정보 수정",
+      "link": "/mypage/user-modify"
+    },
+    {
+      "id": 14,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 내 정보 수정 > 탈퇴",
+      "link": "/mypage/user-modify/with-draw"
+    },
+    {
+      "id": 15,
+      "gubun": "마이페이지",
+      "name": "마이페이지 > 내 정보 수정 > 탈퇴 > 완료",
+      "link": "/with-draw-finish"
+    }
+  ],
+  "eventDetail": [
+    {
+      "id": 16,
+      "gubun": "행사 상세페이지",
+      "name": "행사 상세페이지",
+      "link": "/detail/01"
+    },
+    {
+      "id": 17,
+      "gubun": "행사 상세페이지",
+      "name": "행사 상세페이지 > 신청하기",
+      "link": "/detail/01/apply"
+    },
+    {
+      "id": 18,
+      "gubun": "행사 상세페이지",
+      "name": "행사 상세페이지 > 신청하기 > 신청완료",
+      "link": "/detail/01/finish"
+    }
+  ],
+  "review": [
+    { "id": 19, "gubun": "리뷰", "name": "리뷰 남기기", "link": "/edit-review" }
+  ],
+  "agree": [
+    {
+      "id": 20,
+      "gubun": "이용약관",
+      "name": "성별 생년 정보 제공 동의",
+      "link": "/gender-birth-information"
+    },
+    {
+      "id": 21,
+      "gubun": "이용약관",
+      "name": "개인정보 수집 이용 동의",
+      "link": "/personal-information"
+    },
+    {
+      "id": 22,
+      "gubun": "이용약관",
+      "name": "개인정보처리방침",
+      "link": "/privacy-policy"
+    },
+    {
+      "id": 23,
+      "gubun": "이용약관",
+      "name": "제 3자 제공 동의",
+      "link": "/onward-transfer"
+    },
+    {
+      "id": 24,
+      "gubun": "이용약관",
+      "name": "마케팅 정보 수신 동의",
+      "link": "/markeyting-information"
+    },
+    {
+      "id": 25,
+      "gubun": "이용약관",
+      "name": "서비스 이용약관",
+      "link": "/terms-service"
+    }
+  ]
+}
