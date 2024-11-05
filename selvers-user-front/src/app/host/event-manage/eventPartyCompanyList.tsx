@@ -107,6 +107,7 @@ const EventPartyCompanyList = () => {
   };
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data);
     const formData = new FormData();
     const appendIfDefined = (key, value) => {
       if (
