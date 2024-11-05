@@ -186,7 +186,7 @@ const EditApplyDetail = () => {
       {
         onSuccess: () => {
           if (nextPage === true) {
-            navigate(`/host/my/apply-register/edit/${id}/information`);
+            navigate(`/host/my/apply-register/edit/${id}/application`);
           }
           openToast("저장 되었습니다.");
         },

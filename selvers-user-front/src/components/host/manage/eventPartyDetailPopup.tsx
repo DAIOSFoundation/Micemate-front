@@ -19,6 +19,7 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
   const modalCloseHandler = () => {
     setDetailPopUp(false);
   };
+  console.log(eventPartyDetail);
 
   return (
     <>
@@ -147,6 +148,21 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                   </div>
                 </li>
               </ul> */}
+              <a
+                href={`https://api-test.micemate.io/storage/${eventPartyDetail.data.xlsx}`}
+                style={{
+                  backgroundColor: "#1E9EFF",
+                  padding: "6px 10px",
+                  borderRadius: "5px",
+                  display: "block",
+                  width: "180px",
+                  textAlign: "center",
+                  margin: "64px auto 0",
+                  fontSize: "16px",
+                }}
+              >
+                참가자 엑셀 다운로드
+              </a>
             </div>
           </div>
         </div>

@@ -155,17 +155,19 @@ export const useEventApplyInformationQuery = (
 
 // 행사 참가가자 관리 조회
 export const useEventPartyQuery = (event_id: string, token?: string) => {
+  const location = useLocation();
   return useQuery({
-    queryKey: ["EventPartyQuery", location.pathname],
+    queryKey: ["EventPartyQuery", location.search],
     queryFn: async () => {
       const response = await apiClient({
         method: "GET",
-        url: `/api/events/${event_id}/applications?${location.pathname}`,
+        url: `/api/events/${event_id}/applications${location.search}`,
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
         },
       });
+      console.log("response", response, location.search);
       return response.data;
     },
   });

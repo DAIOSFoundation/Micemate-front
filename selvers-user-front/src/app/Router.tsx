@@ -159,7 +159,7 @@ const router = createBrowserRouter(
               element: <EditApplyDetail />,
             },
             {
-              path: "/host/my/apply-register/edit/:id/information",
+              path: "/host/my/apply-register/edit/:id/application",
               element: <EditApplyInformation />,
             },
             {

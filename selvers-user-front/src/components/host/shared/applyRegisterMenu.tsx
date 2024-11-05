@@ -59,9 +59,9 @@ const ApplyRegisterMenu = () => {
                 상세페이지
               </Link>
               <Link
-                to={`/host/my/apply-register/edit/${id}/information`}
+                to={`/host/my/apply-register/edit/${id}/application`}
                 className={`depth02 ${activeTarget(
-                  `/host/my/apply-register/edit/${id}/information`
+                  `/host/my/apply-register/edit/${id}/application`
                 )}`}
               >
                 모집정보

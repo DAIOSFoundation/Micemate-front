@@ -27,6 +27,7 @@ const EventPartyCompanyList = () => {
   } = useForm();
 
   const handleFileChange = (files: FileList | null, type: "img" | "xlsx") => {
+    console.log(files);
     if (files && files.length > 0) {
       const file = files[0];
       const validImageTypes = [
@@ -43,6 +44,7 @@ const EventPartyCompanyList = () => {
 
       // 이미지 파일 검증
       if (type === "img" && validImageTypes.includes(file.type)) {
+        console.log(files);
         if (file.size > MAX_FILE_SIZE) {
           setFileError("이미지 파일의 크기는 10MB 이하이어야 합니다.");
           setUploadedFile(null);
@@ -107,7 +109,6 @@ const EventPartyCompanyList = () => {
   };
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     const formData = new FormData();
     const appendIfDefined = (key, value) => {
       if (
@@ -118,8 +119,8 @@ const EventPartyCompanyList = () => {
         formData.append(key, value);
       }
     };
-    appendIfDefined("img", data.img ? data.img : undefined);
-    appendIfDefined("xlsx", data.xlsx ? data.xlsx : undefined);
+    appendIfDefined("img", data.img ? data.img[0] : undefined);
+    appendIfDefined("xlsx", data.xlsx ? data.xlsx[0] : undefined);
 
     editBooth.mutate(
       { token: token, event_id: id, formData: formData },

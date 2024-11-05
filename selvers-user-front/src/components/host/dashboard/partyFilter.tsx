@@ -12,8 +12,8 @@ const dateType = [
 ];
 
 const progressType = [
-  { value: "개인 신청", type: 1 },
-  { value: "단체 신청", type: 2 },
+  { value: "개인 신청", type: 0 },
+  { value: "단체 신청", type: 1 },
 ];
 
 const PartyFilter = ({

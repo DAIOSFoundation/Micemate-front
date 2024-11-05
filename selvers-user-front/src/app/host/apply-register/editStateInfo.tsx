@@ -154,17 +154,26 @@ const EditStateInfo = () => {
               {writeNav.map((item) => (
                 <li className="blue" key={item.key}>
                   <span className="tit">{item.title}</span>
-
-                  {RegisterState?.data?.state === 0 ||
-                    RegisterState?.data?.state === 1 ||
-                    RegisterState?.data?.state === 2 ||
-                    (RegisterState?.data?.state === 3 &&
-                      RegisterState?.data?.[item.key] === true && (
-                        <span className={`state col_blue`}>작성 완료</span>
-                      ))}
-                  {RegisterState?.data?.state === 0 && (
-                    <span className={`state col_yellow`}>작성 중</span>
-                  )}
+                  {RegisterState?.data?.state === 0 &&
+                    RegisterState?.data?.[item.key] === true && (
+                      <span className={`state col_blue`}>작성 완료</span>
+                    )}
+                  {RegisterState?.data?.state === 1 &&
+                    RegisterState?.data?.[item.key] === true && (
+                      <span className={`state col_blue`}>작성 완료</span>
+                    )}
+                  {RegisterState?.data?.state === 2 &&
+                    RegisterState?.data?.[item.key] === true && (
+                      <span className={`state col_blue`}>작성 완료</span>
+                    )}
+                  {RegisterState?.data?.state === 3 &&
+                    RegisterState?.data?.[item.key] === true && (
+                      <span className={`state col_blue`}>작성 완료</span>
+                    )}
+                  {RegisterState?.data?.state === 0 &&
+                    RegisterState?.data?.[item.key] === false && (
+                      <span className={`state col_yellow`}>작성 중</span>
+                    )}
                   {RegisterState?.data?.state === 1 &&
                     RegisterState?.data?.[item.key] === false && (
                       <span className={`state col_yellow`}>작성 전</span>
