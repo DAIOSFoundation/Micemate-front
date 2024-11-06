@@ -72,7 +72,7 @@ const EventCard = ({
           {likeState ? <LikeIcon /> : <UnLikeIcon />}
         </span>
       </LikeBtn>
-      <Link to={`detail/${id}`}>
+      <Link to={`/detail/${id}`}>
         <Thumbnail>
           <img src={`https://api.micemate.io/storage/${img}`} />
           {Number(ddayCount(event_end_date)) > 0 && (
