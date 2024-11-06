@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import SideMenu from "@components/shared/sideMenu/sideMenu";
 import Panel from "@components/page/event/pannel";
 import SearchFilter from "@components/page/event/searchFilter";
@@ -22,7 +22,7 @@ const Page = () => {
   const { openConfirm } = useConfirm();
   const { openAlret } = useAlret();
   const confirmValue = useRecoilValue(confirmState);
-
+  const resetConfirm = useResetRecoilState(confirmState);
   const [filterData, setFilterData] = useState<Partial<FilterType02>>({});
   const [filterQueryString, setFilterQueryString] = useState<string>();
   const [checkedList, setCheckedList] = useState([]);
@@ -61,6 +61,7 @@ const Page = () => {
             openAlret({
               text: "삭제가 완료되었습니다.",
             });
+            resetConfirm();
             setCheckedList([]);
             queryClient.invalidateQueries({ queryKey: ["eventManage"] });
           },

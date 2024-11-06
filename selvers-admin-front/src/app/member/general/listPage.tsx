@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import SideMenu from "@components/shared/sideMenu/sideMenu";
 import SearchFilter from "@components/page/member/searchFilter";
 import ListTable from "@components/page/member/listTable";
@@ -21,7 +21,7 @@ const Page = () => {
   const { openConfirm } = useConfirm();
   const { openAlret } = useAlret();
   const confirmValue = useRecoilValue(confirmState);
-
+  const resetConfirm = useResetRecoilState(confirmState);
   const [filterData, setFilterData] = useState<Partial<FilterType01>>({});
   const [filterQueryString, setFilterQueryString] = useState<string>();
   const [checkedList, setCheckedList] = useState([]);
@@ -54,6 +54,7 @@ const Page = () => {
       text: `선택 [${checkedList.length}건]을 [탈퇴]\n처리 하시겠습니까?`,
       okBtn: "탈퇴",
     });
+    resetConfirm();
   };
 
   // 회원 삭제
@@ -67,6 +68,7 @@ const Page = () => {
       text: `선택 [${checkedList.length}건]을 [삭제]\n처리 하시겠습니까?`,
       okBtn: "삭제",
     });
+    resetConfirm();
   };
 
   useEffect(() => {

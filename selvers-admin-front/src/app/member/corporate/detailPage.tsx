@@ -18,7 +18,7 @@ import { EditUserRequest } from "@/type";
 import { useAlret } from "@/hook/useAlret";
 import { useConfirm } from "@/hook/useConfirm";
 import { confirmState } from "@/store/modalState";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { commonImgUrl } from "@/constants/config";
 
 const schema = z.object({
@@ -36,7 +36,7 @@ const Page = () => {
     resolver: zodResolver(schema),
   });
   const [tempPwLoading, setTempPwLoading] = useState(false);
-
+  const resetConfirm = useResetRecoilState(confirmState);
   const { openToast } = useToast();
   const { openAlret } = useAlret();
   const { openConfirm } = useConfirm();
@@ -101,6 +101,7 @@ const Page = () => {
                 location.reload();
               },
             });
+            resetConfirm();
           },
           onError: (errors) => {
             console.log(errors);

@@ -7,7 +7,7 @@ import {
 } from "@/api/events/events.query";
 import { useConfirm } from "@/hook/useConfirm";
 import { useAlret } from "@/hook/useAlret";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { confirmState } from "@/store/modalState";
 import PostRejectModal from "@components/page/event/postRejectModal";
 
@@ -19,6 +19,7 @@ const AcceptBtns = () => {
   const confirmValue = useRecoilValue(confirmState);
   const [reason, setReason] = useState("");
   const [rejectOpen, setRejectOpen] = useState(false);
+  const resetConfirm = useResetRecoilState(confirmState);
 
   const { data: GeneralData } = useApplyRegisterGeneralQuery(
     id ? Number(id) : undefined
@@ -82,6 +83,7 @@ const AcceptBtns = () => {
               location.reload();
             },
           });
+          resetConfirm();
         },
       }
     );
@@ -101,6 +103,7 @@ const AcceptBtns = () => {
             openAlret({
               text: `행사가 승인되었습니다.`,
             });
+            resetConfirm();
             navigate("/event");
           },
         }
