@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useMediaQuery } from "usehooks-ts";
+import useQueryParams from "@/hook/useSearchParams";
 
 const CategoryList = ({
   categoryList,
@@ -12,6 +13,20 @@ const CategoryList = ({
   categoryList: CategoryListType[];
 }) => {
   const isSwiper = useMediaQuery("(max-width:1400px)");
+  const queryParams = useQueryParams({
+    isReplace: true,
+  });
+
+  const onClickCategory = (id: number) => {
+    const currentCategory = queryParams.get("category");
+    console.log(currentCategory);
+    if (currentCategory === id.toString()) {
+      queryParams.set("category", null);
+    } else {
+      queryParams.set("category", id.toString());
+    }
+  };
+
   return (
     <CategoryListWrap className="maxframe">
       {!isSwiper && (
@@ -44,7 +59,9 @@ const CategoryList = ({
           {categoryList.map((data) => {
             return (
               <SwiperSlide key={data.id}>
-                <CateItem>{data.name}</CateItem>
+                <CateItem onClick={() => onClickCategory(data.id)}>
+                  {data.name}
+                </CateItem>
               </SwiperSlide>
             );
           })}
