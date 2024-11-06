@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://api-test.micemate.io",
+        target: "https://api.micemate.io/",
         changeOrigin: true,
       },
     },

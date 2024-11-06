@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://api-test.micemate.io",
+  baseURL: "https://api.micemate.io/",
 });
 
 export default apiClient;
