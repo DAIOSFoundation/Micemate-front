@@ -27,7 +27,6 @@ const EventPartyCompanyList = () => {
   } = useForm();
 
   const handleFileChange = (files: FileList | null, type: "img" | "xlsx") => {
-    console.log(files);
     if (files && files.length > 0) {
       const file = files[0];
       const validImageTypes = [
@@ -44,7 +43,6 @@ const EventPartyCompanyList = () => {
 
       // 이미지 파일 검증
       if (type === "img" && validImageTypes.includes(file.type)) {
-        console.log(files);
         if (file.size > MAX_FILE_SIZE) {
           setFileError("이미지 파일의 크기는 10MB 이하이어야 합니다.");
           setUploadedFile(null);

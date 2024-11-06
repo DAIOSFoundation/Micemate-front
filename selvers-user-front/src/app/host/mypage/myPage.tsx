@@ -41,8 +41,6 @@ const MyPage = () => {
     user_id: userId,
   });
 
-  console.log(userData);
-
   const {
     register,
     handleSubmit,

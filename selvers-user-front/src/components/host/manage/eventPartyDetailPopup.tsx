@@ -19,7 +19,6 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
   const modalCloseHandler = () => {
     setDetailPopUp(false);
   };
-  console.log(eventPartyDetail);
 
   return (
     <>

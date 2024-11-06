@@ -188,7 +188,6 @@ const EditApplyInformation = () => {
       );
     }
   });
-  console.log(recruitData);
   return (
     <div className="cont_area">
       <div className="cont_panel type2">

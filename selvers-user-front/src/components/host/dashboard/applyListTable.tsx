@@ -15,8 +15,6 @@ const applyState = [
 const ApplyListTable = ({ eventList, checkedList, setCheckedList }) => {
   const [allChecked, setAllChecked] = useState(false);
 
-  console.log(eventList);
-
   const handleCheckboxChange = (id) => {
     setCheckedList(
       (prev) =>

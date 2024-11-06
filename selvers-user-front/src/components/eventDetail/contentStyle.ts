@@ -116,6 +116,12 @@ export const DetailInfo = styled.section<{ $detailView: boolean }>`
       & img {
         width: 100%;
       }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
       strong {
         font-weight: bold;
       }

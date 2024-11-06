@@ -61,7 +61,7 @@ const EventDetailPage = () => {
     if (detailData) {
       setApplyBtn(!detailData.data.applied);
     }
-  }, [detailData]);
+  }, [detailData, applyBtn]);
 
   if (isLoadingAI || isLoadingDetail || isLoadingReview || isLoadingBoothList) {
     return <LoadingScreen />;

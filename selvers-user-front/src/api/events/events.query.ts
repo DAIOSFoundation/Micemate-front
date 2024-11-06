@@ -167,7 +167,6 @@ export const useEventPartyQuery = (event_id: string, token?: string) => {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log("response", response, location.search);
       return response.data;
     },
   });

@@ -120,7 +120,6 @@ const Page = () => {
 
   useEffect(() => {
     if (userDetailData !== undefined && !userDetailLoading) {
-      // console.log(userDetailData);
       setValue("contact", userDetailData?.data?.contact ?? "");
       setValue("interests", userDetailData.data.interests);
       setInterestList(userDetailData.data.interests);
@@ -310,7 +309,10 @@ const Page = () => {
                               <div className="dis_flex row_item_7">
                                 {categoryData.map((item) => {
                                   return (
-                                    <div key={item.id} className="checkbox item">
+                                    <div
+                                      key={item.id}
+                                      className="checkbox item"
+                                    >
                                       <input
                                         type="checkbox"
                                         id={`checkbox-${item.id}`}
@@ -346,7 +348,9 @@ const Page = () => {
                               <select
                                 className="btn border_w w_136"
                                 value={eventSelected}
-                                onChange={(e) => setEventSelected(e.target.value)}
+                                onChange={(e) =>
+                                  setEventSelected(e.target.value)
+                                }
                               >
                                 {eventState.map((item) => {
                                   return (

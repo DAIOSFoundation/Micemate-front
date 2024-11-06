@@ -46,7 +46,6 @@ const Thumbnail = ({
       navigate("/login");
     },
   };
-  console.log(thumnaildata);
   const wishEventHandler = () => {
     if (token && userId) {
       const data: WishEventType = {

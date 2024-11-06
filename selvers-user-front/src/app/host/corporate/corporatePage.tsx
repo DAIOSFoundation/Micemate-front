@@ -72,7 +72,6 @@ const CorporatePage = () => {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(corporateSchema),
@@ -88,8 +87,6 @@ const CorporatePage = () => {
       }
     }
   };
-
-  console.log(watch("company_id_file"));
 
   // useEffect(() => {
   //   if (companyFile) {

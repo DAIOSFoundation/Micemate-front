@@ -139,11 +139,13 @@ const Page = () => {
         const url = window.URL.createObjectURL(new Blob([blob]));
         const a = document.createElement("a");
         a.href = url;
-        a.download = userDetailData?.data?.company?.company_id_file.split("/").pop() || "download";
+        a.download =
+          userDetailData?.data?.company?.company_id_file.split("/").pop() ||
+          "download";
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        document.body.removeChild(a); 
+        document.body.removeChild(a);
       })
       .catch((error) => {
         console.error("파일 다운로드 오류:", error);
@@ -152,7 +154,6 @@ const Page = () => {
 
   useEffect(() => {
     if (userDetailData !== undefined && !userDetailLoading) {
-      // console.log(userDetailData);
       setValue("contact", userDetailData?.data?.contact ?? "");
     }
   }, [userDetailData, userDetailLoading, setValue]);
