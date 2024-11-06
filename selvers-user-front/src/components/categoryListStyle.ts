@@ -24,6 +24,7 @@ export const CateItem = styled.li`
   color: #fff;
   text-align: center;
   padding: 30px 0;
+  cursor: pointer;
   @media (max-width: 1024px) {
     padding: 16px 0;
   }
