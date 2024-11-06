@@ -1,2 +1,2 @@
-export const commonImgUrl = "https://api-test.micemate.io/storage";
-export const commonUserUrl = "https://www-test.micemate.io/detail";
+export const commonImgUrl = "https://api.micemate.io/storage";
+export const commonUserUrl = "https://www.micemate.io/detail";

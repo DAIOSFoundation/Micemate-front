@@ -42,7 +42,7 @@ const SideMenu = () => {
   // 프로필 이미지 변경
   useEffect(() => {
     setProfilePreview(
-      `https://api-test.micemate.io/storage/${myInformation?.data?.company?.logo}`
+      `https://api.micemate.io/storage/${myInformation?.data?.company?.logo}`
     );
   }, [myInformation?.data]);
 
