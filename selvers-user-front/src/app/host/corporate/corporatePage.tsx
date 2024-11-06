@@ -14,18 +14,20 @@ const corporateSchema = z
     company_id_03: z.string().trim().min(5),
     company_id_file: z
       .any()
-      .refine((file) => file && file.length > 0, {
+      .refine((file) => file && file[0].size > 0, {
         message: "사업자 등록증을 첨부해주세요.",
       })
       .refine(
         (file) => {
           const allowedTypes = ["image/png", "application/pdf"];
           return (
-            file && allowedTypes.some((type) => file[0]?.type.startsWith(type))
+            file &&
+            file[0] &&
+            allowedTypes.some((type) => file[0].type.startsWith(type))
           );
         },
         {
-          message: "Only image or PDF files are allowed",
+          message: "pdf또는 png파일로 업로드 해주세요.",
         }
       ),
     name: z.string().trim().min(1, "담당자 이름을 입력해주세요."),
@@ -70,6 +72,7 @@ const CorporatePage = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(corporateSchema),
@@ -86,18 +89,19 @@ const CorporatePage = () => {
     }
   };
 
-  useEffect(() => {
-    if (companyFile) {
-      setValue("company_id_file", [companyFile]);
-    }
-  }, [companyFile, setValue]);
+  console.log(watch("company_id_file"));
+
+  // useEffect(() => {
+  //   if (companyFile) {
+  //     setValue("company_id_file", [companyFile]);
+  //   }
+  // }, [companyFile, setValue]);
 
   useEffect(() => {
     setValue("file_name_view", fileName);
   }, [fileName, setValue]);
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     const formData = new FormData();
     // 회사 정보 추가
     formData.append("company_name", data.company_name);
@@ -105,9 +109,9 @@ const CorporatePage = () => {
       "company_id",
       `${data.company_id_01}-${data.company_id_02}-${data.company_id_03}`
     );
-    if (companyFile) {
-      formData.append("company_id_file", companyFile);
-    }
+
+    formData.append("company_id_file", companyFile);
+
     formData.append("name", data.name);
     formData.append("department", data.department);
     formData.append("position", data.position);
