@@ -24,7 +24,7 @@ const payableInfo = (type: number, pay1: number, pay2: number) => {
   if (type === 1) {
     return `무료`;
   } else if (type === 2) {
-    return `사전신청 무료 / 현장구매 유료(${priceFormat(String(pay1))})`;
+    return `사전신청 무료 / 현장구매 유료(${priceFormat(String(pay2))})`;
   } else if (type === 3) {
     return `사전 신청 무료 / 기간 한정 유료(${priceFormat(
       String(pay1)

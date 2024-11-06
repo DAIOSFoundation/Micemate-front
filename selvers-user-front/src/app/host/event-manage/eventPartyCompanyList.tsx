@@ -28,7 +28,9 @@ const EventPartyCompanyList = () => {
 
   const handleFileChange = (files: FileList | null, type: "img" | "xlsx") => {
     if (files && files.length > 0) {
+      // console.log("files", files);
       const file = files[0];
+      console.log(file);
       const validImageTypes = [
         "image/jpeg",
         "image/tiff",
@@ -41,7 +43,6 @@ const EventPartyCompanyList = () => {
         "application/haansoftxlsx",
       ];
 
-      // 이미지 파일 검증
       if (type === "img" && validImageTypes.includes(file.type)) {
         if (file.size > MAX_FILE_SIZE) {
           setFileError("이미지 파일의 크기는 10MB 이하이어야 합니다.");
@@ -106,7 +107,7 @@ const EventPartyCompanyList = () => {
     return (bytes / 1024 / 1024).toFixed(2); // 소수점 2자리까지 표현
   };
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(() => {
     const formData = new FormData();
     const appendIfDefined = (key, value) => {
       if (
@@ -117,8 +118,8 @@ const EventPartyCompanyList = () => {
         formData.append(key, value);
       }
     };
-    appendIfDefined("img", data.img ? data.img[0] : undefined);
-    appendIfDefined("xlsx", data.xlsx ? data.xlsx[0] : undefined);
+    appendIfDefined("img", uploadedFile ?? undefined);
+    appendIfDefined("xlsx", excelFile ?? undefined);
 
     editBooth.mutate(
       { token: token, event_id: id, formData: formData },

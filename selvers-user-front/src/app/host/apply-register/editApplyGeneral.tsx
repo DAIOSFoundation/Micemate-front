@@ -749,9 +749,9 @@ const EditApplyGeneral = () => {
                 <div id="_sel1">
                   <input
                     type="number"
-                    {...register("payable_price2", { valueAsNumber: true })}
+                    {...register("payable_price1", { valueAsNumber: true })}
                     className="w_372"
-                    placeholder="현장 신청 비용을 입력해주세요."
+                    placeholder="유료 사전 신청 기간의 비용을 입력해주세요."
                   />
                 </div>
               )}
@@ -843,6 +843,19 @@ const EditApplyGeneral = () => {
                   {...register("payable_price_url")}
                   className="w_767"
                   placeholder="외부 결제 및 홈페이지 url을 입력해주세요. (마이스메이트 서비스에선 별도에 결제 기능을 제공하고 있지 않습니다.)"
+                />
+              </div>
+              <div className="dis_flex align_start justify_between pr_52 mt_25">
+                <div className="w_767 txt_center">
+                  {/* <i className="blue_icon_box">+</i> */}
+                </div>
+              </div>
+              <div className="dis_flex align_start justify_between pr_52 mt_25">
+                <input
+                  type="number"
+                  {...register("payable_price2", { valueAsNumber: true })}
+                  className="w_372"
+                  placeholder="현장 신청 비용을 입력해주세요."
                 />
               </div>
             </div>
