@@ -51,7 +51,7 @@ const ApplyPreviewPage = ({ target, setClose }) => {
           <div className="top_wrap">
             <div className="m_img">
               <img
-                src={`https://api-test.micemate.io/storage/${eventDetail?.data?.img}`}
+                src={`https://api.micemate.io/storage/${eventDetail?.data?.img}`}
               />
             </div>
             <div className="tit_area">

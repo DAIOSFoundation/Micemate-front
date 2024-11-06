@@ -149,7 +149,7 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                 </li>
               </ul> */}
               <a
-                href={`https://api-test.micemate.io/storage/${eventPartyDetail.data.xlsx}`}
+                href={`https://api.micemate.io/storage/${eventPartyDetail.data.xlsx}`}
                 style={{
                   backgroundColor: "#1E9EFF",
                   padding: "6px 10px",

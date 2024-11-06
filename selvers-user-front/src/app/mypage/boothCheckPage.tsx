@@ -47,7 +47,7 @@ const BoothCheckPage = () => {
           <button
             onClick={() => {
               downloadFile(
-                `https://api-test.micemate.io/storage/${boothList?.data?.img}`,
+                `https://api.micemate.io/storage/${boothList?.data?.img}`,
                 "부스 이미지"
               );
             }}
@@ -58,9 +58,7 @@ const BoothCheckPage = () => {
         )}
       </div>
       <BoothMap>
-        <img
-          src={`https://api-test.micemate.io/storage/${boothList?.data?.img}`}
-        />
+        <img src={`https://api.micemate.io/storage/${boothList?.data?.img}`} />
       </BoothMap>
       <SelectBoothList>
         <div>

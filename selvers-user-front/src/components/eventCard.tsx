@@ -74,7 +74,7 @@ const EventCard = ({
       </LikeBtn>
       <Link to={`detail/${id}`}>
         <Thumbnail>
-          <img src={`https://api-test.micemate.io/storage/${img}`} />
+          <img src={`https://api.micemate.io/storage/${img}`} />
           {Number(ddayCount(event_end_date)) > 0 && (
             <p className="end_event">종료행사</p>
           )}

@@ -87,7 +87,7 @@ const MainPage = () => {
       {SubBannerImg?.data?.items.length > 0 && (
         <SubBannerWrap>
           <img
-            src={`https://api-test.micemate.io/storage/${SubBannerImg.data.items[0].img}`}
+            src={`https://api.micemate.io/storage/${SubBannerImg.data.items[0].img}`}
           />
         </SubBannerWrap>
       )}

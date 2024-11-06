@@ -202,11 +202,11 @@ const EditApplyGeneral = () => {
       setValue("category", GeneralData?.data?.category?.id);
       if (GeneralData?.data?.img1)
         setPreviewType1(
-          `https://api-test.micemate.io/storage/${GeneralData?.data?.img1}`
+          `https://api.micemate.io/storage/${GeneralData?.data?.img1}`
         );
       if (GeneralData?.data?.img2)
         setPreviewType2(
-          `https://api-test.micemate.io/storage/${GeneralData?.data?.img2}`
+          `https://api.micemate.io/storage/${GeneralData?.data?.img2}`
         );
       setValue(
         "event_start_date",
