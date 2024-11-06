@@ -206,10 +206,8 @@ const JoinFormPage = () => {
       },
       onError: (error) => {
         const customError = error as CustomError;
-        if (
-          customError.response?.data.data.email[0] ===
-          "The email has already been taken."
-        ) {
+        console.log(customError.response.data);
+        if (customError.response?.data.message === "이미 회원이 존재합니다.") {
           setError("apiError", {
             type: "manual",
             message: "사용중인 이메일 입니다.",
@@ -222,7 +220,6 @@ const JoinFormPage = () => {
   if (useJoin.isPending) {
     return <LoadingScreen />;
   }
-
   return (
     <JoinFormWrap>
       <JoinForm onSubmit={onSubmit}>
