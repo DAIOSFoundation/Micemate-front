@@ -117,11 +117,9 @@ const ApplyAgreeFrom = ({
         </div>
       </div>
       <div className="submit_btn">
-        <button 
-          type="submit" 
-          disabled={
-            !(watch('agree1') && watch('agree2') && watch('agree3'))
-          }
+        <button
+          type="submit"
+          disabled={!(watch("agree1") && watch("agree2") && watch("agree3"))}
         >
           사전 신청하기
         </button>

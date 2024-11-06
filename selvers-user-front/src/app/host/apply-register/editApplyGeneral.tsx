@@ -257,7 +257,12 @@ const EditApplyGeneral = () => {
         "progress_type",
         JSON.stringify(GeneralData?.data?.progress_type)
       );
-      setValue("progress_url", JSON.stringify(GeneralData?.data?.progress_url));
+      setValue(
+        "progress_url",
+        GeneralData?.data?.progress_url === null
+          ? ""
+          : GeneralData?.data?.progress_url
+      );
       setValue("position1", GeneralData?.data?.position1);
       setValue("position2", GeneralData?.data?.position2);
     }
@@ -372,7 +377,7 @@ const EditApplyGeneral = () => {
     appendIfDefined("payable_price1", data.payable_price1);
     appendIfDefined("payable_price2", data.payable_price2);
     appendIfDefined("progress_type", JSON.parse(data.progress_type));
-    appendIfDefined("progress_url", JSON.parse(data.progress_url));
+    appendIfDefined("progress_url", data.progress_url);
     appendIfDefined("position1", data.position1);
     appendIfDefined("position2", data.position2);
 
@@ -817,7 +822,7 @@ const EditApplyGeneral = () => {
               </div>
               <div className="dis_flex align_start justify_between pr_52 mt_25">
                 <div className="w_767 txt_center">
-                  <i className="blue_icon_box">+</i>
+                  {/* <i className="blue_icon_box">+</i> */}
                 </div>
               </div>
               <div className="dis_flex align_start justify_between pr_52 mt_25">

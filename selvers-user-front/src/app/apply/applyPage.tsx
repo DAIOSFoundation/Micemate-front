@@ -116,7 +116,11 @@ const ApplyPage = () => {
 
   useEffect(() => {
     if (EventApplyInformation) {
-      setApplyType(EventApplyInformation?.data?.application_type);
+      if (EventApplyInformation?.data?.application_type === 2) {
+        setApplyType(0);
+      } else if (EventApplyInformation?.data?.application_type > 2) {
+        setApplyType(EventApplyInformation?.data?.application_type);
+      }
       setApplyList(applyOption(EventApplyInformation?.data?.application_type));
     }
   }, [EventApplyInformation]);
@@ -135,7 +139,6 @@ const ApplyPage = () => {
   }
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     const formData = new FormData();
     const appendIfDefined = (key, value) => {
       if (
@@ -191,14 +194,14 @@ const ApplyPage = () => {
       { token: token, event_id: id, data: formData },
       {
         onSuccess: () => {
-          if (
-            EventApplyInformation?.data?.payable_type === 1 ||
-            EventApplyInformation?.data?.payable_type === 2
-          ) {
-            navigate("/detail/finish");
-          } else {
-            window.open(EventApplyInformation?.data?.payable_price_url);
-          }
+          // if (
+          //   EventApplyInformation?.data?.payable_type === 1 ||
+          //   EventApplyInformation?.data?.payable_type === 2
+          // ) {
+          navigate("/detail/finish");
+          // } else {
+          //   window.open(EventApplyInformation?.data?.payable_price_url);
+          // }
         },
         onError: (error) => {
           console.log(error);
