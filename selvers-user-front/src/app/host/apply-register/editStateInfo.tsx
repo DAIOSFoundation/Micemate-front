@@ -73,7 +73,7 @@ const EditStateInfo = () => {
     token: authInfo.token,
     event_id: id,
   });
-  console.log(RegisterState);
+
   //1차개발 임시
   useEffect(() => {
     if (userData) {

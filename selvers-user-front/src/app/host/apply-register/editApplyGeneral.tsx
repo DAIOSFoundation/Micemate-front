@@ -4,6 +4,7 @@ import * as z from "zod";
 import {
   useApplyRegisterGeneralQuery,
   useApplyRegisterGeneralMutation,
+  useApplyRegisterRecruitQuery,
 } from "@/api/events/events.query";
 import { useCategoryQuery } from "@/api/etc/category.query";
 import { useOutletContext, useParams, useNavigate } from "react-router-dom";
@@ -35,81 +36,6 @@ const payableTypes = [
   { type: 5, name: "유료" },
 ];
 
-// zod 스키마 정의
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-
-const EditSchema = z
-  .object({
-    title: z.string().trim().min(1, "제목을 입력해주세요."),
-    category: z.number().nullable().optional(),
-    img1: z
-      .any()
-      .nullable()
-      .optional()
-      .refine(
-        (files) => {
-          if (!files || files.length === 0) return true; // 파일이 없을 때는 통과
-          return files[0].size < MAX_FILE_SIZE;
-        },
-        {
-          message: "파일 크기는 10MB 이하이어야 합니다.",
-        }
-      ),
-    img2: z
-      .any()
-      .nullable()
-      .optional()
-      .refine(
-        (files) => {
-          if (!files || files.length === 0) return true; // 파일이 없을 때는 통과
-          return files[0].size < MAX_FILE_SIZE;
-        },
-        {
-          message: "파일 크기는 10MB 이하이어야 합니다.",
-        }
-      ),
-    event_start_view: z.string().nullable().optional(),
-    event_end_view: z.string().nullable().optional(),
-    event_start_time: z.date().nullable().optional(),
-    event_end_time: z.date().nullable().optional(),
-    payable_type: z.number().nullable().optional(),
-    payable_start_view: z.string().nullable().optional(),
-    payable_end_view: z.string().nullable().optional(),
-    payable_price_url: z.string().nullable().optional(),
-    payable_price1: z.number().nullable().optional(),
-    payable_price2: z.number().nullable().optional(),
-    progress_type: z.string().nullable().optional(),
-    progress_url: z.string().nullable().optional(),
-    position1: z.string().nullable().optional(),
-    position2: z.string().nullable().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.event_start_view && data.event_end_view) {
-        return new Date(data.event_start_view) <= new Date(data.event_end_view);
-      }
-      return true;
-    },
-    {
-      message: "종료 날짜는 시작 날짜 이후여야 합니다.",
-      path: ["event_end_date"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.payable_start_view && data.payable_end_view) {
-        return (
-          new Date(data.payable_start_view) <= new Date(data.payable_end_view)
-        );
-      }
-      return true;
-    },
-    {
-      message: "종료 날짜는 시작 날짜 이후여야 합니다.",
-      path: ["payable_end_date"],
-    }
-  );
-
 const EditApplyGeneral = () => {
   const { openToast } = useToast();
   const { id } = useParams();
@@ -124,11 +50,135 @@ const EditApplyGeneral = () => {
   const category = useCategoryQuery();
   const useApplyRegisterGeneral = useApplyRegisterGeneralMutation();
   const open = useDaumPostcodePopup();
+  const recuitData = {
+    token: authInfo.token,
+    event_id: id,
+  };
+  const { data: ApplyRegisterRecruit } =
+    useApplyRegisterRecruitQuery(recuitData);
+
+  // zod 스키마 정의
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+  const EditSchema = z
+    .object({
+      title: z.string().trim().min(1, "제목을 입력해주세요."),
+      category: z.number().nullable().optional(),
+      img1: z
+        .any()
+        .nullable()
+        .optional()
+        .refine(
+          (files) => {
+            if (!files || files.length === 0) return true; // 파일이 없을 때는 통과
+            return files[0].size < MAX_FILE_SIZE;
+          },
+          {
+            message: "파일 크기는 10MB 이하이어야 합니다.",
+          }
+        ),
+      img2: z
+        .any()
+        .nullable()
+        .optional()
+        .refine(
+          (files) => {
+            if (!files || files.length === 0) return true; // 파일이 없을 때는 통과
+            return files[0].size < MAX_FILE_SIZE;
+          },
+          {
+            message: "파일 크기는 10MB 이하이어야 합니다.",
+          }
+        ),
+      event_start_view: z.string().nullable().optional(),
+      event_end_view: z.string().nullable().optional(),
+      event_start_time: z.date().nullable().optional(),
+      event_end_time: z.date().nullable().optional(),
+      payable_type: z.number().nullable().optional(),
+      payable_start_view: z.string().nullable().optional(),
+      payable_end_view: z.string().nullable().optional(),
+      payable_price_url: z.string().nullable().optional(),
+      payable_price1: z.number().nullable().optional(),
+      payable_price2: z.number().nullable().optional(),
+      progress_type: z.string().nullable().optional(),
+      progress_url: z.string().nullable().optional(),
+      position1: z.string().nullable().optional(),
+      position2: z.string().nullable().optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.event_start_view && data.event_end_view) {
+          return (
+            new Date(data.event_start_view) <= new Date(data.event_end_view)
+          );
+        }
+        return true;
+      },
+      {
+        message: "종료 날짜는 시작 날짜 이후여야 합니다.",
+        path: ["event_end_date"],
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.payable_start_view && data.payable_end_view) {
+          return (
+            new Date(data.payable_start_view) <= new Date(data.payable_end_view)
+          );
+        }
+        return true;
+      },
+      {
+        message: "종료 날짜는 시작 날짜 이후여야 합니다.",
+        path: ["payable_end_date"],
+      }
+    )
+    .refine(
+      (data) => {
+        // 서버에서 받은 날짜 값을 처리
+        const rangeStart = ApplyRegisterRecruit?.data?.application_start_date
+          ? new Date(ApplyRegisterRecruit?.data?.application_start_date)
+          : null;
+        const rangeEnd = ApplyRegisterRecruit?.data?.application_end_date
+          ? new Date(ApplyRegisterRecruit?.data?.application_end_date)
+          : null;
+
+        // 서버 값이 없으면 유효성 검사를 건너뛰고 통과시킴
+        if (!rangeStart || !rangeEnd) {
+          return true; // 서버 값이 없으면 검증을 통과시킴
+        }
+
+        let errorMessages = false;
+
+        if (data.payable_start_view && data.payable_end_view) {
+          const startDate = new Date(data.payable_start_view);
+          const endDate = new Date(data.payable_end_view);
+
+          // 시작 날짜가 범위 안에 포함되지 않으면 오류
+          if (startDate < rangeStart || startDate > rangeEnd) {
+            errorMessages = true;
+          }
+
+          // 종료 날짜가 범위 안에 포함되지 않으면 오류
+          if (endDate < rangeStart || endDate > rangeEnd) {
+            errorMessages = true;
+          }
+        }
+
+        // 오류가 있으면 false 반환, 없으면 true 반환
+        return errorMessages ? false : true;
+      },
+      {
+        message: "유료 사전 신청 기간은 모집기간 안에 포함되어야 합니다.",
+        path: ["payable_end_date"],
+      }
+    );
 
   const { data: GeneralData } = useApplyRegisterGeneralQuery({
     token: authInfo.token,
     event_id: id,
   });
+
   const {
     register,
     handleSubmit,
@@ -139,6 +189,7 @@ const EditApplyGeneral = () => {
   } = useForm({
     resolver: zodResolver(EditSchema),
   });
+  console.log(errors);
 
   const startTime = watch("event_start_time");
   const endTime = watch("event_end_time");
@@ -206,7 +257,7 @@ const EditApplyGeneral = () => {
         "progress_type",
         JSON.stringify(GeneralData?.data?.progress_type)
       );
-      setValue("progress_url", GeneralData?.data?.progress_url);
+      setValue("progress_url", JSON.stringify(GeneralData?.data?.progress_url));
       setValue("position1", GeneralData?.data?.position1);
       setValue("position2", GeneralData?.data?.position2);
     }
@@ -321,7 +372,7 @@ const EditApplyGeneral = () => {
     appendIfDefined("payable_price1", data.payable_price1);
     appendIfDefined("payable_price2", data.payable_price2);
     appendIfDefined("progress_type", JSON.parse(data.progress_type));
-    appendIfDefined("progress_url", data.progress_url);
+    appendIfDefined("progress_url", JSON.parse(data.progress_url));
     appendIfDefined("position1", data.position1);
     appendIfDefined("position2", data.position2);
 
