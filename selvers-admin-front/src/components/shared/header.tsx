@@ -22,7 +22,8 @@ const Header = () => {
     <div className="header">
       <div className="inner">
         <h1 className="main_logo">
-          <Link to="/member/general">
+          {user.isLogin}
+          <Link to={user.isLogin ? "/member/general" : "/login"}>
             <img src={Logo} alt="마이스 메이트" />
           </Link>
         </h1>

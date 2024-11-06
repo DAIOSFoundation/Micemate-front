@@ -59,7 +59,7 @@ const Header = () => {
   //   } else {
   //     setMainPage(false);
   //   }
-  // }, [location.pathname]);
+  // }, [location.pathname])
 
   return (
     <div>
