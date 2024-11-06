@@ -49,6 +49,7 @@ const SideMenu = ({ authInfo, userInfo }) => {
         {
           onSuccess: () => {
             openToast("프로필 이미지를 변경했습니다.");
+            setProfilePreview(URL.createObjectURL(profileData));
           },
           onError: () => {
             openToast("프로필 이미지 변경 실패, 다시 시도해 주세요.");
@@ -70,7 +71,6 @@ const SideMenu = ({ authInfo, userInfo }) => {
       // 파일 형식 검사 (jpg, png)
       const validFileTypes = ["image/jpeg", "image/png"];
       if (!validFileTypes.includes(imgFile.type)) {
-        // alert("JPG 또는 PNG 파일만 선택할 수 있습니다.");
         return;
       }
 
