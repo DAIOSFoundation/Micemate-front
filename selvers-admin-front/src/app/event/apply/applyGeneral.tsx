@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import SideMenu from "@components/shared/sideMenu/sideMenu";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import { useApplyRegisterGeneralQuery } from "@/api/events/events.query";
-import { commonImgUrl } from "@/constants/config";
 
 const payableTypes = [
   { type: 1, name: "무료" },
@@ -171,7 +170,11 @@ const Page = () => {
                 {GeneralData?.data?.img1 && (
                   <span className="preview_img">
                     {/* <span className="cancel_btn"></span> */}
-                    <img src={`${commonImgUrl}/${GeneralData?.data?.img1}`} />
+                    <img
+                      src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                        GeneralData?.data?.img1
+                      }`}
+                    />
                   </span>
                 )}
                 0 / 1
@@ -187,7 +190,11 @@ const Page = () => {
                 {GeneralData?.data?.img2 && (
                   <span className="preview_img">
                     {/* <span className="cancel_btn"></span> */}
-                    <img src={`${commonImgUrl}/${GeneralData?.data?.img2}`} />
+                    <img
+                      src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                        GeneralData?.data?.img2
+                      }`}
+                    />
                   </span>
                 )}
                 0 / 1
