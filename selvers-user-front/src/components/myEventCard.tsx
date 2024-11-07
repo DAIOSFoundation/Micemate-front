@@ -109,7 +109,7 @@ const MyEventCard = ({
           {eventState.state === "cancel" && (
             <span className="blind">취소완료</span>
           )}
-          <img src={`https://api.micemate.io/storage/${img}`} />
+          <img src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${img}`} />
         </Link>
       </ThumbnailArea>
       <InfoArea>

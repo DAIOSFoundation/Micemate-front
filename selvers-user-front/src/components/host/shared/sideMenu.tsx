@@ -31,7 +31,7 @@ const SideMenu = ({ authInfo, userInfo }) => {
   // 프로필 이미지 변경
   useEffect(() => {
     setProfilePreview(
-      `https://api.micemate.io/storage/${userInfo?.company?.logo}`
+      `${import.meta.env.VITE_IMAGE_BASE_URL}/${userInfo?.company?.logo}`
     );
   }, [userInfo, profileData]);
 

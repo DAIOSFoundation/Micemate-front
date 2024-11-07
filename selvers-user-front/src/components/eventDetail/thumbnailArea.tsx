@@ -120,7 +120,9 @@ const Thumbnail = ({
   return (
     <ThumbnailWrap>
       <figure className="thumb_img">
-        <img src={`https://api.micemate.io/storage/${thumnaildata.img}`} />
+        <img
+          src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${thumnaildata.img}`}
+        />
       </figure>
       <InfoBox>
         <div className="title_box">

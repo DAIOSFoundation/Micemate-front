@@ -64,7 +64,9 @@ const EditApplyDetail = () => {
     const removedImages = imageData
       .filter(
         (img) =>
-          !currentImages.includes(`https://api.micemate.io/storage/${img.path}`)
+          !currentImages.includes(
+            `${import.meta.env.VITE_IMAGE_BASE_URL}/${img.path}`
+          )
       )
       .map((img) => img.id);
     // 삭제된 이미지 ID 업데이트
@@ -88,7 +90,9 @@ const EditApplyDetail = () => {
         { token: authInfo.token, event_id: id, formData },
         {
           onSuccess: (data) => {
-            const imgUrl = `https://api.micemate.io/storage/${data?.data?.path}`;
+            const imgUrl = `${import.meta.env.VITE_IMAGE_BASE_URL}/${
+              data?.data?.path
+            }`;
             const editor = quillRef.current.getEditor();
             const range = editor.getSelection();
             editor.insertEmbed(range.index, "image", imgUrl);

@@ -49,7 +49,9 @@ const ApplyPreviewPage = () => {
             <div className="top_wrap">
               <div className="m_img">
                 <img
-                  src={`https://api.micemate.io/storage/${eventDetail?.data?.img}`}
+                  src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                    eventDetail?.data?.img
+                  }`}
                 />
               </div>
               <div className="tit_area">

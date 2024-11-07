@@ -148,7 +148,9 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                 </li>
               </ul> */}
               <a
-                href={`https://api.micemate.io/storage/${eventPartyDetail.data.xlsx}`}
+                href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                  eventPartyDetail.data.xlsx
+                }`}
                 style={{
                   backgroundColor: "#1E9EFF",
                   padding: "6px 10px",
