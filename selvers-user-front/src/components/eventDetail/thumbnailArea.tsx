@@ -78,21 +78,44 @@ const Thumbnail = ({
     return today < targetDate;
   };
 
-  const applyBtnHandler = (type: number, priceLink: string) => {
+  const applyBtnHandler = (
+    type: number,
+    priceLink: string,
+    paybleStart: string,
+    paybleEnd: string
+  ) => {
+    const validUrl =
+      priceLink.startsWith("http://") || priceLink.startsWith("https://")
+        ? priceLink
+        : `http://${priceLink}`;
+
     // 로그인 상태일 경우
     if (user.isLogin === true) {
-      if (type === 1 || type === 2 || type === 3) {
-        //무료일경우
+      if (type === 1 || type === 2) {
+        //무료, 사전신청 시 무료 / 현장 구매 시 유료
         navigate(`/detail/${id}/apply`);
+      } else if (type === 3) {
+        // 사전 신청 무료 / 기간 한정 유로일 경우 / 현장 구매 시 유료
+        const today = new Date();
+        const startDate = new Date(paybleStart);
+        const endDate = new Date(paybleEnd);
+
+        if (today >= startDate && today <= endDate) {
+          window.open(validUrl);
+        } else {
+          navigate(`/detail/${id}/apply`);
+        }
       } else if (type === 4 || type === 5) {
         // 유료일경우
-        window.open(priceLink);
+        window.open(validUrl);
       }
     } else {
       // 미로그인 상태일 경우
       navigate("/login");
     }
   };
+
+  console.log(thumnaildata);
 
   return (
     <ThumbnailWrap>
@@ -142,7 +165,9 @@ const Thumbnail = ({
                     onClick={() => {
                       applyBtnHandler(
                         thumnaildata.payable_type,
-                        thumnaildata.payable_price_url
+                        thumnaildata.payable_price_url,
+                        thumnaildata.payable_start_date,
+                        thumnaildata.payable_end_date
                       );
                     }}
                     className="btn primary"
