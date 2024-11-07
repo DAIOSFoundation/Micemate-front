@@ -84,11 +84,6 @@ const Thumbnail = ({
     paybleStart: string,
     paybleEnd: string
   ) => {
-    const validUrl =
-      priceLink.startsWith("http://") || priceLink.startsWith("https://")
-        ? priceLink
-        : `http://${priceLink}`;
-
     // 로그인 상태일 경우
     if (user.isLogin === true) {
       if (type === 1 || type === 2) {
@@ -99,7 +94,10 @@ const Thumbnail = ({
         const today = new Date();
         const startDate = new Date(paybleStart);
         const endDate = new Date(paybleEnd);
-
+        const validUrl =
+          priceLink.startsWith("http://") || priceLink.startsWith("https://")
+            ? priceLink
+            : `http://${priceLink}`;
         if (today >= startDate && today <= endDate) {
           window.open(validUrl);
         } else {
@@ -107,6 +105,10 @@ const Thumbnail = ({
         }
       } else if (type === 4 || type === 5) {
         // 유료일경우
+        const validUrl =
+          priceLink.startsWith("http://") || priceLink.startsWith("https://")
+            ? priceLink
+            : `http://${priceLink}`;
         window.open(validUrl);
       }
     } else {
@@ -114,8 +116,6 @@ const Thumbnail = ({
       navigate("/login");
     }
   };
-
-  console.log(thumnaildata);
 
   return (
     <ThumbnailWrap>
