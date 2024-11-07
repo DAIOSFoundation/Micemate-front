@@ -91,7 +91,7 @@ const EventCard = ({
             </p>
           </div>
           <div>
-            <p className="dday">{`D${ddayCount(event_end_date)}`}</p>
+            <p className="dday">{`D${ddayCount(event_start_date)}`}</p>
             <p className="price">{`${priceFormat(price.toString())}`}</p>
           </div>
         </TextBox>
