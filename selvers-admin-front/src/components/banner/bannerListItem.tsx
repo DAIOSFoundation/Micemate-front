@@ -22,7 +22,7 @@ const BannerListItem = ({ banner }: BannerListItemProps) => {
       <td></td>
       <td>
         <div className="banner_img">
-          <img src={banner.img} />
+          <img src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${banner.img}`} />
         </div>
       </td>
       <td>{banner.created_at}</td>

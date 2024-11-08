@@ -4,7 +4,7 @@ import defaultProfile from "@/assets/images/dummy/user_logo_dummy.png";
 import { useApplyRegisterGeneralQuery } from "@/api/events/events.query";
 import MemberMenu from "./memberMenu";
 import EventMenu from "./eventMenu";
-// import BannerMenu from "./bannerMenu";
+import BannerMenu from "./bannerMenu";
 import EventApplyMenu from "./eventApplyMenu";
 import { useParams } from "react-router-dom";
 
@@ -62,7 +62,7 @@ const SideMenu = () => {
         <ul className="lnb01">
           <MemberMenu />
           <EventMenu />
-          {/* <BannerMenu /> */}
+          <BannerMenu />
         </ul>
       )}
       {pageState === "type02" && (

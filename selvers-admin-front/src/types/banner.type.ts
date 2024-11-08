@@ -12,3 +12,13 @@ export type BannerItemType = {
   end_date: string;
   state: BannerState;
 };
+
+export type CreateBannerForm = {
+  type: BannerType;
+  title: string;
+  start_date: string;
+  end_date: string;
+  img: File;
+  url: string;
+  show: boolean;
+};

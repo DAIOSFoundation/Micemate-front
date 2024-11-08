@@ -37,12 +37,14 @@ const BannerPage = () => {
               <h3 className="tit">
                 <span>전체</span>
                 <span className="col_gray">검색결과</span>
-                <span className="fs_16">[총 회원수 9,999명]</span>
+                <span className="fs_16">[총 {data?.data.total}개]</span>
               </h3>
               <button className="sort_btn">정렬</button>
             </div>
             <div>
-              <button onClick={() => navigate("/banner/add")}>추가</button>
+              <button onClick={() => navigate(`/banner/add?type=${type}`)}>
+                추가
+              </button>
               <button className="ml_22">삭제</button>
             </div>
           </div>

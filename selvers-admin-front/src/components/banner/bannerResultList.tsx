@@ -43,7 +43,7 @@ const BannerResultList = ({ bannerList }: BannerResultListProps) => {
           </thead>
           <tbody>
             {bannerList.map((banner) => (
-              <BannerListItem banner={banner} />
+              <BannerListItem key={banner.id} banner={banner} />
             ))}
           </tbody>
         </table>

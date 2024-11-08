@@ -40,23 +40,30 @@ export const getManageBannerList = async (request: GetManageBannerRequest) => {
   return response.data;
 };
 
-interface CreateBannerRequest {
+export interface CreateBannerRequest extends FormData {
   title: string;
   start_date: string;
   end_date: string;
-  img: string;
+  img: File;
   url: string;
   show: boolean;
 }
 
-export const createBannerApi = async (request: CreateBannerRequest) => {
+export const createBannerApi = async (type: BannerType, request: FormData) => {
   const token = localStorage.getItem("token");
+  console.log(request);
 
   const response = await apiClient.post<DefaultResponse>(
-    "/api/banners",
+    `/api/banners`,
     request,
     {
-      headers: { authorization: `Bearer ${token}` },
+      params: {
+        type,
+      },
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
     }
   );
 

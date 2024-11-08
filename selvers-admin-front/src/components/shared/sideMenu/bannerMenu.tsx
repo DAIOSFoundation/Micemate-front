@@ -36,14 +36,14 @@ const BannerMenu = () => {
       {isOn && (
         <div className="depth02_list active">
           <Link
-            to="/banner/main"
-            className={`depth02 ${activeTarget("/banner/main")}`}
+            to="/banner?type=0"
+            className={`depth02 ${activeTarget("/banner?type=0")}`}
           >
             메인배너
           </Link>
           <Link
-            to="/banner/band"
-            className={`depth02 ${activeTarget("/banner/band")}`}
+            to="/banner?type=1"
+            className={`depth02 ${activeTarget("/banner?type=1")}`}
           >
             띠배너
           </Link>
