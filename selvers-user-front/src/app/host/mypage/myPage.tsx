@@ -234,7 +234,7 @@ const MyPage = () => {
                       field.value &&
                       category?.data?.map((data) => {
                         return (
-                          <div className="checkbox item">
+                          <div className="checkbox item" key={data.id}>
                             <input
                               id={JSON.stringify(data.id)}
                               checked={interestList.includes(data.id)}
