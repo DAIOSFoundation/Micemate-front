@@ -128,7 +128,7 @@ const Thumbnail = ({
         <div className="title_box">
           <h2>{thumnaildata.title}</h2>
           <p className="d_day">{`D${ddayCount(
-            thumnaildata.event_end_date
+            thumnaildata.event_start_date
           )}`}</p>
         </div>
         <div className="desc_box">

@@ -19,7 +19,6 @@ import { useAlret } from "@/hook/useAlret";
 import { useConfirm } from "@/hook/useConfirm";
 import { confirmState } from "@/store/modalState";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { commonImgUrl } from "@/constants/config";
 
 const schema = z.object({
   contact: z.string().nullable().optional(),
@@ -132,7 +131,9 @@ const Page = () => {
 
   // 사업자등록번호 다운로드 버튼
   const fileDownload = () => {
-    const fileUrl = `${commonImgUrl}/${userDetailData?.data?.company?.company_id_file}`;
+    const fileUrl = `${import.meta.env.VITE_IMAGE_BASE_URL}/${
+      userDetailData?.data?.company?.company_id_file
+    }`;
 
     fetch(fileUrl)
       .then((response) => response.blob())
