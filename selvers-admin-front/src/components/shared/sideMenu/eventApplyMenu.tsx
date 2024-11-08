@@ -1,15 +1,11 @@
 import { useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useApplyRegisterGeneralQuery } from "@/api/events/events.query";
+import { Link, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const ApplyRegisterMenu = () => {
-  const { id } = useParams();
+const ApplyRegisterMenu = ({ GeneralData }) => {
   const [isOn, setIsOn] = useState(true);
   const location = useLocation();
-
-  const { data: GeneralData } = useApplyRegisterGeneralQuery(
-    id ? Number(id) : undefined
-  );
+  const { id } = useParams();
 
   const toggleDropdown = () => {
     setIsOn((prev) => !prev);
@@ -25,7 +21,7 @@ const ApplyRegisterMenu = () => {
 
   return (
     <div>
-      <div className="title_tag">{GeneralData?.data?.title}</div>
+      <div className="title_tag">{GeneralData?.title}</div>
       <ul className="lnb02">
         <li>
           <p

@@ -1,4 +1,7 @@
-import { useEventPartyQuery } from "@/api/events/events.query";
+import {
+  useEventPartyQuery,
+  useEventPartyExcelQuery,
+} from "@/api/events/events.query";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UserInformationRequest } from "@/type";
@@ -7,6 +10,8 @@ import Pagination from "@components/host/shared/pagination";
 import PartyFilter from "@components/host/dashboard/partyFilter";
 import { useQueryClient } from "@tanstack/react-query";
 import { PartyFilterType } from "@/type";
+import { useToast } from "@/hook/useToast";
+// import DownloadIcon from "@/assets/icon/download.svg?react";
 
 interface UserInfoConText {
   authInfo: UserInformationRequest;
@@ -20,10 +25,12 @@ const EventPartyList = () => {
   const navigate = useNavigate();
   const authInfo = OutletContext.authInfo;
   const queryClient = useQueryClient();
+  const { openToast } = useToast();
 
   const { id } = useParams();
 
   const { data: eventParty } = useEventPartyQuery(id, authInfo.token);
+  const { data: eventPartyExcel } = useEventPartyExcelQuery(id, authInfo.token);
 
   useEffect(() => {
     const filter = {
@@ -71,12 +78,31 @@ const EventPartyList = () => {
     });
   };
 
+  // Excel 파일 다운로드 함수 추가
+  const downloadExcelFile = () => {
+    if (eventPartyExcel) {
+      const blob = new Blob([eventPartyExcel], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "party_list.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } else {
+      openToast("Excel 파일 데이터를 불러오는 데 실패했습니다.");
+    }
+  };
+
   return (
     <div className="cont_area">
       <div className="cont_panel">
         <div className="tit_wrap">
           <h3 className="fs_40">참가자 관리</h3>
-          {/* <a href="#none" download className="download_btn"></a> */}
+          <button onClick={downloadExcelFile} className="download_btn"></button>
         </div>
         <PartyFilter setFilterData={setFilterData} resetFilter={resetFilter} />
 

@@ -174,6 +174,26 @@ export const useEventPartyQuery = (event_id: string, token?: string) => {
   });
 };
 
+// 행사 참가가자 관리 조회(엑셀 다운로드)
+export const useEventPartyExcelQuery = (event_id: string, token?: string) => {
+  const location = useLocation();
+  return useQuery({
+    queryKey: ["EventPartyExcelQuery", location.search],
+    queryFn: async () => {
+      const response = await apiClient({
+        method: "GET",
+        url: `/api/events/${event_id}/applications/download${location.search}`,
+        headers: {
+          "Content-Type": "blob",
+          authorization: `Bearer ${token}`,
+        },
+        responseType: "arraybuffer",
+      });
+      return response.data;
+    },
+  });
+};
+
 // 행사 참가자 괸리 조회(detail)
 export const useEventPartyDetailQuery = (
   event_id: string,
@@ -639,6 +659,24 @@ export const useBoothList = (event_id: string, token: string) => {
         headers: {
           "Content-Type": "application/json",
           ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
+// 참가기업 관리 부스 조회
+export const useEventBooth = (event_id: string, token: string) => {
+  return useQuery({
+    queryKey: ["EventBooth", location.search],
+    queryFn: async () => {
+      const response = await apiClient({
+        method: "GET",
+        url: `/api/events/${event_id}/edit/booth`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
         },
       });
       return response.data;

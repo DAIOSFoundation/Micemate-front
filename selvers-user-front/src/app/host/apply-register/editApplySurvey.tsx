@@ -1,9 +1,15 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
-import { useApplyRegisterSurveyMutation, useApplyRegisterSurveyQuery } from "@/api/events/events.query";
+import {
+  useApplyRegisterSurveyMutation,
+  useApplyRegisterSurveyQuery,
+} from "@/api/events/events.query";
 import { useOutletContext, useParams, useNavigate } from "react-router-dom";
-import { UserInformationRequest, ApplyRegisterSurveyData, SurveyField } from "@/type";
+import {
+  UserInformationRequest,
+  ApplyRegisterSurveyData,
+  SurveyField,
+} from "@/type";
 import { useToast } from "@/hook/useToast";
-
 
 interface UserInfoContext {
   authInfo: UserInformationRequest;
@@ -28,14 +34,15 @@ const EditApplySurvey: React.FC = () => {
   useEffect(() => {
     if (surveyData && surveyData.success) {
       const { is_survey, surveys } = surveyData.data;
-      
+
       if (is_survey !== undefined) {
         setIsSurveyUsed(is_survey);
       } else {
         setIsSurveyUsed(true); // is_survey 값이 없으면 기본값 유지
       }
 
-      if (is_survey === true && surveys.length > 0) { // is_survey가 0일 때만 필드 초기화
+      if (is_survey === true && surveys.length > 0) {
+        // is_survey가 0일 때만 필드 초기화
         const mappedFields: SurveyField[] = surveys.map((field: any) => ({
           type: field.type as 0 | 1 | 2,
           title: field.title,
@@ -129,7 +136,7 @@ const EditApplySurvey: React.FC = () => {
     }
   };
 
-  const handleSave = (type : boolean) => {
+  const handleSave = (type: boolean) => {
     // 유효성 검사
     for (let i = 0; i < fields.length; i++) {
       if (fields[i].title.trim() === "") {
@@ -141,12 +148,12 @@ const EditApplySurvey: React.FC = () => {
         return;
       }
       if (
-        (fields[i].type === 0 || fields[i].type === 1)
+        (fields[i].type === 0 || fields[i].type === 1) &&
         // 옵션 텍스트 길이 검사 추가
-        && (fields[i].options.some(opt => opt.text.trim() === "") 
-            || fields[i].options.some(opt => opt.text.length > 20))
+        (fields[i].options.some((opt) => opt.text.trim() === "") ||
+          fields[i].options.some((opt) => opt.text.length > 20))
       ) {
-        if (fields[i].options.some(opt => opt.text.trim() === "")) {
+        if (fields[i].options.some((opt) => opt.text.trim() === "")) {
           alert(`옵션을 모두 입력해주세요. (${i + 1}번 설문)`);
         } else {
           alert(`옵션 텍스트는 20자를 초과할 수 없습니다. (${i + 1}번 설문)`);
@@ -154,13 +161,16 @@ const EditApplySurvey: React.FC = () => {
         return;
       }
     }
-  
+
     const data: ApplyRegisterSurveyData = {
       is_survey: isSurveyUsed,
       surveys: fields.map((field) => ({
         type: field.type,
         title: field.title,
-        options: field.type === 0 || field.type === 1 ? field.options.map(opt => opt.text) : [],
+        options:
+          field.type === 0 || field.type === 1
+            ? field.options.map((opt) => opt.text)
+            : [],
         required: field.required,
         is_reject: field.isReject,
       })),
@@ -176,9 +186,10 @@ const EditApplySurvey: React.FC = () => {
         data: data,
       },
       {
-        onSuccess: (response) => {
-          type ? openToast("임시저장 되었습니다.") : navigate(`/host/my/apply-register/edit/${id}/faq`)
-        },
+        onSuccess: () =>
+          type
+            ? openToast("임시저장 되었습니다.")
+            : navigate(`/host/my/apply-register/edit/${id}/faq`),
         onError: (error) => {
           console.error("Mutation failed:", error);
           // 오류 시 사용자에게 알림
@@ -186,7 +197,6 @@ const EditApplySurvey: React.FC = () => {
       }
     );
   };
-  
 
   return (
     <div className="cont_area">
@@ -294,7 +304,7 @@ const EditApplySurvey: React.FC = () => {
                                 }
                                 className="remove_option_btn"
                               >
-                              X
+                                X
                               </button>
                             )}
                           </div>
@@ -303,7 +313,9 @@ const EditApplySurvey: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => addOption(fieldIndex)}
-                        className={`option_add_btn ${field.options.length >= 10 ? "disabled" : ""}`}
+                        className={`option_add_btn ${
+                          field.options.length >= 10 ? "disabled" : ""
+                        }`}
                         disabled={field.options.length >= 10}
                       >
                         옵션 추가
@@ -315,9 +327,7 @@ const EditApplySurvey: React.FC = () => {
                       type="button"
                       onClick={() => removeField(fieldIndex)}
                       className="delete_btn"
-                    >
-                      
-                    </button>
+                    ></button>
                     <i className="bor_line"></i>
                     <button
                       type="button"
@@ -341,7 +351,9 @@ const EditApplySurvey: React.FC = () => {
                 <button
                   type="button"
                   onClick={addField}
-                  className={`btn h_36 dark_blue ${fields.length >= 5 ? "disabled" : ""}`}
+                  className={`btn h_36 dark_blue ${
+                    fields.length >= 5 ? "disabled" : ""
+                  }`}
                   disabled={fields.length >= 5}
                 >
                   추가하기
@@ -354,10 +366,18 @@ const EditApplySurvey: React.FC = () => {
         <div className="dis_flex justify_between mt_48">
           <div className="btn_wrap"></div>
           <div className="btn_wrap gap23">
-            <button type="button" className="btn blue_bor" onClick={() => handleSave(true)}>
+            <button
+              type="button"
+              className="btn blue_bor"
+              onClick={() => handleSave(true)}
+            >
               임시 저장
             </button>
-            <button type="button" className="btn dark_blue" onClick={() => handleSave(false)}>
+            <button
+              type="button"
+              className="btn dark_blue"
+              onClick={() => handleSave(false)}
+            >
               다음
             </button>
           </div>

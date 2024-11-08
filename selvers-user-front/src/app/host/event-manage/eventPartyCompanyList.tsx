@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useEditBoothMutation } from "@/api/events/events.query";
+import { useState, useEffect } from "react";
+import { useEditBoothMutation, useEventBooth } from "@/api/events/events.query";
 import { useParams } from "react-router-dom";
 import { useToast } from "@/hook/useToast";
 import { CustomError } from "@/type";
@@ -17,6 +17,17 @@ const EventPartyCompanyList = () => {
   const token = localStorage.getItem("token");
   const { id } = useParams();
   const { openToast } = useToast();
+
+  const { data: eventBooth } = useEventBooth(id, token);
+
+  useEffect(() => {
+    if (eventBooth?.data?.img_name) {
+      setUploadedFile(new File([], eventBooth.data.img_name));
+    }
+    if (eventBooth?.data?.xlsx_name) {
+      setExcelFile(new File([], eventBooth.data.xlsx_name));
+    }
+  }, [eventBooth]);
 
   const {
     register,
