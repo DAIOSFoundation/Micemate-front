@@ -39,3 +39,26 @@ export const getManageBannerList = async (request: GetManageBannerRequest) => {
   );
   return response.data;
 };
+
+interface CreateBannerRequest {
+  title: string;
+  start_date: string;
+  end_date: string;
+  img: string;
+  url: string;
+  show: boolean;
+}
+
+export const createBannerApi = async (request: CreateBannerRequest) => {
+  const token = localStorage.getItem("token");
+
+  const response = await apiClient.post<DefaultResponse>(
+    "/api/banners",
+    request,
+    {
+      headers: { authorization: `Bearer ${token}` },
+    }
+  );
+
+  return response.data;
+};
