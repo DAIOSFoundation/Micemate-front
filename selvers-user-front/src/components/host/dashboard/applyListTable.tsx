@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { dateStringFormatB } from "@/util/stringTransition";
 import { Link } from "react-router-dom";
+import { padWithZeroes } from "@/util/stringTransition";
 
 const applyState = [
   { type: 0, text: "임시 저장", class: "yellow" },
@@ -100,7 +101,7 @@ const ApplyListTable = ({ eventList, checkedList, setCheckedList }) => {
                       <label htmlFor={data.id}></label>
                     </div>
                   </td>
-                  <td>{data.id}</td>
+                  <td>{padWithZeroes(data.id)}</td>
                   <td className="txt_left">
                     <Link to={`/host/my/apply-register/edit/${data.id}/state`}>
                       {data.title}

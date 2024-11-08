@@ -54,7 +54,6 @@ const Page = () => {
       text: `선택 [${checkedList.length}건]을 [탈퇴]\n처리 하시겠습니까?`,
       okBtn: "탈퇴",
     });
-    resetConfirm();
   };
 
   // 회원 삭제
@@ -68,14 +67,13 @@ const Page = () => {
       text: `선택 [${checkedList.length}건]을 [삭제]\n처리 하시겠습니까?`,
       okBtn: "삭제",
     });
-    resetConfirm();
   };
 
   useEffect(() => {
     if (confirmValue.confirm === true && checkedList.length > 0) {
       useDeleteUser.mutate(
         {
-          delete: confirmValue.okBtn === "삭제" ? true : false,
+          delete: confirmValue.confirm === true ? true : false,
           ids: checkedList,
         },
         {
@@ -83,6 +81,7 @@ const Page = () => {
             openAlret({
               text: `${confirmValue.okBtn}가 완료되었습니다.`,
             });
+            resetConfirm();
             setCheckedList([]);
             queryClient.invalidateQueries({ queryKey: ["userList"] });
           },

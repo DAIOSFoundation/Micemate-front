@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { userState } from "@/store/userState";
-import { confirmState, alretState, toastState } from "@/store/modalState";
 import { Link } from "react-router-dom";
 import { useLogout, useTokenValidationQuery } from "@/api/auth/auth.query";
 import Logo from "@/assets/images/logo/main_logo_w.png";
@@ -10,9 +9,6 @@ const Header = () => {
   const token = localStorage.getItem("token");
   const user = useRecoilValue(userState);
   const resetUserState = useResetRecoilState(userState);
-  const confirmStat = useRecoilValue(confirmState);
-  const alretStat = useRecoilValue(alretState);
-  const toastStat = useRecoilValue(toastState);
   const { data: TokenVail, isError: TokenVailError } =
     useTokenValidationQuery(token);
 
@@ -21,8 +17,6 @@ const Header = () => {
       resetUserState();
     }
   }, [TokenVail, TokenVailError, resetUserState]);
-
-  console.log(confirmStat, alretStat, toastStat);
 
   return (
     <div className="header">

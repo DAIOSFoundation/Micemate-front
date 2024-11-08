@@ -61,3 +61,7 @@ export const priceFormat = (price: string) => {
     return "무료";
   }
 };
+
+export const padWithZeroes = (number: number) => {
+  return number.toString().padStart(6, "0");
+};
