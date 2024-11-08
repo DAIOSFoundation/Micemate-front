@@ -6,6 +6,8 @@ import {
   EventReviewRequest,
   NewApplyRegisterRequest,
   EventInformationRequest,
+  ApplyRegisterSurveyData,
+  ApplyRegisterSurveyPayload
   // ApplyRegisterGeneralRequest,
 } from "@/type";
 import apiClient from "@/api/index";
@@ -511,16 +513,8 @@ export const useApplyRegisterSurveyQuery = (data) => {
 
 // 행사 등록 사전 설문 정보 수정
 export const useApplyRegisterSurveyMutation = () => {
-  return useMutation({
-    mutationFn: async ({
-      token,
-      event_id,
-      data,
-    }: {
-      token: string;
-      event_id: string;
-      data;
-    }) => {
+  return useMutation<ApplyRegisterSurveyData, Error, ApplyRegisterSurveyPayload>({
+    mutationFn: async ({ token, event_id, data }) => {
       const response = await apiClient({
         method: "POST",
         url: `/api/events/${event_id}/edit/survey`,
@@ -536,6 +530,22 @@ export const useApplyRegisterSurveyMutation = () => {
 };
 
 // 행사 등록 FAQ 정보 조회
+export const useApplyRegisterFaqQuery = (data) => {
+  return useQuery({
+    queryKey: ["ApplyRegisterSurvey", data],
+    queryFn: async () => {
+      const response = await apiClient({
+        method: "GET",
+        url: `/api/events/${data.event_id}/edit/faq`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${data.token}`,
+        },
+      });
+      return response.data;
+    },
+  });
+}
 
 // 행사 등록 FAQ 정보 수정
 export const useApplyRegisterFaqMutation = () => {

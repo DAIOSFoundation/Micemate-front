@@ -57,7 +57,7 @@ const ApplyNewMenu = () => {
               >
                 모집정보
               </Link>
-              {/* <Link
+              <Link
                 to={`/host/my/apply-register/edit/${id}/survey`}
                 className={`depth02 ${activeTarget(
                   `/host/my/apply-register/edit/${id}/survey`
@@ -72,7 +72,7 @@ const ApplyNewMenu = () => {
                 )}`}
               >
                 FAQ & 문의
-              </Link> */}
+              </Link>
             </div>
           )}
         </li>

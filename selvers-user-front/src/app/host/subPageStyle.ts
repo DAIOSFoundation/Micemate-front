@@ -174,6 +174,7 @@ export const HostSubWrap = styled.div`
     height: 0;
   }
   input[type="email"],
+  input[type="tel"],
   input[type="number"],
   input[type="password"],
   input[type="date"],
@@ -997,6 +998,9 @@ export const HostSubWrap = styled.div`
   .btn.dark_blue {
     background-color: #09338c;
     color: #fff;
+  }
+  .btn.dark_blue.disabled {
+    opacity: 0.5;
   }
   .btn.blue {
     background-color: #235ef3;
@@ -1992,7 +1996,7 @@ export const HostSubWrap = styled.div`
     margin-top: -6px;
   }
   .survey_card .body input {
-    font-size: 12px;
+    font-size: 14px;
     border: 0;
     border-radius: 0;
     border-bottom: 1px solid #eaeaea;
@@ -2280,5 +2284,50 @@ export const HostSubWrap = styled.div`
 
   .outline {
     border: 2px solid #dab600 !important;
+  }
+    .option_item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+  .option_input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .option_input input {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .remove_option_btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .remove_option_btn:hover {
+    color: #ff7875;
+  }
+
+  .option_add_btn {
+    margin-top: 8px;
+  }
+
+  .option_add_btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .option_counter {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #555;
   }
 `;

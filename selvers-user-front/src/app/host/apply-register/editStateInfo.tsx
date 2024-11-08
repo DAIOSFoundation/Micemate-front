@@ -42,8 +42,8 @@ const writeNav = [
   { title: "기본정보", key: "general" },
   { title: "상세페이지", key: "detail" },
   { title: "모집정보", key: "application" },
-  // { title: "사전설문", key: "survey", url: "survey" },
-  // { title: "FAQ & 문의", key: "faq", url: "faq" },
+  { title: "사전설문", key: "survey", url: "survey" },
+  { title: "FAQ & 문의", key: "faq", url: "faq" },
 ];
 
 const EditStateInfo = () => {
@@ -54,7 +54,6 @@ const EditStateInfo = () => {
     token: token,
     user_id: userId,
   });
-  const useApplyRegisterSurvey = useApplyRegisterSurveyMutation();
   const useApplyRegisterFaq = useApplyRegisterFaqMutation();
   //1차개발 임시
   const useApplySubmit = useApplySubmitMutation();
@@ -73,15 +72,10 @@ const EditStateInfo = () => {
     token: authInfo.token,
     event_id: id,
   });
-
+  console.log(RegisterState)
   //1차개발 임시
   useEffect(() => {
     if (userData) {
-      useApplyRegisterSurvey.mutate({
-        token: authInfo.token,
-        event_id: id,
-        data: { is_survey: false },
-      });
       useApplyRegisterFaq.mutate({
         token: authInfo.token,
         event_id: id,

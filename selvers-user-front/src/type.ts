@@ -261,3 +261,48 @@ export interface ApplyRegisterGeneralRequest extends EventInformationRequest {
     position2: string;
   };
 }
+
+export interface SurveyOption {
+  text: string;
+}
+
+export interface SurveyField {
+  type: 0 | 1 | 2; // 0: 단일 선택, 1: 다중 선택, 2: 장문
+  title: string;
+  options: SurveyOption[];
+  required: boolean;
+  isReject: boolean;
+}
+
+export interface ApplyRegisterSurveyPayload {
+  token: string;
+  event_id: string;
+  data: ApplyRegisterSurveyData;
+}
+
+export interface ApplyRegisterSurveyData {
+  is_survey: boolean;
+  surveys: {
+    type: 0 | 1 | 2;
+    title: string;
+    options: string[];
+    required: boolean;
+    is_reject: boolean;
+  }[];
+  is_reject: {
+    survey: boolean;
+  };
+}
+
+export interface FaqField {
+  question: string,
+  answer: string,
+  required: boolean,
+  is_reject: boolean
+}
+
+export interface FaqUser {
+  contact_name: string
+  contact_email: string
+  contact_number: string
+}
