@@ -17,6 +17,8 @@ import MainBannerList from "@/app/banner/main/listPage";
 import MainBannerDetail from "@/app/banner/main/detailPage";
 import BandBannerList from "@/app/banner/band/listPage";
 import BandBannerDetail from "@/app/banner/band/detailPage";
+import BannerPage from "@/app/banner/bannerPage";
+import AddBannerPage from "./banner/addBannerPage";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +76,14 @@ const router = createBrowserRouter([
         element: <EventApplyFaq />,
       },
       // 배너관리
+      {
+        path: "/banner",
+        element: <BannerPage />,
+      },
+      {
+        path: "/banner/add",
+        element: <AddBannerPage />,
+      },
       {
         path: "/banner/main",
         element: <MainBannerList />,

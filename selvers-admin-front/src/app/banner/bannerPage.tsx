@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SideMenu from "@components/shared/sideMenu/sideMenu";
 import useQueryParams from "@/hook/useSearchParams";
 import { useGetManageBannerList } from "@/api/banner/banner.query";
@@ -6,7 +6,8 @@ import BannerFilter from "@components/banner/bannerFilter";
 import BannerResultList from "@components/banner/bannerResultList";
 import Pagination from "@components/pagination";
 
-const Page = () => {
+const BannerPage = () => {
+  const navigate = useNavigate();
   const queryParams = useQueryParams();
   const type = queryParams.get("type") || "0";
 
@@ -41,7 +42,7 @@ const Page = () => {
               <button className="sort_btn">정렬</button>
             </div>
             <div>
-              <button>추가</button>
+              <button onClick={() => navigate("/banner/add")}>추가</button>
               <button className="ml_22">삭제</button>
             </div>
           </div>
@@ -59,4 +60,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default BannerPage;
