@@ -85,6 +85,7 @@ const EditApplySurvey: React.FC = () => {
   const [initialFields, setInitialFields] = useState<SurveyField[]>([]);
   const [fields, setFields] = useState<SurveyField[]>([]);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [isReject, setIsReject] = useState<boolean>(false);
 
   const { mutate } = useApplyRegisterSurveyMutation();
 
@@ -94,6 +95,7 @@ const EditApplySurvey: React.FC = () => {
   // API 응답 데이터를 기반으로 상태 초기화
   useEffect(() => {
     if (surveyData && surveyData.success) {
+      setIsReject(surveyData.data.is_reject.survey);
       const { is_survey, surveys } = surveyData.data;
 
       if (is_survey !== undefined) {
@@ -318,7 +320,7 @@ const EditApplySurvey: React.FC = () => {
                 checked={isSurveyUsed}
                 onChange={() => handleSurveyUsageChange(true)}
               />
-              <label htmlFor="useSurvey_yes">사용함</label>
+              <label htmlFor="useSurvey_yes" className={isReject ? "outline" : ""}>사용함</label>
             </div>
             <div className="checkbox02 flex1">
               <input
@@ -329,7 +331,7 @@ const EditApplySurvey: React.FC = () => {
                 checked={!isSurveyUsed}
                 onChange={() => handleSurveyUsageChange(false)}
               />
-              <label htmlFor="useSurvey_no">사용하지 않음</label>
+              <label htmlFor="useSurvey_no" className={isReject ? "outline" : ""}>사용하지 않음</label>
             </div>
           </div>
         </div>
@@ -345,7 +347,7 @@ const EditApplySurvey: React.FC = () => {
                 key={fieldIndex}
                 className="dis_flex align_start justify_between pr_52 mt_14"
               >
-                <div className="survey_card w_767">
+                <div className={field.isReject ? "survey_card w_767 outline" : "survey_card w_767"}>
                   <div className="head">
                     <input
                       type="text"

@@ -59,7 +59,7 @@ const ApplyRegisterMenu = ({ GeneralData }) => {
                 모집정보
               </Link>
               {/* TODO : 2차 개발 범위 */}
-              {/* <Link
+              <Link
                 to={`/event/apply/${id}/survey`}
                 className={`depth02 ${activeTarget(
                   `/event/apply/${id}/survey`
@@ -72,7 +72,7 @@ const ApplyRegisterMenu = ({ GeneralData }) => {
                 className={`depth02 ${activeTarget(`/event/apply/${id}/faq`)}`}
               >
                 FAQ & 문의
-              </Link> */}
+              </Link>
             </div>
           )}
         </li>

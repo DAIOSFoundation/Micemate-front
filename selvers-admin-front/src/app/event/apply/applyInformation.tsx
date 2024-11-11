@@ -288,14 +288,14 @@ const Page = () => {
               </Link>
             </div>
             <AcceptBtns />
-            {/* <div className="btn_wrap gap23">
+            <div className="btn_wrap gap23">
               <Link to={`/event/apply/${id}/detail`} className="btn gray">
                 뒤로
               </Link>
               <Link to={`/event/apply/${id}/survey`} className="btn light_blue">
                 다음
               </Link>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

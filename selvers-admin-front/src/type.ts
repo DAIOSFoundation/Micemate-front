@@ -113,3 +113,48 @@ export interface ApplyAcceptRequest {
     reason?: string;
   };
 }
+
+export interface Survey {
+  type: number; // 0: 단일 선택, 1: 다중 선택, 2: 장문
+  title: string;
+  options?: string[]; // type 0, 1일 경우 옵션이 존재
+  required: boolean;
+  is_reject: boolean;
+}
+
+export interface SurveyData {
+  is_survey: boolean; // 0: 사용하지 않음, 1: 사용함
+  surveys: Survey[];
+  is_reject: {
+    survey: boolean;
+  };
+}
+
+export interface surveyCheck {
+  survey: boolean;
+  surveys: boolean[];
+}
+
+export interface Faq {
+  question: string;
+  answer: string;
+  is_reject: boolean;
+}
+
+export interface FaqData {
+  is_FAQ: boolean;
+  faqs: Faq[];
+  contact_name: string;
+  contact_email: string;
+  contact_number: string;
+  is_reject: {
+    faq: boolean;
+    contact: boolean;
+  };
+}
+
+export interface FaqCheck {
+  faq: boolean;
+  faqs: boolean[];
+  contact: boolean;
+}

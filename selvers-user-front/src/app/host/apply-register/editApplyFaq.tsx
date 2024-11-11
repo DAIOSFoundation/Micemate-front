@@ -74,6 +74,8 @@ const EditApplyFaq: React.FC = () => {
     contact_email: "",
     contact_number: "",
   });
+  const [ isReject, setIsReject ] = useState<boolean>(false);
+  const [ contactReject, setContactReject ] = useState<boolean>(false);
   const { mutate } = useApplyRegisterFaqMutation();
 
   const [formErrors, setFormErrors] = useState<FormErrors>({}); // 에러 상태 관리
@@ -83,6 +85,8 @@ const EditApplyFaq: React.FC = () => {
 
   useEffect(() => {
     if (faqData && faqData.success) {
+      setIsReject(faqData.data.is_reject.faq);
+      setContactReject(faqData.data.is_reject.contact);
       const { is_FAQ, faqs, contact_name, contact_email, contact_number } = faqData.data;
 
       if (is_FAQ !== undefined) {
@@ -289,7 +293,7 @@ const EditApplyFaq: React.FC = () => {
                 checked={isFaqUsed}
                 onChange={() => handleFaqUsageChange(true)}
               />
-              <label htmlFor="faq_use_yes">사용함</label>
+              <label htmlFor="faq_use_yes" className={isReject ? "outline" : "" }>사용함</label>
             </div>
             <div className="checkbox02 flex1">
               <input
@@ -299,7 +303,7 @@ const EditApplyFaq: React.FC = () => {
                 checked={!isFaqUsed}
                 onChange={() => handleFaqUsageChange(false)}
               />
-              <label htmlFor="faq_use_no">사용하지 않음</label>
+              <label htmlFor="faq_use_no" className={isReject ? "outline" : "" }>사용하지 않음</label>
             </div>
           </div>
         </div>
@@ -315,7 +319,7 @@ const EditApplyFaq: React.FC = () => {
                 key={fieldIndex}
                 className="dis_flex align_start justify_between pr_52 mt_14"
               >
-                <div className="survey_card w_767">
+                <div className={field.is_reject ? "survey_card w_767 outline" :"survey_card w_767"}>
                   <div className="head">
                     <input
                       className={formErrors.faqs && formErrors.faqs[fieldIndex]?.question ? "red" : "" }
@@ -391,7 +395,7 @@ const EditApplyFaq: React.FC = () => {
         </div>
           <div className="dis_flex align_start justify_between pr_52 mt_10">
             <input
-              className="w_767"
+              className={contactReject ? "w_767 outline" :"w_767"}
               type="text"
               name="contact_name"
               value={faquser.contact_name}
@@ -400,12 +404,12 @@ const EditApplyFaq: React.FC = () => {
               maxLength={50} // 이름 최대 50자
               required
             />
-            
+
           </div>
           {formErrors.contact_name && (<p className="err_msg_mt">{formErrors.contact_name}</p>)}
           <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
             <input
-              className="w_767"
+              className={contactReject ? "w_767 outline" :"w_767"}
               type="email"
               name="contact_email"
               value={faquser.contact_email}
@@ -417,7 +421,7 @@ const EditApplyFaq: React.FC = () => {
           {formErrors.contact_email && (<p className="err_msg_mt">{formErrors.contact_email}</p>)}
           <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
             <input
-              className="w_767"
+              className={contactReject ? "w_767 outline" :"w_767"}
               type="tel"
               name="contact_number"
               value={faquser.contact_number}

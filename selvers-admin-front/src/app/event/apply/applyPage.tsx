@@ -36,8 +36,8 @@ const writeNav = [
   { title: "상세페이지", key: "detail", url: "detail" },
   { title: "모집정보", key: "application", url: "information" },
   // TODO : 2차 개발 범위
-  // { title: "사전설문", key: "survey", url: "survey" },
-  // { title: "FAQ & 문의", key: "faq", url: "faq" },
+  { title: "사전설문", key: "survey", url: "survey" },
+  { title: "FAQ & 문의", key: "faq", url: "faq" },
 ];
 
 const Page = () => {
@@ -54,7 +54,7 @@ const Page = () => {
   } = useApplyRegisterStateQuery(id ? Number(id) : undefined);
 
   useEffect(() => {
-    if (!GeneralData) return sessionStorage.removeItem("EVENT_ACCEPT");;
+    if (!GeneralData) return sessionStorage.removeItem("EVENT_ACCEPT");
 
     const getData = sessionStorage.getItem("EVENT_ACCEPT");
     const storageData = JSON.parse(getData);

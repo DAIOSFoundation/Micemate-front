@@ -328,3 +328,40 @@ export const useApplyRegisterRecruitQuery = (data) => {
     },
   });
 };
+
+// 행사 등록 사전 설문 정보 조회
+export const useApplyRegisterSurveyQuery = (data) => {
+  const token = localStorage.getItem("token");
+  return useQuery({
+    queryKey: ["ApplyRegisterSurvey", data],
+    queryFn: async () => {
+      const response = await apiClient({
+        method: "GET",
+        url: `/api/events/${data.event_id}/edit/survey`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useApplyRegisterFaqQuery = (data) => {
+  const token = localStorage.getItem("token");
+  return useQuery({
+    queryKey: ["ApplyRegisterSurvey", data],
+    queryFn: async () => {
+      const response = await apiClient({
+        method: "GET",
+        url: `/api/events/${data.event_id}/edit/faq`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    },
+  });
+}

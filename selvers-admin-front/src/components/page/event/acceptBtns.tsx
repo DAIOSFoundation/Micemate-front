@@ -35,8 +35,8 @@ const AcceptBtns = () => {
       "general",
       "detail",
       "application",
-      // "survey",
-      // "faq",
+      "survey",
+      "faq",
     ].some((key) => RegisterState?.data[key] === false);
     if (hasAnyFalse)
       return openAlret({
@@ -62,32 +62,47 @@ const AcceptBtns = () => {
     const getData = sessionStorage.getItem("EVENT_ACCEPT");
     const storageData = JSON.parse(getData);
 
-    useApplyRegisterAccept.mutate(
-      {
-        id: id ? Number(id) : undefined,
-        data: {
-          accept: false,
-          reject: storageData
-            ? {
-                ...storageData?.reject,
-                reason: reason,
-              }
-            : undefined,
-        },
+    const surveyData = JSON.parse(sessionStorage.getItem('EVENT_SURVEY'));
+    const faqData = JSON.parse(sessionStorage.getItem('EVENT_FAQ'));
+
+    // Reject 데이터를 병합
+    const mergedReject = {
+      ...storageData?.reject,
+      ...surveyData.reject,
+      ...faqData.reject,
+      reason: reason,
+    };
+
+    // 병합된 데이터를 로그로 확인
+    console.log(mergedReject);
+
+    // 서버로 전송할 데이터 구성
+    const payload = {
+      id: id ? Number(id) : undefined,
+      data: {
+        accept: false,
+        reject: mergedReject, // 병합된 reject 데이터 사용
       },
-      {
-        onSuccess: () => {
-          openAlret({
-            text: `행사가 반려되었습니다.`,
-            callback: () => {
-              location.reload();
-            },
-          });
-          resetConfirm();
-        },
-      }
-    );
+    };
+
+    // 변이를 실행 (주석 해제 후 사용)
+    useApplyRegisterAccept.mutate(payload, {
+      onSuccess: () => {
+        openAlret({
+          text: `행사가 반려되었습니다.`,
+          callback: () => {
+            location.reload();
+          },
+        });
+        resetConfirm();
+      },
+      onError: (error) => {
+        // 에러 처리 로직 추가 가능
+        console.error("변이 실패:", error);
+      },
+    });
   };
+
 
   useEffect(() => {
     if (confirmValue.confirm === true) {
