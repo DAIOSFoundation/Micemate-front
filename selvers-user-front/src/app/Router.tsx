@@ -6,6 +6,8 @@ import MyPageLayout from "@components/shared/myPageLayout";
 import Main from "@/app/page";
 import JoinPage from "@/app/auth/join/joinPage";
 import JoinFormPage from "@/app/auth/join/form/joinFormPage";
+import SocialLoginPage from "@/app/auth/social-login";
+import SocialTokenVaild from "@/app/auth/social-token-vaild";
 import LoginPage from "@/app/auth/login/loginPage";
 import PasswordFindPage from "@/app/auth/passwordFindPage";
 import ApplyListPage from "@/app/mypage/applyListPage";
@@ -76,6 +78,14 @@ const router = createBrowserRouter(
         {
           path: "/login/password-find",
           element: <PasswordFindPage />,
+        },
+        {
+          path: "/social-login",
+          element: <SocialLoginPage />,
+        },
+        {
+          path: "/social-token-valid",
+          element: <SocialTokenVaild />,
         },
         {
           path: "mypage",

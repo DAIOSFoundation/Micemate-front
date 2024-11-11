@@ -2,7 +2,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSetRecoilState } from "recoil";
 import { userState } from "@/store/userState";
-import { JoinType, LoginRequest } from "@/type";
+import { JoinType, LoginRequest, JoinSocialType } from "@/type";
 import apiClient from "@/api/index";
 
 /*회원가입(사용자 등록)*/
@@ -12,6 +12,23 @@ export const useJoinMutation = () => {
       const response = await apiClient({
         method: "POST",
         url: "/api/users",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      });
+      return response.data;
+    },
+  });
+};
+
+// 소셜 사용자 추가 정보 입력
+export const useSocialMutation = () => {
+  return useMutation({
+    mutationFn: async (data: JoinSocialType) => {
+      const response = await apiClient({
+        method: "POST",
+        url: `/api/users/social`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -79,3 +96,5 @@ export const useTokenValidationQuery = (token: string) => {
     enabled: !!token,
   });
 };
+
+// 카카오

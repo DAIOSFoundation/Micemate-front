@@ -1,17 +1,26 @@
 import { JoinPageWrap, ButtonItem } from "./joinPageStyle";
 
-// import KakaoIcon from "@/assets/icon/kakao.svg?react";
-// import NaverIcon from "@/assets/icon/naver.svg?react";
-// import GmailIcon from "@/assets/icon/gmail.svg?react";
+import KakaoIcon from "@/assets/icon/kakao.svg?react";
+import NaverIcon from "@/assets/icon/naver.svg?react";
+import GmailIcon from "@/assets/icon/gmail.svg?react";
 import MailIcon from "@/assets/icon/mail.svg?react";
 import { useNavigate } from "react-router-dom";
 
 const JoinPage = () => {
   const navigate = useNavigate();
 
+  const socialHandler = {
+    kakaoJoin: () => {
+      const apiKey = import.meta.env.VITE_REST_API_KEY;
+      const redirectUri =
+        "https://api-test.micemate.io/api/auth/kakao/callback";
+      location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code`;
+    },
+  };
+
   return (
     <JoinPageWrap>
-      {/* <ButtonItem className="kakao">
+      <ButtonItem onClick={socialHandler.kakaoJoin} className="kakao">
         <span className="icon">
           <KakaoIcon />
         </span>
@@ -28,7 +37,7 @@ const JoinPage = () => {
           <GmailIcon />
         </span>
         <span>구글 계정으로 가입하기</span>
-      </ButtonItem> */}
+      </ButtonItem>
       <ButtonItem
         onClick={() => {
           navigate("/join/form");

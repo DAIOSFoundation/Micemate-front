@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useJoinMutation } from "@/api/auth/auth.query";
+import { useJoinMutation, useSocialMutation } from "@/api/auth/auth.query";
 import { useCategoryQuery } from "@/api/etc/category.query";
 import { FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ import {
   AgreeBox,
   SubmitBtn,
 } from "./joinFormPageStyle";
-import { JoinType, CustomError } from "@/type";
+import { JoinType, CustomError, JoinSocialType } from "@/type";
 import LoadingScreen from "@components/shared/LoadingScreen";
 
 interface FavorList {
@@ -83,7 +83,9 @@ const JoinFormPage = () => {
   const [interestList, setInterestList] = useState<number[]>([]);
   const [favorList, setFavorList] = useState<FavorList[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isSocial, setIsSocial] = useState(false);
   const useJoin = useJoinMutation();
+  const useJoinSocial = useSocialMutation();
   const { openAlret } = useAlret();
   const navigate = useNavigate();
 
@@ -169,7 +171,25 @@ const JoinFormPage = () => {
     }
   }, [agree01, agree03, agree04]);
 
+  // 소셜 로그인시 기본정보 입력
+  const socialEmail = localStorage.getItem("social_email");
+  const socialName = localStorage.getItem("social_name");
+  useEffect(() => {
+    if (socialEmail !== null && socialName !== null) {
+      setIsSocial(true);
+      setValue("email", socialEmail);
+      setValue("name", socialName);
+    }
+  }, [socialEmail, socialName]);
+
   const onSubmit = handleSubmit((data) => {
+    //소셜 로그인시 스토리지 기본정보 삭제
+    if (socialEmail !== null && socialName !== null) {
+      localStorage.removeItem("social_token");
+      localStorage.removeItem("social_email");
+      localStorage.removeItem("social_name");
+    }
+
     const gender = () => {
       if (data.gender === "man") {
         return false;
@@ -178,43 +198,91 @@ const JoinFormPage = () => {
       }
     };
 
-    const joinData: JoinType = {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      c_password: data.passwordChk,
-      birth: data.birth,
-      sex: gender() as boolean,
-      interests: interestList,
-      terms_of_uses: {
-        "1": data.agree_01,
-        "2": data.agree_02,
-        "3": data.agree_03,
-        "4": data.agree_04,
-      },
-    };
-    //api 요청
-    useJoin.mutate(joinData, {
-      onSuccess: () => {
-        const alretData = {
-          text: "회원가입이 완료되었습니다.\n이메일 인증 후 서비스를 이용할 수 있습니다.",
-          callback: () => {
-            navigate("/login", { replace: true });
-          },
-        };
-        openAlret(alretData);
-      },
-      onError: (error) => {
-        const customError = error as CustomError;
-        console.log(customError.response.data);
-        if (customError.response?.data.message === "이미 회원이 존재합니다.") {
-          setError("apiError", {
-            type: "manual",
-            message: "사용중인 이메일 입니다.",
-          });
-        }
-      },
-    });
+    if (isSocial) {
+      // 소셜 회원가입
+      const provider = localStorage.getItem("social_provider");
+      const provider_id = localStorage.getItem("social_provider_id");
+      const joinSocialData: JoinSocialType = {
+        provider: provider,
+        provider_id: provider_id,
+        password: data.password,
+        c_password: data.passwordChk,
+        birth: data.birth,
+        sex: gender() as boolean,
+        interests: interestList,
+        terms_of_uses: {
+          "1": data.agree_01,
+          "2": data.agree_02,
+          "3": data.agree_03,
+          "4": data.agree_04,
+        },
+      };
+      useJoinSocial.mutate(joinSocialData, {
+        onSuccess: () => {
+          const alretData = {
+            text: "간편 회원가입이 완료되었습니다.",
+            callback: () => {
+              navigate("/login", { replace: true });
+            },
+          };
+          openAlret(alretData);
+        },
+        onError: (error) => {
+          const customError = error as CustomError;
+          console.log(customError.response.data);
+          if (
+            customError.response?.data.message === "이미 회원이 존재합니다."
+          ) {
+            setError("apiError", {
+              type: "manual",
+              message: "사용중인 이메일 입니다.",
+            });
+          }
+        },
+      });
+    }
+
+    if (!isSocial) {
+      // 이메일 회원가입
+      const joinData: JoinType = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        c_password: data.passwordChk,
+        birth: data.birth,
+        sex: gender() as boolean,
+        interests: interestList,
+        terms_of_uses: {
+          "1": data.agree_01,
+          "2": data.agree_02,
+          "3": data.agree_03,
+          "4": data.agree_04,
+        },
+      };
+      useJoin.mutate(joinData, {
+        onSuccess: () => {
+          const alretData = {
+            text: "회원가입이 완료되었습니다.\n이메일 인증 후 서비스를 이용할 수 있습니다.",
+            callback: () => {
+              navigate("/login", { replace: true });
+            },
+          };
+          openAlret(alretData);
+        },
+        onError: (error) => {
+          const customError = error as CustomError;
+          console.log(customError.response.data);
+          if (
+            customError.response?.data.message === "이미 회원이 존재합니다."
+          ) {
+            setError("apiError", {
+              type: "manual",
+              message: "사용중인 이메일 입니다.",
+            });
+          }
+        },
+      });
+    }
   });
 
   if (useJoin.isPending) {

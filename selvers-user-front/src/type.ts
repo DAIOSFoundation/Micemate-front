@@ -59,6 +59,17 @@ export interface JoinType {
   interests: number[];
   terms_of_uses: { [key: string]: string };
 }
+
+export interface JoinSocialType {
+  provider: string;
+  provider_id: string;
+  password: string;
+  c_password: string;
+  birth: string;
+  sex: boolean;
+  interests: number[];
+  terms_of_uses: { [key: string]: string };
+}
 //카테고리
 export interface CategoryListType {
   id: number;
@@ -295,14 +306,14 @@ export interface ApplyRegisterSurveyData {
 }
 
 export interface FaqField {
-  question: string,
-  answer: string,
-  required: boolean,
-  is_reject: boolean
+  question: string;
+  answer: string;
+  required: boolean;
+  is_reject: boolean;
 }
 
 export interface FaqUser {
-  contact_name: string
-  contact_email: string
-  contact_number: string
+  contact_name: string;
+  contact_email: string;
+  contact_number: string;
 }

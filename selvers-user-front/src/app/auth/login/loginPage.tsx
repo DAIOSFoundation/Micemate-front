@@ -17,9 +17,9 @@ import {
 } from "./loginPageStyle";
 import { LoginRequest, CustomError } from "@/type";
 import { Link } from "react-router-dom";
-// import GoogleIcon from "@/assets/icon/round_google.svg?react";
-// import NaverIcon from "@/assets/icon/round_naver.svg?react";
-// import KakaoIcon from "@/assets/icon/round_kakao.svg?react";
+import GoogleIcon from "@/assets/icon/round_google.svg?react";
+import NaverIcon from "@/assets/icon/round_naver.svg?react";
+import KakaoIcon from "@/assets/icon/round_kakao.svg?react";
 import { useRecoilValue } from "recoil";
 import { userState } from "@/store/userState";
 
@@ -104,6 +104,15 @@ const LoginPage = () => {
     }
   }, [useLogin.isError, useLogin.error, setError]);
 
+  const socialHandler = {
+    kakaoJoin: () => {
+      const apiKey = import.meta.env.VITE_REST_API_KEY;
+      const redirectUri =
+        "https://api-test.micemate.io/api/auth/kakao/callback";
+      location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code`;
+    },
+  };
+
   return (
     <LoginPageWrap>
       <TitleBox>
@@ -149,18 +158,18 @@ const LoginPage = () => {
       </FindAuthWrap>
       {/* 간편 로그인하기 */}
       <SnsLoginWrap>
-        {/* <h3>간편 로그인하기</h3> */}
-        {/* <div className="btn_area">
+        <h3>간편 로그인하기</h3>
+        <div className="btn_area">
           <button>
             <GoogleIcon />
           </button>
           <button>
             <NaverIcon />
           </button>
-          <button>
+          <button onClick={socialHandler.kakaoJoin}>
             <KakaoIcon />
           </button>
-        </div> */}
+        </div>
       </SnsLoginWrap>
       <DescBtn className="desc_btn">
         <Link to="/privacy-policy">개인정보 처리방침</Link>
