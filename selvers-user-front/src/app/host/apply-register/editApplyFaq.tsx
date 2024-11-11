@@ -3,6 +3,56 @@ import { useApplyRegisterFaqQuery, useApplyRegisterFaqMutation } from "@/api/eve
 import { useOutletContext, useParams, useNavigate } from "react-router-dom";
 import { UserInformationRequest, FaqField, FaqUser } from "@/type";
 import { useToast } from "@/hook/useToast";
+import { z } from "zod";
+
+
+// Zod 스키마 정의
+const faqFieldSchema = z.object({
+  question: z
+    .string()
+    .min(1, "질문을 입력해주세요.")
+    .max(100, "질문은 최대 100자입니다."),
+  answer: z
+    .string()
+    .min(1, "답변을 입력해주세요.")
+    .max(500, "답변은 최대 500자입니다."),
+});
+
+const faquserSchema = z.object({
+  contact_name: z
+    .string()
+    .min(1, "이름을 입력해주세요.")
+    .max(50, "이름은 최대 50자입니다."),
+  contact_email: z
+    .string()
+    .email("유효한 이메일을 입력해주세요."),
+  contact_number: z
+    .string()
+    .min(1, "휴대전화 번호를 입력해주세요.")
+    .regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
+});
+
+const editApplyFaqSchema = z.object({
+  is_FAQ: z.boolean(),
+  faqs: z
+    .array(faqFieldSchema)
+    .max(5, "최대 5개의 FAQ를 추가할 수 있습니다."),
+  contact_name: z.string().min(1, "이름을 입력해주세요.").max(50, "이름은 최대 50자입니다."),
+  contact_email: z.string().email("유효한 이메일을 입력해주세요."),
+  contact_number: z.string().min(1, "휴대전화 번호를 입력해주세요.").regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
+});
+
+// 에러 메시지 타입 정의
+type FormErrors = {
+  is_FAQ?: string;
+  faqs?: Array<{
+    question?: string;
+    answer?: string;
+  }>;
+  contact_name?: string;
+  contact_email?: string;
+  contact_number?: string;
+};
 
 interface UserInfoContext {
   authInfo: UserInformationRequest;
@@ -17,6 +67,7 @@ const EditApplyFaq: React.FC = () => {
   });
 
   const [isFaqUsed, setIsFaqUsed] = useState<boolean>(true); // 기본값을 true로 설정
+  const [initialFields, setInitialFields] = useState<FaqField[]>([]);
   const [fields, setFields] = useState<FaqField[]>([]);
   const [faquser, setFaquser] = useState<FaqUser>({
     contact_name: "",
@@ -24,6 +75,8 @@ const EditApplyFaq: React.FC = () => {
     contact_number: "",
   });
   const { mutate } = useApplyRegisterFaqMutation();
+
+  const [formErrors, setFormErrors] = useState<FormErrors>({}); // 에러 상태 관리
 
   const { openToast } = useToast();
   const navigate = useNavigate();
@@ -50,6 +103,7 @@ const EditApplyFaq: React.FC = () => {
           contact_email: contact_email,
           contact_number: contact_number,
         };
+        setInitialFields(mappedFields);
         setFields(mappedFields);
         setFaquser(User);
       } else {
@@ -112,78 +166,103 @@ const EditApplyFaq: React.FC = () => {
     setIsFaqUsed(useFaq);
     if (!useFaq) {
       setFields([]);
-    } else if (fields.length === 0) {
-      addField();
+    } else {
+      if (initialFields.length > 0) {
+        setFields(initialFields); // 초기 데이터를 복원
+      } else {
+        addField();
+      }
     }
   };
 
   // 저장 버튼 클릭 시 호출되는 함수
   const handleSave = (type: any) => {
-    // 유효성 검사
-    for (let i = 0; i < fields.length; i++) {
-      const faq = fields[i];
-      if (faq.question.trim() === "") {
-        alert(`FAQ 질문을 입력해주세요. (${i + 1}번 FAQ)`);
-        return;
-      }
-      if (faq.question.length > 100) {
-        alert(`FAQ 질문은 100자 이하여야 합니다. (${i + 1}번 FAQ)`);
-        return;
-      }
-      if (faq.answer.trim() === "") {
-        alert(`FAQ 답변을 입력해주세요. (${i + 1}번 FAQ)`);
-        return;
-      }
-      if (faq.answer.length > 500) {
-        alert(`FAQ 답변은 500자 이하여야 합니다. (${i + 1}번 FAQ)`);
-        return;
-      }
-    }
-
-    if (faquser.contact_name.trim() === "") {
-      alert("문의 담당자의 이름을 입력해주세요.");
-      return;
-    }
-    if (faquser.contact_email.trim() === "") {
-      alert("문의 담당자의 이메일을 입력해주세요.");
-      return;
-    }
-    if (faquser.contact_number.trim() === "") {
-      alert("문의 담당자의 휴대전화 번호를 입력해주세요.");
-      return;
-    }
-
     const data = {
       is_FAQ: isFaqUsed,
       faqs: fields.map((field) => ({
         question: field.question,
         answer: field.answer,
-        required: field.required,
-        is_reject: field.is_reject,
+        // required 및 is_reject 필드 제거
       })),
       contact_name: faquser.contact_name,
       contact_email: faquser.contact_email,
       contact_number: faquser.contact_number,
     };
 
+    console.log("API   : ", data);
+
+    try {
+      editApplyFaqSchema.parse(data);
+      setFormErrors({});
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // 에러 메시지를 구조화하여 상태에 저장
+        const errors: FormErrors = {};
+        error.errors.forEach((err) => {
+          const path = err.path;
+          const message = err.message;
+
+          if (path[0] === "faqs" && typeof path[1] === "number") {
+            const index = path[1];
+            if (!errors.faqs) {
+              errors.faqs = [];
+            }
+            if (!errors.faqs[index]) {
+              errors.faqs[index] = {};
+            }
+            if (path[2] === "question") {
+              errors.faqs[index].question = message;
+            }
+            if (path[2] === "answer") {
+              errors.faqs[index].answer = message;
+            }
+          } else {
+            const field = path[0];
+            if (field === "contact_name") {
+              errors.contact_name = message;
+            }
+            if (field === "contact_email") {
+              errors.contact_email = message;
+            }
+            if (field === "contact_number") {
+              errors.contact_number = message;
+            }
+            if (field === "is_FAQ") {
+              errors.is_FAQ = message;
+            }
+          }
+        });
+        setFormErrors(errors);
+        console.log(error);
+        openToast("잘못된 입력값 입니다.");
+        return;
+      }
+      openToast("예기치 못한 오류가 발생했습니다.");
+      return;
+    }
+
     // 여기서 API 호출을 수행합니다.
     mutate(
-      {
-        token: authInfo.token,
-        event_id: id!,
-        data: data,
-      },
-      {
-        onSuccess: (response) => {
-          type ? openToast("FAQ가 성공적으로 저장되었습니다.") : navigate(`/host/my/apply-register/edit/finish`);
+        {
+          token: authInfo.token,
+          event_id: id!,
+          data: data,
         },
-        onError: (error) => {
-          console.error("Mutation failed:", error);
-          // 오류 시 사용자에게 알림
-        },
-      }
+        {
+          onSuccess: (response) => {
+            type
+                ? openToast("FAQ가 성공적으로 저장되었습니다.")
+                : navigate(`/host/my/apply-register/edit/finish`);
+          },
+          onError: (error) => {
+            console.error("Mutation failed:", error);
+            // 오류 시 사용자에게 알림
+          },
+        }
     );
   };
+
+
 
   return (
     <div className="cont_area">
@@ -239,6 +318,7 @@ const EditApplyFaq: React.FC = () => {
                 <div className="survey_card w_767">
                   <div className="head">
                     <input
+                      className={formErrors.faqs && formErrors.faqs[fieldIndex]?.question ? "red" : "" }
                       type="text"
                       id={`question-${fieldIndex}`}
                       name="question"
@@ -254,10 +334,10 @@ const EditApplyFaq: React.FC = () => {
                       placeholder="질문을 입력해주세요."
                       required
                     />
-                    
                   </div>
                   <div className="body">
                     <input
+                      className={formErrors.faqs && formErrors.faqs[fieldIndex]?.answer ? "red" : ""}
                       id={`answer-${fieldIndex}`}
                       type="text"
                       name="answer"
@@ -273,7 +353,6 @@ const EditApplyFaq: React.FC = () => {
                       placeholder="답변을 입력해주세요."
                       required
                     />
-                    
                   </div>
                   <div className="btm">
                     <button
@@ -323,7 +402,8 @@ const EditApplyFaq: React.FC = () => {
             />
             
           </div>
-          <div className="dis_flex align_start justify_between pr_52 mt_10">
+          {formErrors.contact_name && (<p className="err_msg_mt">{formErrors.contact_name}</p>)}
+          <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
             <input
               className="w_767"
               type="email"
@@ -334,7 +414,8 @@ const EditApplyFaq: React.FC = () => {
               required
             />
           </div>
-          <div className="dis_flex align_start justify_between pr_52 mt_10">
+          {formErrors.contact_email && (<p className="err_msg_mt">{formErrors.contact_email}</p>)}
+          <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
             <input
               className="w_767"
               type="tel"
@@ -345,9 +426,10 @@ const EditApplyFaq: React.FC = () => {
               required
             />
           </div>
+          {formErrors.contact_number && (<p className="err_msg_mt">{formErrors.contact_number}</p>)}
 
           {/* 저장 및 게시 버튼 */}
-          <div className="dis_flex justify_between mt_48">
+          <div className="dis_flex justify_between mt_48 mb-2">
             <div className="btn_wrap"></div>
             <div className="btn_wrap gap23">
               <button type="submit" className="btn dark_blue" onClick={() => handleSave(true)}>

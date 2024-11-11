@@ -10,10 +10,69 @@ import {
   SurveyField,
 } from "@/type";
 import { useToast } from "@/hook/useToast";
+import { z } from "zod";
+
+// 전체 설문 데이터 스키마
+const editApplySurveySchema = z.object({
+  is_survey: z.boolean(),
+  surveys: z
+      .array(
+          z.object({
+            type: z.union([
+              z.literal(0),
+              z.literal(1),
+              z.literal(2)
+            ], {
+              invalid_type_error: "설문 유형이 유효하지 않습니다."
+            }),
+            title: z
+                .string()
+                .min(1, { message: "설문 제목을 입력해주세요." })
+                .max(50, { message: "설문 제목은 최대 50자입니다." }),
+            options: z
+                .array(
+                    z.string()
+                        .min(1, { message: "옵션을 입력해주세요." })
+                        .max(20, { message: "옵션 텍스트는 20자를 초과할 수 없습니다." })
+                )
+                .max(10, { message: "옵션은 최대 10개까지 추가할 수 있습니다." })
+                .optional(),
+            required: z.boolean(),
+            is_reject: z.boolean(),
+          }).superRefine((data, ctx) => {
+            if ((data.type === 0 || data.type === 1) && (!data.options || data.options.length < 1)) {
+              ctx.addIssue({
+                path: ['options'],
+                code: z.ZodIssueCode.custom,
+                message: "옵션을 최소 1개 이상 입력해주세요.",
+              });
+            }
+          })
+      )
+      .max(5, { message: "최대 5개의 설문을 추가할 수 있습니다." }),
+  is_reject: z.object({
+    survey: z.boolean(),
+  }),
+});
 
 interface UserInfoContext {
   authInfo: UserInformationRequest;
 }
+
+// FormErrors 타입 정의
+type FormErrors = {
+  is_survey?: string;
+  surveys?: Array<{
+    type?: string;
+    title?: string;
+    options?: string[]; // 개별 옵션 오류 메시지를 위한 배열
+    required?: string;
+    isReject?: string;
+  }>;
+  is_reject?: {
+    survey?: string;
+  };
+};
 
 const EditApplySurvey: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +82,9 @@ const EditApplySurvey: React.FC = () => {
     event_id: id,
   });
   const [isSurveyUsed, setIsSurveyUsed] = useState<boolean>(true); // 기본값을 true로 설정
+  const [initialFields, setInitialFields] = useState<SurveyField[]>([]);
   const [fields, setFields] = useState<SurveyField[]>([]);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const { mutate } = useApplyRegisterSurveyMutation();
 
@@ -55,6 +116,7 @@ const EditApplySurvey: React.FC = () => {
           required: field.required,
           isReject: field.is_reject,
         }));
+        setInitialFields(mappedFields)
         setFields(mappedFields);
       } else {
         setFields([]);
@@ -131,46 +193,25 @@ const EditApplySurvey: React.FC = () => {
     setIsSurveyUsed(useSurvey);
     if (!useSurvey) {
       setFields([]);
-    } else if (fields.length === 0) {
-      addField();
+    } else {
+      if (initialFields.length > 0) {
+        setFields(initialFields)
+      } else {
+        addField()
+      }
     }
   };
 
   const handleSave = (type: boolean) => {
-    // 유효성 검사
-    for (let i = 0; i < fields.length; i++) {
-      if (fields[i].title.trim() === "") {
-        alert(`설문 제목을 입력해주세요. (${i + 1}번 설문)`);
-        return;
-      }
-      if (fields[i].title.length > 50) {
-        alert(`설문 제목은 50자 이하여야 합니다. (${i + 1}번 설문)`);
-        return;
-      }
-      if (
-        (fields[i].type === 0 || fields[i].type === 1) &&
-        // 옵션 텍스트 길이 검사 추가
-        (fields[i].options.some((opt) => opt.text.trim() === "") ||
-          fields[i].options.some((opt) => opt.text.length > 20))
-      ) {
-        if (fields[i].options.some((opt) => opt.text.trim() === "")) {
-          alert(`옵션을 모두 입력해주세요. (${i + 1}번 설문)`);
-        } else {
-          alert(`옵션 텍스트는 20자를 초과할 수 없습니다. (${i + 1}번 설문)`);
-        }
-        return;
-      }
-    }
-
     const data: ApplyRegisterSurveyData = {
       is_survey: isSurveyUsed,
       surveys: fields.map((field) => ({
         type: field.type,
         title: field.title,
         options:
-          field.type === 0 || field.type === 1
-            ? field.options.map((opt) => opt.text)
-            : [],
+            field.type === 0 || field.type === 1
+                ? field.options.map((opt) => opt.text)
+                : [],
         required: field.required,
         is_reject: field.isReject,
       })),
@@ -179,24 +220,77 @@ const EditApplySurvey: React.FC = () => {
       },
     };
 
+    console.log("API 데이터:", data);
+
+    // Zod 유효성 검사 수행
+    const validation = editApplySurveySchema.safeParse(data);
+
+    if (!validation.success) {
+      const errors: FormErrors = {};
+
+      validation.error.errors.forEach((err) => {
+        const path = err.path;
+        const message = err.message;
+
+        if (path[0] === "surveys" && typeof path[1] === "number") {
+          const index = path[1];
+          const field = path[2];
+
+          if (!errors.surveys) {
+            errors.surveys = [];
+          }
+          if (!errors.surveys[index]) {
+            errors.surveys[index] = {};
+          }
+
+          if (field === "options" && path.length > 3) {
+            const optionIndex = path[3];
+            if (!errors.surveys[index].options) {
+              errors.surveys[index].options = [];
+            }
+            errors.surveys[index].options[optionIndex] = message;
+          } else if (field) {
+            errors.surveys[index][field as keyof typeof errors.surveys[number]] = message;
+          }
+        } else if (path[0] === "is_reject" && path[1] === "survey") {
+          errors.is_reject = {
+            survey: message,
+          };
+        } else if (path[0] === "is_survey") {
+          errors.is_survey = message;
+        }
+      });
+
+      setFormErrors(errors);
+      console.log(validation.error);
+      openToast("잘못된 입력값 입니다.");
+      return;
+    }
+
+    // 유효성 검사를 통과한 경우 에러 상태 초기화
+    setFormErrors({});
+
+    // API 호출 수행
     mutate(
-      {
-        token: authInfo.token,
-        event_id: id!,
-        data: data,
-      },
-      {
-        onSuccess: () =>
-          type
-            ? openToast("임시저장 되었습니다.")
-            : navigate(`/host/my/apply-register/edit/${id}/faq`),
-        onError: (error) => {
-          console.error("Mutation failed:", error);
-          // 오류 시 사용자에게 알림
+        {
+          token: authInfo.token,
+          event_id: id!,
+          data: data,
         },
-      }
+        {
+          onSuccess: () =>
+              type
+                  ? openToast("임시저장 되었습니다.")
+                  : navigate(`/host/my/apply-register/edit/${id}/faq`),
+          onError: (error) => {
+            console.error("Mutation failed:", error);
+            openToast("저장 중 오류가 발생했습니다.");
+          },
+        }
     );
   };
+
+
 
   return (
     <div className="cont_area">
@@ -261,6 +355,7 @@ const EditApplySurvey: React.FC = () => {
                         updateField(fieldIndex, "title", e.target.value)
                       }
                       maxLength={50}
+                      className={formErrors.surveys?.[fieldIndex]?.title ? "red" : ""}
                     />
                     <select
                       value={field.type}
@@ -295,6 +390,7 @@ const EditApplySurvey: React.FC = () => {
                                 )
                               }
                               maxLength={20}
+                              className={formErrors.surveys?.[fieldIndex]?.options?.[optionIndex] ? "red" : ""} // 개별 옵션 오류 확인
                             />
                             {field.options.length > 1 && (
                               <button

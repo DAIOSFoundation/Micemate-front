@@ -138,7 +138,6 @@ export const HostSubWrap = styled.div`
   * {
     -webkit-tap-highlight-color: transparent;
   }
-
   /* input */
   input[type="password"],
   input[type="tel"],
@@ -220,6 +219,10 @@ export const HostSubWrap = styled.div`
     color: rgba(255, 255, 255, 0.5);
     font-size: 16px;
     font-weight: 500;
+  }
+
+  input.red {
+
   }
 
   input.small {
@@ -320,7 +323,6 @@ export const HostSubWrap = styled.div`
     display: flex;
     align-items: center;
   }
-
   .gap5 {
     gap: 5px;
   }
@@ -567,6 +569,10 @@ export const HostSubWrap = styled.div`
   }
   .mt_326 {
     margin-top: 326px;
+  }
+
+  .mb_2 {
+    margin-bottom: 2px;
   }
 
   .ml_4 {
@@ -1959,6 +1965,17 @@ export const HostSubWrap = styled.div`
     padding: 0 9px;
     width: 430px;
   }
+  .survey_card .head input.red {
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid red;
+    height: 34px;
+    line-height: 34px;
+    background-color: #d9d9d933;
+    color: #fff;
+    padding: 0 9px;
+    width: 430px;
+  }
   .survey_card .head input::placeholder {
     color: #fff;
   }
@@ -2000,6 +2017,16 @@ export const HostSubWrap = styled.div`
     border: 0;
     border-radius: 0;
     border-bottom: 1px solid #eaeaea;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 9px;
+    width: 100%;
+  }
+  .survey_card .body input.red {
+    font-size: 14px;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid red;
     height: 26px;
     line-height: 26px;
     padding: 0 9px;
@@ -2329,5 +2356,12 @@ export const HostSubWrap = styled.div`
     margin-top: 5px;
     font-size: 12px;
     color: #555;
+  }
+  .err_msg_mt {
+    color: #F56767;
+    padding:2px 0;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 7px;
   }
 `;
