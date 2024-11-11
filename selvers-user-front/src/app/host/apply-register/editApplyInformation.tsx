@@ -109,7 +109,7 @@ const EditApplyInformation = () => {
       data.event_end_date &&
       data.event_start_date > data.event_end_date
     ) {
-      setError("event_end_date", {
+      setError("event_end_view", {
         type: "manual",
         message: "종료 날짜는 시작 날짜 이후여야 합니다.",
       });
@@ -117,7 +117,7 @@ const EditApplyInformation = () => {
     }
 
     if (GeneralData?.data?.event_end_date < data.event_end_date) {
-      setError("event_end_date", {
+      setError("event_end_view", {
         type: "manual",
         message: "모집 기간은 행사 종료일 이후 일 수 없습니다.",
       });
@@ -138,13 +138,13 @@ const EditApplyInformation = () => {
 
     const requestData = {
       information: formData,
-      ...(data.event_start_date &&
+      ...(data.event_start_view &&
         start_time && {
-          application_start_date: `${data.event_start_date} ${start_time}`,
+          application_start_date: `${data.event_start_view} ${start_time}`,
         }),
-      ...(data.event_end_date &&
+      ...(data.event_end_view &&
         end_time && {
-          application_end_date: `${data.event_end_date} ${end_time}`,
+          application_end_date: `${data.event_end_view} ${end_time}`,
         }),
 
       ...(data.application_type && { application_type: data.application_type }),
@@ -163,7 +163,7 @@ const EditApplyInformation = () => {
               { token: authInfo.token, event_id: id },
               {
                 onSuccess: () => {
-                  navigate("/host/my/apply-register/edit/finish");
+                  navigate(`/host/my/apply-register/edit/${id}/survey`);
                 },
                 onError: () => {
                   openToast("작성중인 필드가 있습니다.");
@@ -631,7 +631,7 @@ const EditApplyInformation = () => {
                 onClick={() => setSubmitFinish(true)}
                 className="btn dark_blue"
               >
-                행사 게시
+                다음
               </button>
             </div>
           </div>
