@@ -114,6 +114,7 @@ const BannerListItem = ({
 export default BannerListItem;
 
 const BANNER_STATE_MAP = {
+  [0]: "노출 이전",
   [1]: "노출",
   [2]: "노출 안함",
   [3]: "종료",
