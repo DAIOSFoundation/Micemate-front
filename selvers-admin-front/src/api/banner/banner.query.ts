@@ -8,6 +8,7 @@ import {
   getManageBannerList,
   GetManageBannerRequest,
   updateBannerApi,
+  updateBannerOrderApi,
 } from "./banner.api";
 import { BannerType } from "@/types";
 
@@ -42,5 +43,11 @@ export const useGetBannerDetail = (id: number) => {
 export const useDeleteBannerMutation = () => {
   return useMutation({
     mutationFn: (request: DeleteBannerRequest) => deleteBannerApi(request),
+  });
+};
+
+export const useUpdateBannerOrderMutation = (id: number) => {
+  return useMutation({
+    mutationFn: (order: number) => updateBannerOrderApi(id, order),
   });
 };

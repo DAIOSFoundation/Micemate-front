@@ -125,3 +125,21 @@ export const deleteBannerApi = async (request: DeleteBannerRequest) => {
 
   return response.data;
 };
+
+export const updateBannerOrderApi = async (id: number, order: number) => {
+  const token = localStorage.getItem("token");
+
+  const response = await apiClient.put<DefaultResponse>(
+    `/api/banners/${id}/order`,
+    {
+      order,
+    },
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};

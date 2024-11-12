@@ -1,4 +1,8 @@
+import { useUpdateBannerOrderMutation } from "@/api/banner/banner.query";
+import { QUERY_KEYS } from "@/constants/queryKeys";
 import { BannerType, type BannerItemType } from "@/types/index";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 interface BannerListItemProps {
@@ -14,6 +18,29 @@ const BannerListItem = ({
   selected,
   setSelected,
 }: BannerListItemProps) => {
+  const queryClient = useQueryClient();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [orderValue, setOrderValue] = useState(banner.order);
+
+  const { mutate: updateBannerOrder } = useUpdateBannerOrderMutation(banner.id);
+
+  const onUpdateBannerOrder = (order: number) => {
+    if (confirm("배너 순서를 수정하시겠습니까?")) {
+      updateBannerOrder(order, {
+        onSuccess: () => {
+          alert("배너 순서 수정이 완료되었습니다.");
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.BANNER.LIST],
+          });
+        },
+        onError: () => {
+          alert("배너 순서 수정에 실패하였습니다.");
+        },
+      });
+      setIsEditMode(false);
+    } else return;
+  };
+
   return (
     <tr>
       <td>
@@ -34,7 +61,32 @@ const BannerListItem = ({
         </div>
       </td>
       <td>
-        <span className="btn border_w w_60">10</span>
+        {isEditMode ? (
+          <div className="banner_order_input_container">
+            <input
+              className="banner_order_input"
+              type="text"
+              defaultValue={orderValue}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (!isNaN(Number(value))) {
+                  setOrderValue(Number(value));
+                }
+              }}
+            />
+            <div className="banner_order_input_btn_container">
+              <span onClick={() => onUpdateBannerOrder(orderValue)}>V</span>
+              <span onClick={() => setIsEditMode(false)}>X</span>
+            </div>
+          </div>
+        ) : (
+          <span
+            className="btn border_w w_60"
+            onClick={() => setIsEditMode(true)}
+          >
+            {banner.order}
+          </span>
+        )}
       </td>
       <td className="txt_left">
         <Link to={`/banner/detail/${banner.id}?type=${type}`}>
