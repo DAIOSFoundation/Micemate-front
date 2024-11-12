@@ -7,19 +7,32 @@ export const BoothCheckPageWrap = styled.div`
   color: #fff;
   background-color: rgba(41, 46, 55, 0.5);
   border-radius: 20px;
+  @media (max-width: 1024px) {
+    padding: 60px 12px 56px;
+    margin-bottom: 60px;
+  }
   & .download_icon {
     position: absolute;
     top: 46px;
     right: 54px;
-  }
-  @media (max-width: 1024px) {
-    padding: 12px 12px 56px;
-    margin-bottom: 60px;
+    @media (max-width: 1024px) {
+      width: 30px;
+      height: 30px;
+      top: 8px;
+      right: 20px;
+      & svg {
+        width: 100%;
+      }
+    }
   }
 `;
 
 export const BoothMap = styled.div`
   width: 100%;
+  & .react-pdf__Page__canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
   & img {
     width: 100%;
   }

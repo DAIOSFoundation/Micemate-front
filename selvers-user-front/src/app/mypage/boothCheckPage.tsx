@@ -8,6 +8,11 @@ import { useParams } from "react-router-dom";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import DownloadIcon from "@/assets/icon/download.svg?react";
 
+import { useEffect, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
 const BoothCheckPage = () => {
   const token = localStorage.getItem("token");
   const { id } = useParams();
@@ -15,6 +20,20 @@ const BoothCheckPage = () => {
   const likedItems = boothList?.data?.items.filter(
     (item) => item.like === true
   );
+  const [boothUrl, setBoothUrl] = useState(null);
+  // const [pageNumber, setPageNumber] = useState(1);
+  // const [numPages, setNumPages] = useState(1);
+  // const url = `${import.meta.env.VITE_IMAGE_BASE_URL}/${boothList?.data?.img}`;
+  // const pdfFile = useMemo(() => ({ url }), [url]);
+  // const onDocumentLoaded = ({ numPages }) => setNumPages(numPages);
+
+  useEffect(() => {
+    if (boothList?.data?.img) {
+      setBoothUrl(
+        `${import.meta.env.VITE_IMAGE_BASE_URL}/${boothList?.data?.img}`
+      );
+    }
+  }, [boothList]);
 
   const toDataURL = (url: string) => {
     return fetch(url)
@@ -25,6 +44,8 @@ const BoothCheckPage = () => {
         return URL.createObjectURL(blob);
       });
   };
+  // console.log(pdfFile);
+  console.log(pdfjs);
 
   const downloadFile = async (url: string, fileName?: string) => {
     const a = document.createElement("a");
@@ -60,9 +81,17 @@ const BoothCheckPage = () => {
         )}
       </div>
       <BoothMap>
-        <img
-          src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${boothList?.data?.img}`}
-        />
+        {boothUrl && boothUrl.slice(-3) === "pdf" ? (
+          <Document file={boothUrl}>
+            <Page
+              pageNumber={1}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+            />
+          </Document>
+        ) : (
+          <img src={boothUrl} />
+        )}
       </BoothMap>
       <SelectBoothList>
         <div>

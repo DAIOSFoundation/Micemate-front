@@ -105,10 +105,19 @@ const LoginPage = () => {
   }, [useLogin.isError, useLogin.error, setError]);
 
   const socialHandler = {
+    googleJoin: () => {
+      const apiKey = import.meta.env.VITE_GOOGLE_REST_API_KEY;
+      const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+      window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code&scope=profile email`;
+    },
+    naverJoin: () => {
+      const apiKey = import.meta.env.VITE_NAVER_REST_API_KEY;
+      const redirectUri = import.meta.env.VITE_NAVER_REDIRECT_URI;
+      window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${apiKey}&state=STATE_STRING&redirect_uri=${redirectUri}`;
+    },
     kakaoJoin: () => {
-      const apiKey = import.meta.env.VITE_REST_API_KEY;
-      const redirectUri =
-        "https://api-test.micemate.io/api/auth/kakao/callback";
+      const apiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
+      const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
       location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code`;
     },
   };
@@ -160,10 +169,10 @@ const LoginPage = () => {
       <SnsLoginWrap>
         <h3>간편 로그인하기</h3>
         <div className="btn_area">
-          <button>
+          <button onClick={socialHandler.googleJoin}>
             <GoogleIcon />
           </button>
-          <button>
+          <button onClick={socialHandler.naverJoin}>
             <NaverIcon />
           </button>
           <button onClick={socialHandler.kakaoJoin}>

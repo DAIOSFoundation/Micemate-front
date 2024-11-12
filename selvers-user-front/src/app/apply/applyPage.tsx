@@ -209,7 +209,7 @@ const ApplyPage = () => {
       }
     );
   });
-
+  console.log(detailData);
   return (
     <ApplyPageWrap className="maxframe">
       <FormWrap onSubmit={onSubmit}>

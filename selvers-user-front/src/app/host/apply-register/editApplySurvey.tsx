@@ -16,40 +16,44 @@ import { z } from "zod";
 const editApplySurveySchema = z.object({
   is_survey: z.boolean(),
   surveys: z
-      .array(
-          z.object({
-            type: z.union([
-              z.literal(0),
-              z.literal(1),
-              z.literal(2)
-            ], {
-              invalid_type_error: "설문 유형이 유효하지 않습니다."
-            }),
-            title: z
+    .array(
+      z
+        .object({
+          type: z.union([z.literal(0), z.literal(1), z.literal(2)], {
+            invalid_type_error: "설문 유형이 유효하지 않습니다.",
+          }),
+          title: z
+            .string()
+            .min(1, { message: "설문 제목을 입력해주세요." })
+            .max(50, { message: "설문 제목은 최대 50자입니다." }),
+          options: z
+            .array(
+              z
                 .string()
-                .min(1, { message: "설문 제목을 입력해주세요." })
-                .max(50, { message: "설문 제목은 최대 50자입니다." }),
-            options: z
-                .array(
-                    z.string()
-                        .min(1, { message: "옵션을 입력해주세요." })
-                        .max(20, { message: "옵션 텍스트는 20자를 초과할 수 없습니다." })
-                )
-                .max(10, { message: "옵션은 최대 10개까지 추가할 수 있습니다." })
-                .optional(),
-            required: z.boolean(),
-            is_reject: z.boolean(),
-          }).superRefine((data, ctx) => {
-            if ((data.type === 0 || data.type === 1) && (!data.options || data.options.length < 1)) {
-              ctx.addIssue({
-                path: ['options'],
-                code: z.ZodIssueCode.custom,
-                message: "옵션을 최소 1개 이상 입력해주세요.",
-              });
-            }
-          })
-      )
-      .max(5, { message: "최대 5개의 설문을 추가할 수 있습니다." }),
+                .min(1, { message: "옵션을 입력해주세요." })
+                .max(20, {
+                  message: "옵션 텍스트는 20자를 초과할 수 없습니다.",
+                })
+            )
+            .max(10, { message: "옵션은 최대 10개까지 추가할 수 있습니다." })
+            .optional(),
+          required: z.boolean(),
+          is_reject: z.boolean(),
+        })
+        .superRefine((data, ctx) => {
+          if (
+            (data.type === 0 || data.type === 1) &&
+            (!data.options || data.options.length < 1)
+          ) {
+            ctx.addIssue({
+              path: ["options"],
+              code: z.ZodIssueCode.custom,
+              message: "옵션을 최소 1개 이상 입력해주세요.",
+            });
+          }
+        })
+    )
+    .max(5, { message: "최대 5개의 설문을 추가할 수 있습니다." }),
   is_reject: z.object({
     survey: z.boolean(),
   }),
@@ -118,7 +122,7 @@ const EditApplySurvey: React.FC = () => {
           required: field.required,
           isReject: field.is_reject,
         }));
-        setInitialFields(mappedFields)
+        setInitialFields(mappedFields);
         setFields(mappedFields);
       } else {
         setFields([]);
@@ -197,9 +201,9 @@ const EditApplySurvey: React.FC = () => {
       setFields([]);
     } else {
       if (initialFields.length > 0) {
-        setFields(initialFields)
+        setFields(initialFields);
       } else {
-        addField()
+        addField();
       }
     }
   };
@@ -211,9 +215,9 @@ const EditApplySurvey: React.FC = () => {
         type: field.type,
         title: field.title,
         options:
-            field.type === 0 || field.type === 1
-                ? field.options.map((opt) => opt.text)
-                : [],
+          field.type === 0 || field.type === 1
+            ? field.options.map((opt) => opt.text)
+            : [],
         required: field.required,
         is_reject: field.isReject,
       })),
@@ -252,7 +256,7 @@ const EditApplySurvey: React.FC = () => {
             }
             errors.surveys[index].options[optionIndex] = message;
           } else if (field) {
-            errors.surveys[index][field as keyof typeof errors.surveys[number]] = message;
+            // errors.surveys[index][field as keyof typeof errors.surveys[number]] = message;
           }
         } else if (path[0] === "is_reject" && path[1] === "survey") {
           errors.is_reject = {
@@ -274,25 +278,23 @@ const EditApplySurvey: React.FC = () => {
 
     // API 호출 수행
     mutate(
-        {
-          token: authInfo.token,
-          event_id: id!,
-          data: data,
+      {
+        token: authInfo.token,
+        event_id: id!,
+        data: data,
+      },
+      {
+        onSuccess: () =>
+          type
+            ? openToast("임시저장 되었습니다.")
+            : navigate(`/host/my/apply-register/edit/${id}/faq`),
+        onError: (error) => {
+          console.error("Mutation failed:", error);
+          openToast("저장 중 오류가 발생했습니다.");
         },
-        {
-          onSuccess: () =>
-              type
-                  ? openToast("임시저장 되었습니다.")
-                  : navigate(`/host/my/apply-register/edit/${id}/faq`),
-          onError: (error) => {
-            console.error("Mutation failed:", error);
-            openToast("저장 중 오류가 발생했습니다.");
-          },
-        }
+      }
     );
   };
-
-
 
   return (
     <div className="cont_area">
@@ -320,7 +322,12 @@ const EditApplySurvey: React.FC = () => {
                 checked={isSurveyUsed}
                 onChange={() => handleSurveyUsageChange(true)}
               />
-              <label htmlFor="useSurvey_yes" className={isReject ? "outline" : ""}>사용함</label>
+              <label
+                htmlFor="useSurvey_yes"
+                className={isReject ? "outline" : ""}
+              >
+                사용함
+              </label>
             </div>
             <div className="checkbox02 flex1">
               <input
@@ -331,7 +338,12 @@ const EditApplySurvey: React.FC = () => {
                 checked={!isSurveyUsed}
                 onChange={() => handleSurveyUsageChange(false)}
               />
-              <label htmlFor="useSurvey_no" className={isReject ? "outline" : ""}>사용하지 않음</label>
+              <label
+                htmlFor="useSurvey_no"
+                className={isReject ? "outline" : ""}
+              >
+                사용하지 않음
+              </label>
             </div>
           </div>
         </div>
@@ -347,7 +359,13 @@ const EditApplySurvey: React.FC = () => {
                 key={fieldIndex}
                 className="dis_flex align_start justify_between pr_52 mt_14"
               >
-                <div className={field.isReject ? "survey_card w_767 outline" : "survey_card w_767"}>
+                <div
+                  className={
+                    field.isReject
+                      ? "survey_card w_767 outline"
+                      : "survey_card w_767"
+                  }
+                >
                   <div className="head">
                     <input
                       type="text"
@@ -357,7 +375,9 @@ const EditApplySurvey: React.FC = () => {
                         updateField(fieldIndex, "title", e.target.value)
                       }
                       maxLength={50}
-                      className={formErrors.surveys?.[fieldIndex]?.title ? "red" : ""}
+                      className={
+                        formErrors.surveys?.[fieldIndex]?.title ? "red" : ""
+                      }
                     />
                     <select
                       value={field.type}
@@ -392,7 +412,13 @@ const EditApplySurvey: React.FC = () => {
                                 )
                               }
                               maxLength={20}
-                              className={formErrors.surveys?.[fieldIndex]?.options?.[optionIndex] ? "red" : ""} // 개별 옵션 오류 확인
+                              className={
+                                formErrors.surveys?.[fieldIndex]?.options?.[
+                                  optionIndex
+                                ]
+                                  ? "red"
+                                  : ""
+                              } // 개별 옵션 오류 확인
                             />
                             {field.options.length > 1 && (
                               <button

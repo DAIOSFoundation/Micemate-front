@@ -10,10 +10,19 @@ const JoinPage = () => {
   const navigate = useNavigate();
 
   const socialHandler = {
+    googleJoin: () => {
+      const apiKey = import.meta.env.VITE_GOOGLE_REST_API_KEY;
+      const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+      window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code&scope=profile email`;
+    },
+    naverJoin: () => {
+      const apiKey = import.meta.env.VITE_NAVER_REST_API_KEY;
+      const redirectUri = import.meta.env.VITE_NAVER_REDIRECT_URI;
+      window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${apiKey}&state=STATE_STRING&redirect_uri=${redirectUri}`;
+    },
     kakaoJoin: () => {
-      const apiKey = import.meta.env.VITE_REST_API_KEY;
-      const redirectUri =
-        "https://api-test.micemate.io/api/auth/kakao/callback";
+      const apiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
+      const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
       location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code`;
     },
   };
@@ -26,13 +35,13 @@ const JoinPage = () => {
         </span>
         <span>카카오 계정으로 가입하기</span>
       </ButtonItem>
-      <ButtonItem className="naver">
+      <ButtonItem onClick={socialHandler.naverJoin} className="naver">
         <span className="icon">
           <NaverIcon />
         </span>
         <span>네이버 계정으로 가입하기</span>
       </ButtonItem>
-      <ButtonItem className="gmail">
+      <ButtonItem onClick={socialHandler.googleJoin} className="gmail">
         <span className="icon">
           <GmailIcon />
         </span>
