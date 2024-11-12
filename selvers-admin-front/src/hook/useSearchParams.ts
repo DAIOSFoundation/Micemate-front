@@ -4,18 +4,24 @@ interface UseQueryParamsOptions {
   isDirectPush?: boolean;
   isReplace?: boolean;
   preserveScroll?: boolean;
+  isSetPageFirst?: boolean;
 }
 
 const useQueryParams = ({
   isDirectPush = false,
   isReplace = false,
   preserveScroll = true,
+  isSetPageFirst = false,
 }: UseQueryParamsOptions = {}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = new URLSearchParams(searchParams);
   const navigate = useNavigate();
 
   const updateQueryAndNavigate = () => {
+    if (isSetPageFirst) {
+      query.delete("page");
+    }
+
     const queryString = `?${query.toString()}`;
     if (isDirectPush) {
       navigate(queryString, {

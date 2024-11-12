@@ -89,7 +89,7 @@ const BannerPage = () => {
           <Pagination
             total={data?.data.total || 10}
             page={Number(queryParams.get("page")) || 1}
-            setPage={() => console.log("2")}
+            setPage={(page: number) => queryParams.set("page", page.toString())}
             size={20}
           />
         </div>

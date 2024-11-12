@@ -10,6 +10,7 @@ const BannerFilter = () => {
   const queryParams = useQueryParams({
     isDirectPush: true,
     isReplace: true,
+    isSetPageFirst: true,
   });
   const [search, setSearch] = useState(queryParams.get("search") || "");
   const [dateType, setDateType] = useState<string>(
@@ -89,9 +90,13 @@ const BannerFilter = () => {
                       id="rad01"
                       className="hide"
                       checked={item.start === start && item.end === end}
-                      onChange={() => onClickDate(item.start, item.end)}
+                      readOnly
                     />
-                    <label htmlFor={`rad${index}`} className="btn border_w">
+                    <label
+                      htmlFor={`rad${index}`}
+                      className="btn border_w"
+                      onClick={() => onClickDate(item.start, item.end)}
+                    >
                       {item.label}
                     </label>
                   </div>
