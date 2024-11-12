@@ -69,7 +69,6 @@ const BannerPage = () => {
                 <span className="col_gray">검색결과</span>
                 <span className="fs_16">[총 {data?.data.total}개]</span>
               </h3>
-              <button className="sort_btn">정렬</button>
             </div>
             <div>
               <button onClick={() => navigate(`/banner/add?type=${type}`)}>
