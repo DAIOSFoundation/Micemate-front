@@ -35,7 +35,7 @@ const Page = () => {
     formData.append("start_date", data.start_date);
     formData.append("end_date", data.end_date);
     formData.append("url", data.url);
-    formData.append("show", data.show.toString());
+    formData.append("show", (!data.show).toString());
 
     updateBanner(formData, {
       onSuccess: () => {
@@ -59,7 +59,7 @@ const Page = () => {
         start_date: data.data.start_date,
         end_date: data.data.end_date,
         url: data.data.url,
-        show: data.data.show,
+        show: !data.data.show,
         img: data.data.img,
       });
     }
