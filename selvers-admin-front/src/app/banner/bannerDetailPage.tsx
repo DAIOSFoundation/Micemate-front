@@ -40,7 +40,7 @@ const Page = () => {
     updateBanner(formData, {
       onSuccess: () => {
         alert("배너 수정이 완료되었습니다.");
-        navigate("/banner/main");
+        navigate(`/banner?type=${type}`);
       },
       onError: (error: AxiosError<{ message: string }>) => {
         if (error?.response?.data.message === "Not available image size") {

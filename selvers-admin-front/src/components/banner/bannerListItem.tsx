@@ -36,9 +36,15 @@ const BannerListItem = ({ banner, type }: BannerListItemProps) => {
       <td>
         {banner.start_date}~{banner.end_date}
       </td>
-      <td>{banner.state}</td>
+      <td>{BANNER_STATE_MAP[banner.state]}</td>
     </tr>
   );
 };
 
 export default BannerListItem;
+
+const BANNER_STATE_MAP = {
+  [1]: "노출",
+  [2]: "노출 안함",
+  [3]: "종료",
+};

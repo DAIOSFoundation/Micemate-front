@@ -194,7 +194,7 @@ const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
               type="button"
               onClick={handleSubmit(onSubmit)}
             >
-              추가
+              {type === "create" ? "추가" : "수정"}
             </button>
           </div>
         </div>

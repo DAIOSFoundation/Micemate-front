@@ -11,11 +11,7 @@ const BannerPage = () => {
   const navigate = useNavigate();
   const queryParams = useQueryParams();
   const type = queryParams.get("type") || "0";
-
-  const { data } = useGetManageBannerList({
-    type: Number(type) as BannerType,
-    dateType: 1,
-  });
+  const { data } = useGetManageBannerList(queryParams.getAll());
 
   return (
     <div className="container">
