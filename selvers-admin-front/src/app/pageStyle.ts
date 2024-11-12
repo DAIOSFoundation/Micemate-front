@@ -1979,4 +1979,15 @@ export const PageWrap = styled.div`
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
   }
+
+  .preview_banner_img {
+    height: 300px;
+    aspect-ratio: 1920 / 1080;
+    object-fit: cover;
+    margin-top: 20px;
+  }
+
+  .cursor_pointer {
+    cursor: pointer;
+  }
 `;

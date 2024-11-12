@@ -27,8 +27,7 @@ const BannerMenu = () => {
     <li>
       <p
         onClick={toggleDropdown}
-        className={`depth01 ${isOn ? "active" : ""}`}
-        style={{ cursor: "pointer" }}
+        className={`depth01 ${isOn ? "active" : ""} cursor_pointer`}
       >
         배너관리
         <i className="arrow_b_icon"></i>

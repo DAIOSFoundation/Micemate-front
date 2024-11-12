@@ -122,13 +122,7 @@ const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
                   String(watch("img"))
             }
             alt="Preview"
-            className="w_767"
-            style={{
-              height: "300px",
-              aspectRatio: "1920 / 1080",
-              objectFit: "cover",
-              marginTop: "20px",
-            }}
+            className="w_767 preview_banner_img"
           />
         )}
         <div className="dis_flex mt_10">
@@ -150,9 +144,7 @@ const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
         </div>
 
         {errors.img && (
-          <p className="fs_12 col_red" style={{ marginTop: "10px" }}>
-            {errors.img.message}
-          </p>
+          <p className="fs_12 col_red mt_10">{errors.img.message}</p>
         )}
 
         <div className="tit_wrap mt_25">
