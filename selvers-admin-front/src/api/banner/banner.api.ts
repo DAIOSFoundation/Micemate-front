@@ -1,6 +1,7 @@
 import apiClient from "@/api/index";
 import { DefaultResponse } from "@/types/api.types";
 import {
+  BannerDetailType,
   BannerItemType,
   BannerState,
   BannerType,
@@ -51,7 +52,6 @@ export interface CreateBannerRequest extends FormData {
 
 export const createBannerApi = async (type: BannerType, request: FormData) => {
   const token = localStorage.getItem("token");
-  console.log(request);
 
   const response = await apiClient.post<DefaultResponse>(
     `/api/banners`,
@@ -63,6 +63,42 @@ export const createBannerApi = async (type: BannerType, request: FormData) => {
       headers: {
         authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const updateBannerApi = async (id: number, request: FormData) => {
+  const token = localStorage.getItem("token");
+
+  const response = await apiClient.post<DefaultResponse>(
+    `/api/banners/${id}`,
+    request,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+interface GetBannerDetailResponse extends DefaultResponse {
+  data: BannerDetailType;
+}
+
+export const getBannerDetailApi = async (id: number) => {
+  const token = localStorage.getItem("token");
+
+  const response = await apiClient.get<GetBannerDetailResponse>(
+    `/api/banners/${id}`,
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
       },
     }
   );

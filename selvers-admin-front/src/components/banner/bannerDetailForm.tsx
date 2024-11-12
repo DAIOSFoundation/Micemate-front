@@ -1,16 +1,35 @@
-import { CreateBannerForm } from "@/types";
+import { useNavigate } from "react-router-dom";
 import { UseFormReturn } from "react-hook-form";
+import { type CreateBannerForm } from "@/types";
 
 interface BannerDetailFormProps {
   form: UseFormReturn<CreateBannerForm>;
   onSubmit: (data: CreateBannerForm) => void;
+  type: "create" | "update";
 }
 
-const BannerDetailForm = ({ form, onSubmit }: BannerDetailFormProps) => {
-  const { register, handleSubmit, watch } = form;
+const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    setValue,
+  } = form;
 
   const startDate = watch("start_date");
   const endDate = watch("end_date");
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files?.[0]) {
+      setValue("img", files[0] as File, {
+        shouldValidate: true,
+      });
+    }
+  };
 
   return (
     <div className="cont_area">
@@ -93,22 +112,48 @@ const BannerDetailForm = ({ form, onSubmit }: BannerDetailFormProps) => {
             </div>
           </div>
         </div>
+
+        {watch("img")?.[0] && (
+          <img
+            src={
+              watch("img") instanceof FileList && watch("img")?.[0]
+                ? URL.createObjectURL(watch("img")?.[0] as File)
+                : `${import.meta.env.VITE_IMAGE_BASE_URL}/` +
+                  String(watch("img"))
+            }
+            alt="Preview"
+            className="w_767"
+            style={{
+              height: "300px",
+              aspectRatio: "1920 / 1080",
+              objectFit: "cover",
+              marginTop: "20px",
+            }}
+          />
+        )}
         <div className="dis_flex mt_10">
           <div>
             <input
               type="file"
               id="fileInp01"
               className="hide"
-              accept="image/*"
+              accept=".jpg, .jpeg, .png"
+              onChange={handleImageChange}
               {...register("img", {
-                required: "배너 이미지를 등록해주세요.",
+                required: type === "create" ? "이미지를 선택해주세요." : false,
               })}
             />
             <label htmlFor="fileInp01" className="file_inp">
-              {watch("img") ? "1" : "0"} / 1
+              {watch("img")?.[0] ? "1" : "0"} / 1
             </label>
           </div>
         </div>
+
+        {errors.img && (
+          <p className="fs_12 col_red" style={{ marginTop: "10px" }}>
+            {errors.img.message}
+          </p>
+        )}
 
         <div className="tit_wrap mt_25">
           <h3 className="tit02">
@@ -141,8 +186,14 @@ const BannerDetailForm = ({ form, onSubmit }: BannerDetailFormProps) => {
         <div className="dis_flex justify_between mt_64">
           <div className="btn_wrap"></div>
           <div className="btn_wrap gap23">
-            <button className="btn blue">취소</button>
-            <button className="btn blue" onClick={handleSubmit(onSubmit)}>
+            <button className="btn blue" onClick={() => navigate(-1)}>
+              취소
+            </button>
+            <button
+              className="btn blue"
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+            >
               추가
             </button>
           </div>

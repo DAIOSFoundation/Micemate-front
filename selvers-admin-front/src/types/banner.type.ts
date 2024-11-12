@@ -18,7 +18,16 @@ export type CreateBannerForm = {
   title: string;
   start_date: string;
   end_date: string;
-  img: File;
+  img: string | File;
+  url: string;
+  show: boolean;
+};
+
+export type BannerDetailType = {
+  title: string;
+  start_date: string;
+  end_date: string;
+  img: string | File;
   url: string;
   show: boolean;
 };

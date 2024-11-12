@@ -1,4 +1,5 @@
 import { type BannerItemType } from "@/types/index";
+import { Link } from "react-router-dom";
 
 interface BannerListItemProps {
   banner: BannerItemType;
@@ -17,12 +18,15 @@ const BannerListItem = ({ banner }: BannerListItemProps) => {
         <span className="btn border_w w_60">10</span>
       </td>
       <td className="txt_left">
-        <a href="./관리자배너관리_메인베너_수정.html">{banner.title}</a>
+        <Link to={`/banner/detail/${banner.id}`}>{banner.title}</Link>
       </td>
       <td></td>
       <td>
         <div className="banner_img">
-          <img src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${banner.img}`} />
+          <img
+            src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${banner.img}`}
+            alt="Banner"
+          />
         </div>
       </td>
       <td>{banner.created_at}</td>

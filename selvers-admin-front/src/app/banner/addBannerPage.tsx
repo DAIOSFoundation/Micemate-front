@@ -25,7 +25,13 @@ const AddBannerPage = () => {
       alert("배너 이미지를 등록해주세요.");
       return;
     }
+
     const formData = new FormData();
+
+    if (data.img instanceof File) {
+      formData.append("img", data.img[0]);
+    }
+
     formData.append("title", data.title);
     formData.append("start_date", data.start_date);
     formData.append("end_date", data.end_date);
@@ -56,7 +62,7 @@ const AddBannerPage = () => {
         <p className="item">추가</p>
       </div>
       <SideMenu />
-      <BannerDetailForm form={form} onSubmit={onSubmit} />
+      <BannerDetailForm form={form} onSubmit={onSubmit} type="create" />
     </div>
   );
 };
