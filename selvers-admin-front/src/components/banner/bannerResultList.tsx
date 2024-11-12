@@ -1,11 +1,12 @@
 import BannerListItem from "./bannerListItem";
-import { type BannerItemType } from "@/types/index";
+import { BannerType, type BannerItemType } from "@/types/index";
 
 interface BannerResultListProps {
   bannerList: BannerItemType[];
+  type: BannerType;
 }
 
-const BannerResultList = ({ bannerList }: BannerResultListProps) => {
+const BannerResultList = ({ bannerList, type }: BannerResultListProps) => {
   if (bannerList.length === 0) {
     return <div>배너가 없습니다.</div>;
   }
@@ -43,7 +44,7 @@ const BannerResultList = ({ bannerList }: BannerResultListProps) => {
           </thead>
           <tbody>
             {bannerList.map((banner) => (
-              <BannerListItem key={banner.id} banner={banner} />
+              <BannerListItem key={banner.id} type={type} banner={banner} />
             ))}
           </tbody>
         </table>

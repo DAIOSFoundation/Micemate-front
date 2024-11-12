@@ -5,6 +5,7 @@ import { useGetManageBannerList } from "@/api/banner/banner.query";
 import BannerFilter from "@components/banner/bannerFilter";
 import BannerResultList from "@components/banner/bannerResultList";
 import Pagination from "@components/pagination";
+import { BannerType } from "@/types";
 
 const BannerPage = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const BannerPage = () => {
   const type = queryParams.get("type") || "0";
 
   const { data } = useGetManageBannerList({
-    type: 0,
+    type: Number(type) as BannerType,
     dateType: 1,
   });
 
@@ -49,7 +50,10 @@ const BannerPage = () => {
             </div>
           </div>
 
-          <BannerResultList bannerList={data?.data.items || []} />
+          <BannerResultList
+            bannerList={data?.data.items || []}
+            type={Number(type) as BannerType}
+          />
           <Pagination
             total={data?.data.total || 10}
             page={Number(queryParams.get("page")) || 1}

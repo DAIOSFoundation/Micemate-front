@@ -9,9 +9,13 @@ import { CreateBannerForm } from "@/types";
 import BannerDetailForm from "@components/banner/bannerDetailForm";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
+import useQueryParams from "@/hook/useSearchParams";
 
 const Page = () => {
   const navigate = useNavigate();
+  const queryParams = useQueryParams();
+
+  const type = queryParams.get("type");
   const { id } = useParams();
   const { data } = useGetBannerDetail(Number(id));
   const form = useForm<CreateBannerForm>({
@@ -64,16 +68,13 @@ const Page = () => {
   return (
     <div className="container">
       <div className="history_tit">
-        <Link className="item" to="/banner/main">
+        <Link className="item" to={`/banner?type=${type}`}>
           배너관리
         </Link>
-        <Link className="item" to="/banner/band">
-          띠배너
+        <Link className="item" to={`/banner?type=${type}`}>
+          {type === "0" ? "메인배너" : "띠배너"}
         </Link>
-        <p className="item">
-          추가
-          {/* 수정 */}
-        </p>
+        <p className="item">수정</p>
       </div>
       <SideMenu />
       <BannerDetailForm type="update" form={form} onSubmit={onSubmit} />

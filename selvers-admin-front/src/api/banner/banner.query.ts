@@ -11,7 +11,7 @@ import { BannerType } from "@/types";
 
 export const useGetManageBannerList = (request: GetManageBannerRequest) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.BANNER.LIST],
+    queryKey: [QUERY_KEYS.BANNER.LIST, request],
     queryFn: () => getManageBannerList(request),
     staleTime: 0,
   });

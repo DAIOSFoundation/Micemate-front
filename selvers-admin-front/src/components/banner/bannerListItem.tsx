@@ -1,11 +1,12 @@
-import { type BannerItemType } from "@/types/index";
+import { BannerType, type BannerItemType } from "@/types/index";
 import { Link } from "react-router-dom";
 
 interface BannerListItemProps {
   banner: BannerItemType;
+  type: BannerType;
 }
 
-const BannerListItem = ({ banner }: BannerListItemProps) => {
+const BannerListItem = ({ banner, type }: BannerListItemProps) => {
   return (
     <tr>
       <td>
@@ -18,7 +19,9 @@ const BannerListItem = ({ banner }: BannerListItemProps) => {
         <span className="btn border_w w_60">10</span>
       </td>
       <td className="txt_left">
-        <Link to={`/banner/detail/${banner.id}`}>{banner.title}</Link>
+        <Link to={`/banner/detail/${banner.id}?type=${type}`}>
+          {banner.title}
+        </Link>
       </td>
       <td></td>
       <td>

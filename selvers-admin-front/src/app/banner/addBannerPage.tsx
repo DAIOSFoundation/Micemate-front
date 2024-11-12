@@ -53,10 +53,10 @@ const AddBannerPage = () => {
   return (
     <div className="container">
       <div className="history_tit">
-        <Link className="item" to="/banner/main">
+        <Link className="item" to={`/banner?type=${type}`}>
           배너관리
         </Link>
-        <Link className="item" to="/banner/main">
+        <Link className="item" to={`/banner?type=${type}`}>
           {type === 0 ? "메인배너" : "띠배너"}
         </Link>
         <p className="item">추가</p>
