@@ -15,4 +15,8 @@ export const SubBannerWrap = styled.div`
   & > img {
     width: 100%;
   }
+
+  & > .ribbon_swiper .swiper-pagination .swiper-pagination-bullet {
+    background-color: #fff;
+  }
 `;
