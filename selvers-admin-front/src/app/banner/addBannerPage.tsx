@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { BannerType, type CreateBannerForm } from "@/types";
 import { useCreateBannerMutation } from "@/api/banner/banner.query";
 import BannerDetailForm from "@components/banner/bannerDetailForm";
+import { AxiosError } from "axios";
 
 const AddBannerPage = () => {
   const queryParams = useQueryParams();
@@ -37,15 +38,19 @@ const AddBannerPage = () => {
     formData.append("end_date", data.end_date);
     formData.append("img", data.img[0]);
     formData.append("url", data.url);
-    formData.append("show", data.show.toString());
+    formData.append("show", (!data.show).toString());
 
     createBanner(formData, {
       onSuccess: () => {
         alert("배너 등록이 완료되었습니다.");
         navigate(`/banner?type=${type}`);
       },
-      onError: () => {
-        alert("배너 등록에 실패하였습니다.");
+      onError: (error: AxiosError<{ message: string }>) => {
+        if (error.response?.data.message === "Not available image size") {
+          alert("이미지 사이즈가 올바르지 않습니다.");
+        } else {
+          alert("배너 등록에 실패하였습니다.");
+        }
       },
     });
   };
