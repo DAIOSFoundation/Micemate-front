@@ -1981,10 +1981,14 @@ export const PageWrap = styled.div`
   }
 
   .preview_banner_img {
-    height: 300px;
-    aspect-ratio: 1920 / 1080;
     object-fit: cover;
     margin-top: 20px;
+  }
+  .preview_banner_img_1080 {
+    aspect-ratio: 1920 / 1080;
+  }
+  .preview_banner_img_360 {
+    aspect-ratio: 1920 / 360;
   }
 
   .cursor_pointer {

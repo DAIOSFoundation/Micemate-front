@@ -22,13 +22,13 @@ const BannerListItem = ({
             id={`t_chk${banner.id}`}
             type="checkbox"
             checked={selected.includes(banner.id)}
-            onChange={(e) => {
+            onChange={() =>
               setSelected(
                 selected.includes(banner.id)
                   ? selected.filter((id) => id !== banner.id)
                   : [...selected, banner.id]
-              );
-            }}
+              )
+            }
           />
           <label htmlFor={`t_chk${banner.id}`}></label>
         </div>

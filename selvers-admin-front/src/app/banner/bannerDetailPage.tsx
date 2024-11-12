@@ -5,7 +5,7 @@ import {
   useUpdateBannerMutation,
 } from "@/api/banner/banner.query";
 import { useForm } from "react-hook-form";
-import { CreateBannerForm } from "@/types";
+import { BannerType, CreateBannerForm } from "@/types";
 import BannerDetailForm from "@components/banner/bannerDetailForm";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
@@ -77,7 +77,12 @@ const Page = () => {
         <p className="item">수정</p>
       </div>
       <SideMenu />
-      <BannerDetailForm type="update" form={form} onSubmit={onSubmit} />
+      <BannerDetailForm
+        type="update"
+        form={form}
+        onSubmit={onSubmit}
+        bannerType={Number(type) as BannerType}
+      />
     </div>
   );
 };

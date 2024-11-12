@@ -1,14 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { UseFormReturn } from "react-hook-form";
-import { type CreateBannerForm } from "@/types";
+import { BannerType, type CreateBannerForm } from "@/types";
 
 interface BannerDetailFormProps {
   form: UseFormReturn<CreateBannerForm>;
   onSubmit: (data: CreateBannerForm) => void;
   type: "create" | "update";
+  bannerType: BannerType;
 }
 
-const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
+const BannerDetailForm = ({
+  form,
+  onSubmit,
+  type,
+  bannerType,
+}: BannerDetailFormProps) => {
   const navigate = useNavigate();
   const {
     register,
@@ -108,7 +114,7 @@ const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
             </div>
             <div className="mt_8 fs_12 fw_500 pl_15">
               · 10MB 이하의 JPG, JPEG, PNG 파일
-              <br />· 해상도 1920*1080픽셀
+              <br />· 해상도 1920*{bannerType === 0 ? 1080 : 360}픽셀
             </div>
           </div>
         </div>
@@ -122,7 +128,11 @@ const BannerDetailForm = ({ form, onSubmit, type }: BannerDetailFormProps) => {
                   String(watch("img"))
             }
             alt="Preview"
-            className="w_767 preview_banner_img"
+            className={`w_767 preview_banner_img ${
+              bannerType === 0
+                ? "preview_banner_img_1080"
+                : "preview_banner_img_360"
+            }`}
           />
         )}
         <div className="dis_flex mt_10">

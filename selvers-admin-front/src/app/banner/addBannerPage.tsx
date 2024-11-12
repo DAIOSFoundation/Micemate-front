@@ -67,7 +67,12 @@ const AddBannerPage = () => {
         <p className="item">추가</p>
       </div>
       <SideMenu />
-      <BannerDetailForm form={form} onSubmit={onSubmit} type="create" />
+      <BannerDetailForm
+        form={form}
+        onSubmit={onSubmit}
+        type="create"
+        bannerType={type as BannerType}
+      />
     </div>
   );
 };
