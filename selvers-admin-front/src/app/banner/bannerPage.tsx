@@ -22,6 +22,11 @@ const BannerPage = () => {
   const [selected, setSelected] = useState<number[]>([]);
   const { mutate: deleteBanner } = useDeleteBannerMutation();
   const handleDelete = () => {
+    if (selected.length === 0) {
+      alert("삭제할 배너를 선택해주세요.");
+      return;
+    }
+
     if (confirm("정말 삭제하시겠습니까?")) {
       deleteBanner(
         {

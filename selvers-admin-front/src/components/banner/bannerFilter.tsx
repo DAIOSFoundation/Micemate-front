@@ -82,19 +82,16 @@ const BannerFilter = () => {
                   </select>
                 </div>
                 {dateButtonList.map((item, index) => (
-                  <div className="dis_inblock">
+                  <div className="dis_inblock" key={index}>
                     <input
                       type="radio"
                       name="rad"
                       id="rad01"
                       className="hide"
                       checked={item.start === start && item.end === end}
+                      onChange={() => onClickDate(item.start, item.end)}
                     />
-                    <label
-                      htmlFor={`rad${index}`}
-                      className="btn border_w"
-                      onClick={() => onClickDate(item.start, item.end)}
-                    >
+                    <label htmlFor={`rad${index}`} className="btn border_w">
                       {item.label}
                     </label>
                   </div>
