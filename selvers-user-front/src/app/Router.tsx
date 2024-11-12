@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-// import { RouterProvider, createHashRouter } from "react-router-dom";
+import ChannelTalk from "@/thirdParty/channelTalk";
 
 import Layout from "@components/shared/layout";
 import MyPageLayout from "@components/shared/myPageLayout";
@@ -200,6 +200,29 @@ const router = createBrowserRouter(
   ]
   // { basename: "/root/home/micemate-frontend/dist" }
 );
+
+// const userId = localStorage.getItem("user_id");
+// const userName = localStorage.getItem("name");
+// 채널톡
+const bootOption = {
+  pluginKey: import.meta.env.VITE_PLUGIN_KEY,
+  // customLauncherSelector:
+  //   "#channelTalkButton1,#channelTalkButton2,channelTalkButton3",
+  // hideChannelButtonOnBoot: true,
+  language: "ko",
+  // memberId: userId,
+  // profile: {
+  // name: userName,
+  // mobileNumber: "USER_MOBILE_NUMBER",
+  // landlineNumber: "USER_LANDLINE_NUMBER",
+  // customField1: "VALUE_1",
+  // customField2: "VALUE_2",
+  // },
+};
+
+const bootCallback = () => {};
+ChannelTalk.loadScript();
+ChannelTalk.boot(bootOption, bootCallback);
 
 const Router = () => {
   return <RouterProvider router={router} />;
