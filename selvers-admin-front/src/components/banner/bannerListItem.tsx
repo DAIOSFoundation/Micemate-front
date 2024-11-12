@@ -4,14 +4,32 @@ import { Link } from "react-router-dom";
 interface BannerListItemProps {
   banner: BannerItemType;
   type: BannerType;
+  selected: number[];
+  setSelected: (selected: number[]) => void;
 }
 
-const BannerListItem = ({ banner, type }: BannerListItemProps) => {
+const BannerListItem = ({
+  banner,
+  type,
+  selected,
+  setSelected,
+}: BannerListItemProps) => {
   return (
     <tr>
       <td>
         <div className="checkbox">
-          <input id={`t_chk${banner.id}`} type="checkbox" />
+          <input
+            id={`t_chk${banner.id}`}
+            type="checkbox"
+            checked={selected.includes(banner.id)}
+            onChange={(e) => {
+              setSelected(
+                selected.includes(banner.id)
+                  ? selected.filter((id) => id !== banner.id)
+                  : [...selected, banner.id]
+              );
+            }}
+          />
           <label htmlFor={`t_chk${banner.id}`}></label>
         </div>
       </td>

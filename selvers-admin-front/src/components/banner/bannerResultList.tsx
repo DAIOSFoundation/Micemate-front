@@ -4,9 +4,24 @@ import { BannerType, type BannerItemType } from "@/types/index";
 interface BannerResultListProps {
   bannerList: BannerItemType[];
   type: BannerType;
+  selected: number[];
+  setSelected: (selected: number[]) => void;
 }
 
-const BannerResultList = ({ bannerList, type }: BannerResultListProps) => {
+const BannerResultList = ({
+  bannerList,
+  type,
+  selected,
+  setSelected,
+}: BannerResultListProps) => {
+  const handleSelectAll = () => {
+    if (selected.length === bannerList.length) {
+      setSelected([]);
+    } else {
+      setSelected(bannerList.map((banner) => banner.id));
+    }
+  };
+
   if (bannerList.length === 0) {
     return <div>배너가 없습니다.</div>;
   }
@@ -29,7 +44,11 @@ const BannerResultList = ({ bannerList, type }: BannerResultListProps) => {
             <tr>
               <th>
                 <div className="checkbox">
-                  <input id="t_chkAll" type="checkbox" />
+                  <input
+                    id="t_chkAll"
+                    type="checkbox"
+                    onClick={handleSelectAll}
+                  />
                   <label htmlFor="t_chkAll"></label>
                 </div>
               </th>
@@ -44,7 +63,13 @@ const BannerResultList = ({ bannerList, type }: BannerResultListProps) => {
           </thead>
           <tbody>
             {bannerList.map((banner) => (
-              <BannerListItem key={banner.id} type={type} banner={banner} />
+              <BannerListItem
+                key={banner.id}
+                type={type}
+                banner={banner}
+                selected={selected}
+                setSelected={setSelected}
+              />
             ))}
           </tbody>
         </table>

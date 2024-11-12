@@ -105,3 +105,23 @@ export const getBannerDetailApi = async (id: number) => {
 
   return response.data;
 };
+
+export interface DeleteBannerRequest {
+  ids: number[];
+}
+
+export const deleteBannerApi = async (request: DeleteBannerRequest) => {
+  const token = localStorage.getItem("token");
+
+  const response = await apiClient.delete<DefaultResponse>(
+    `/api/banners/manage`,
+    {
+      data: request,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};

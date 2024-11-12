@@ -2,6 +2,8 @@ import { QUERY_KEYS } from "@/constants/queryKeys";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createBannerApi,
+  deleteBannerApi,
+  DeleteBannerRequest,
   getBannerDetailApi,
   getManageBannerList,
   GetManageBannerRequest,
@@ -34,5 +36,11 @@ export const useGetBannerDetail = (id: number) => {
     queryKey: [QUERY_KEYS.BANNER.DETAIL],
     queryFn: () => getBannerDetailApi(id),
     enabled: !!id,
+  });
+};
+
+export const useDeleteBannerMutation = () => {
+  return useMutation({
+    mutationFn: (request: DeleteBannerRequest) => deleteBannerApi(request),
   });
 };

@@ -1,17 +1,45 @@
 import { Link, useNavigate } from "react-router-dom";
 import SideMenu from "@components/shared/sideMenu/sideMenu";
 import useQueryParams from "@/hook/useSearchParams";
-import { useGetManageBannerList } from "@/api/banner/banner.query";
+import {
+  useDeleteBannerMutation,
+  useGetManageBannerList,
+} from "@/api/banner/banner.query";
 import BannerFilter from "@components/banner/bannerFilter";
 import BannerResultList from "@components/banner/bannerResultList";
 import Pagination from "@components/pagination";
 import { BannerType } from "@/types";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/constants/queryKeys";
 
 const BannerPage = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const queryParams = useQueryParams();
   const type = queryParams.get("type") || "0";
   const { data } = useGetManageBannerList(queryParams.getAll());
+  const [selected, setSelected] = useState<number[]>([]);
+  const { mutate: deleteBanner } = useDeleteBannerMutation();
+  const handleDelete = () => {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      deleteBanner(
+        {
+          ids: selected,
+        },
+        {
+          onSuccess: () => {
+            alert("배너 삭제가 완료되었습니다.");
+            queryClient.invalidateQueries({
+              queryKey: [QUERY_KEYS.BANNER.LIST],
+            });
+          },
+        }
+      );
+    } else {
+      return;
+    }
+  };
 
   return (
     <div className="container">
@@ -42,11 +70,15 @@ const BannerPage = () => {
               <button onClick={() => navigate(`/banner/add?type=${type}`)}>
                 추가
               </button>
-              <button className="ml_22">삭제</button>
+              <button className="ml_22" onClick={handleDelete}>
+                삭제
+              </button>
             </div>
           </div>
 
           <BannerResultList
+            selected={selected}
+            setSelected={setSelected}
             bannerList={data?.data.items || []}
             type={Number(type) as BannerType}
           />
