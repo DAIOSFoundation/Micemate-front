@@ -30,58 +30,36 @@ const Page: React.FC = () => {
         newCheckedResult.surveys = newSurveys;
       }
 
+      sessionStorage.setItem('EVENT_SURVEY', JSON.stringify({
+        id : id,
+        reject: newCheckedResult
+      }));
       return newCheckedResult;
     });
   };
 
   // 데이터가 로드되면 체크박스 초기화 (필요 시)
   useEffect(() => {
+    sessionStorage.removeItem('EVENT_SURVEY');
     if (surveyData) {
       let sessionData;
+      const arr = surveyData.surveys?.map((val) => val.is_reject) || [];
+      const initialCheckedResult: surveyCheck = {
+        survey: surveyData.is_reject.survey,
+        surveys: arr,
+      };
 
-      const getData = sessionStorage.getItem("EVENT_SURVEY");
-      let storageData = null;
-
-      if (getData) {
-        try {
-          storageData = JSON.parse(getData);
-        } catch (error) {
-          console.error("sessionStorage 데이터 파싱 실패:", error);
-        }
-      }
-
-      if (storageData && storageData.id === id) {
-        setCheckedResult(storageData.reject);
-      } else {
-        const arr = surveyData.surveys?.map((val) => val.is_reject) || [];
-        const initialCheckedResult: surveyCheck = {
-          survey: surveyData.is_reject.survey,
-          surveys: arr,
-        };
-
-        sessionData = {
-          id: id,
-          reject: {
-            survey: initialCheckedResult.survey,
-            surveys: [...initialCheckedResult.surveys],
-          },
-        };
-        sessionStorage.setItem("EVENT_SURVEY", JSON.stringify(sessionData));
-        setCheckedResult(initialCheckedResult);
-      }
+      sessionData = {
+        id: id,
+        reject: {
+          survey: initialCheckedResult.survey,
+          surveys: [...initialCheckedResult.surveys],
+        },
+      };
+      sessionStorage.setItem("EVENT_SURVEY", JSON.stringify(sessionData));
+      setCheckedResult(initialCheckedResult);
     }
   }, [surveyData, id]);
-
-  useEffect(() => {
-    const sessionData = {
-      id: id,
-      reject: {
-        survey: checkedResult.survey,
-        surveys: [...checkedResult.surveys],
-      },
-    };
-    sessionStorage.setItem("EVENT_SURVEY", JSON.stringify(sessionData));
-  }, [checkedResult, id]);
 
   if (isLoading) {
     return <div className="container">로딩 중...</div>;

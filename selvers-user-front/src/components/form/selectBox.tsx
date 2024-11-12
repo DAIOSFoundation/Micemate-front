@@ -33,6 +33,11 @@ interface SelectBProps extends SelectProps {
   setTarget: Dispatch<SetStateAction<number>>;
 }
 
+interface SelectDProps extends SelectProps {
+  optionList: string[];
+  setTarget: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
+}
+
 interface SelectCProps extends SelectProps {
   optionList: string[];
 }
@@ -172,5 +177,77 @@ export const SelectBoxC = ({
         <div className="option_box">{children}</div>
       </div>
     </SelectWrapC>
+  );
+};
+
+export const SelectBoxD = ({
+    id,
+    label,
+    required,
+    optionList,
+    setTarget,
+    }: SelectDProps) => {
+  const [isOn, setIsOn] = useState(false);
+  const [targetText, setTargetText] = useState("");
+  const selectBoxRef = useRef<HTMLDivElement>(null);
+  const toggleDropdown = () => {
+    setIsOn((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (optionList) {
+      setTargetText("");
+    }
+  }, [optionList]);
+  const handleSelect = (value: string, index) => {
+    // 각 id 마다 선택된 index 저장
+    setTarget((prev) => {
+      return { ...prev, [id]: [index]}
+    });
+    setTargetText(value);
+    setIsOn(false);
+  };
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+        selectBoxRef.current &&
+        !selectBoxRef.current.contains(event.target as Node)
+    ) {
+      setIsOn(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  return (
+      <SelectWrapB ref={selectBoxRef} $isOn={isOn}>
+        <p className="label">
+          <span className="txt">{label}</span>
+          {required && <span className="req">&nbsp;*</span>}
+        </p>
+        <div className="select_box">
+          <div onClick={toggleDropdown} className="select">
+            <span>{targetText}</span>
+            <span className="icon">
+            <ArrowIconW />
+          </span>
+          </div>
+          <ul className="option_box">
+            {optionList.map((data, index) => {
+              return (
+                  <li
+                      key={index}
+                      onClick={() => handleSelect(data, index)}
+                      className="option"
+                  >
+                    {data}
+                  </li>
+              );
+            })}
+          </ul>
+        </div>
+      </SelectWrapB>
   );
 };

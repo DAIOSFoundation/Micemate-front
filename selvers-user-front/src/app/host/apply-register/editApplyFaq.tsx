@@ -1,12 +1,10 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
-import {
-  useApplyRegisterFaqQuery,
-  useApplyRegisterFaqMutation,
-} from "@/api/events/events.query";
+import {useApplyRegisterFaqQuery, useApplyRegisterFaqMutation, useApplySubmitMutation} from "@/api/events/events.query";
 import { useOutletContext, useParams, useNavigate } from "react-router-dom";
 import { UserInformationRequest, FaqField, FaqUser } from "@/type";
 import { useToast } from "@/hook/useToast";
 import { z } from "zod";
+
 
 // Zod 스키마 정의
 const faqFieldSchema = z.object({
@@ -20,30 +18,28 @@ const faqFieldSchema = z.object({
     .max(500, "답변은 최대 500자입니다."),
 });
 
-// const faquserSchema = z.object({
-//   contact_name: z
-//     .string()
-//     .min(1, "이름을 입력해주세요.")
-//     .max(50, "이름은 최대 50자입니다."),
-//   contact_email: z.string().email("유효한 이메일을 입력해주세요."),
-//   contact_number: z
-//     .string()
-//     .min(1, "휴대전화 번호를 입력해주세요.")
-//     .regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
-// });
-
-const editApplyFaqSchema = z.object({
-  is_FAQ: z.boolean(),
-  faqs: z.array(faqFieldSchema).max(5, "최대 5개의 FAQ를 추가할 수 있습니다."),
+const faquserSchema = z.object({
   contact_name: z
     .string()
     .min(1, "이름을 입력해주세요.")
     .max(50, "이름은 최대 50자입니다."),
-  contact_email: z.string().email("유효한 이메일을 입력해주세요."),
+  contact_email: z
+    .string()
+    .email("유효한 이메일을 입력해주세요."),
   contact_number: z
     .string()
     .min(1, "휴대전화 번호를 입력해주세요.")
     .regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
+});
+
+const editApplyFaqSchema = z.object({
+  is_FAQ: z.boolean(),
+  faqs: z
+    .array(faqFieldSchema)
+    .max(5, "최대 5개의 FAQ를 추가할 수 있습니다."),
+  contact_name: z.string().min(1, "이름을 입력해주세요.").max(50, "이름은 최대 50자입니다."),
+  contact_email: z.string().email("유효한 이메일을 입력해주세요."),
+  contact_number: z.string().min(1, "휴대전화 번호를 입력해주세요.").regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
 });
 
 // 에러 메시지 타입 정의
@@ -69,6 +65,7 @@ const EditApplyFaq: React.FC = () => {
     token: authInfo.token,
     event_id: id,
   });
+  const useApplySubmit = useApplySubmitMutation();
 
   const [isFaqUsed, setIsFaqUsed] = useState<boolean>(true); // 기본값을 true로 설정
   const [initialFields, setInitialFields] = useState<FaqField[]>([]);
@@ -78,8 +75,8 @@ const EditApplyFaq: React.FC = () => {
     contact_email: "",
     contact_number: "",
   });
-  const [isReject, setIsReject] = useState<boolean>(false);
-  const [contactReject, setContactReject] = useState<boolean>(false);
+  const [ isReject, setIsReject ] = useState<boolean>(false);
+  const [ contactReject, setContactReject ] = useState<boolean>(false);
   const { mutate } = useApplyRegisterFaqMutation();
 
   const [formErrors, setFormErrors] = useState<FormErrors>({}); // 에러 상태 관리
@@ -91,15 +88,19 @@ const EditApplyFaq: React.FC = () => {
     if (faqData && faqData.success) {
       setIsReject(faqData.data.is_reject.faq);
       setContactReject(faqData.data.is_reject.contact);
-      const { is_FAQ, faqs, contact_name, contact_email, contact_number } =
-        faqData.data;
+      const { is_FAQ, faqs, contact_name, contact_email, contact_number } = faqData.data;
 
       if (is_FAQ !== undefined) {
         setIsFaqUsed(is_FAQ);
       } else {
         setIsFaqUsed(true); // is_FAQ 값이 없으면 기본값 유지
       }
-
+      const User: FaqUser = {
+        contact_name: contact_name,
+        contact_email: contact_email,
+        contact_number: contact_number,
+      };
+      setFaquser(User);
       if (is_FAQ === true && faqs.length > 0) {
         const mappedFields: FaqField[] = faqs.map((field: any) => ({
           question: field.question,
@@ -159,6 +160,7 @@ const EditApplyFaq: React.FC = () => {
     newFields[index][key] = value;
     setFields(newFields);
   };
+  
 
   // 문의 담당자 정보 업데이트 함수
   const handleFaquserChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -181,6 +183,20 @@ const EditApplyFaq: React.FC = () => {
         addField();
       }
     }
+  };
+
+  const submitHandler = () => {
+    useApplySubmit.mutate(
+        { token: authInfo.token, event_id: id },
+        {
+          onSuccess: () => {
+            navigate("/host/my/apply-register/edit/finish");
+          },
+          onError: () => {
+            openToast("작성중인 필드가 있습니다.");
+          },
+        }
+    );
   };
 
   // 저장 버튼 클릭 시 호출되는 함수
@@ -251,22 +267,20 @@ const EditApplyFaq: React.FC = () => {
 
     // 여기서 API 호출을 수행합니다.
     mutate(
-      {
-        token: authInfo.token,
-        event_id: id!,
-        data: data,
-      },
-      {
-        onSuccess: () => {
-          type
-            ? openToast("FAQ가 성공적으로 저장되었습니다.")
-            : navigate(`/host/my/apply-register/edit/finish`);
+        {
+          token: authInfo.token,
+          event_id: id!,
+          data: data,
         },
-        onError: (error) => {
-          console.error("Mutation failed:", error);
-          // 오류 시 사용자에게 알림
-        },
-      }
+        {
+          onSuccess: (response) => {
+            type ? openToast("FAQ가 성공적으로 저장되었습니다.") : submitHandler();
+          },
+          onError: (error) => {
+            console.error("Mutation failed:", error);
+            // 오류 시 사용자에게 알림
+          },
+        }
     );
   };
 
@@ -295,12 +309,7 @@ const EditApplyFaq: React.FC = () => {
                 checked={isFaqUsed}
                 onChange={() => handleFaqUsageChange(true)}
               />
-              <label
-                htmlFor="faq_use_yes"
-                className={isReject ? "outline" : ""}
-              >
-                사용함
-              </label>
+              <label htmlFor="faq_use_yes" className={isReject ? "outline" : "" }>사용함</label>
             </div>
             <div className="checkbox02 flex1">
               <input
@@ -310,9 +319,7 @@ const EditApplyFaq: React.FC = () => {
                 checked={!isFaqUsed}
                 onChange={() => handleFaqUsageChange(false)}
               />
-              <label htmlFor="faq_use_no" className={isReject ? "outline" : ""}>
-                사용하지 않음
-              </label>
+              <label htmlFor="faq_use_no" className={isReject ? "outline" : "" }>사용하지 않음</label>
             </div>
           </div>
         </div>
@@ -328,26 +335,20 @@ const EditApplyFaq: React.FC = () => {
                 key={fieldIndex}
                 className="dis_flex align_start justify_between pr_52 mt_14"
               >
-                <div
-                  className={
-                    field.is_reject
-                      ? "survey_card w_767 outline"
-                      : "survey_card w_767"
-                  }
-                >
+                <div className={field.is_reject ? "survey_card w_767 outline" :"survey_card w_767"}>
                   <div className="head">
                     <input
-                      className={
-                        formErrors.faqs && formErrors.faqs[fieldIndex]?.question
-                          ? "red"
-                          : ""
-                      }
+                      className={formErrors.faqs && formErrors.faqs[fieldIndex]?.question ? "red" : "" }
                       type="text"
                       id={`question-${fieldIndex}`}
                       name="question"
                       value={field.question}
                       onChange={(e) =>
-                        updateField(fieldIndex, "question", e.target.value)
+                        updateField(
+                          fieldIndex,
+                          "question",
+                          e.target.value
+                        )
                       }
                       maxLength={100} // 질문 최대 100자
                       placeholder="질문을 입력해주세요."
@@ -356,17 +357,17 @@ const EditApplyFaq: React.FC = () => {
                   </div>
                   <div className="body">
                     <input
-                      className={
-                        formErrors.faqs && formErrors.faqs[fieldIndex]?.answer
-                          ? "red"
-                          : ""
-                      }
+                      className={formErrors.faqs && formErrors.faqs[fieldIndex]?.answer ? "red" : ""}
                       id={`answer-${fieldIndex}`}
                       type="text"
                       name="answer"
                       value={field.answer}
                       onChange={(e) =>
-                        updateField(fieldIndex, "answer", e.target.value)
+                        updateField(
+                          fieldIndex,
+                          "answer",
+                          e.target.value
+                        )
                       }
                       maxLength={500} // 답변 최대 500자
                       placeholder="답변을 입력해주세요."
@@ -379,7 +380,8 @@ const EditApplyFaq: React.FC = () => {
                       onClick={() => removeField(fieldIndex)}
                       className="delete_btn"
                       aria-label={`FAQ ${fieldIndex + 1} 삭제`}
-                    ></button>
+                    >
+                    </button>
                   </div>
                 </div>
               </div>
@@ -407,70 +409,57 @@ const EditApplyFaq: React.FC = () => {
             문의 담당자 <i className="col_red">*</i>
           </h3>
         </div>
-        <div className="dis_flex align_start justify_between pr_52 mt_10">
-          <input
-            className={contactReject ? "w_767 outline" : "w_767"}
-            type="text"
-            name="contact_name"
-            value={faquser.contact_name}
-            onChange={handleFaquserChange}
-            placeholder="이름"
-            maxLength={50} // 이름 최대 50자
-            required
-          />
-        </div>
-        {formErrors.contact_name && (
-          <p className="err_msg_mt">{formErrors.contact_name}</p>
-        )}
-        <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
-          <input
-            className={contactReject ? "w_767 outline" : "w_767"}
-            type="email"
-            name="contact_email"
-            value={faquser.contact_email}
-            onChange={handleFaquserChange}
-            placeholder="이메일"
-            required
-          />
-        </div>
-        {formErrors.contact_email && (
-          <p className="err_msg_mt">{formErrors.contact_email}</p>
-        )}
-        <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
-          <input
-            className={contactReject ? "w_767 outline" : "w_767"}
-            type="tel"
-            name="contact_number"
-            value={faquser.contact_number}
-            onChange={handleFaquserChange}
-            placeholder="휴대전화 번호"
-            required
-          />
-        </div>
-        {formErrors.contact_number && (
-          <p className="err_msg_mt">{formErrors.contact_number}</p>
-        )}
+          <div className="dis_flex align_start justify_between pr_52 mt_10">
+            <input
+              className={contactReject ? "w_767 outline" :"w_767"}
+              type="text"
+              name="contact_name"
+              value={faquser.contact_name}
+              onChange={handleFaquserChange}
+              placeholder="이름"
+              maxLength={50} // 이름 최대 50자
+              required
+            />
 
-        {/* 저장 및 게시 버튼 */}
-        <div className="dis_flex justify_between mt_48 mb-2">
-          <div className="btn_wrap"></div>
-          <div className="btn_wrap gap23">
-            <button
-              type="submit"
-              className="btn dark_blue"
-              onClick={() => handleSave(true)}
-            >
-              저장
-            </button>
-            <button
-              type="button"
-              className="btn dark_blue"
-              onClick={() => handleSave(false)}
-            >
-              행사 게시
-            </button>
           </div>
-        </div>
+          {formErrors.contact_name && (<p className="err_msg_mt">{formErrors.contact_name}</p>)}
+          <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
+            <input
+              className={contactReject ? "w_767 outline" :"w_767"}
+              type="email"
+              name="contact_email"
+              value={faquser.contact_email}
+              onChange={handleFaquserChange}
+              placeholder="이메일"
+              required
+            />
+          </div>
+          {formErrors.contact_email && (<p className="err_msg_mt">{formErrors.contact_email}</p>)}
+          <div className="dis_flex align_start justify_between pr_52 mt_10 mb-2">
+            <input
+              className={contactReject ? "w_767 outline" :"w_767"}
+              type="tel"
+              name="contact_number"
+              value={faquser.contact_number}
+              onChange={handleFaquserChange}
+              placeholder="휴대전화 번호"
+              required
+            />
+          </div>
+          {formErrors.contact_number && (<p className="err_msg_mt">{formErrors.contact_number}</p>)}
+
+          {/* 저장 및 게시 버튼 */}
+          <div className="dis_flex justify_between mt_48 mb-2">
+            <div className="btn_wrap"></div>
+            <div className="btn_wrap gap23">
+              <button type="submit" className="btn dark_blue" onClick={() => handleSave(true)}>
+                저장
+              </button>
+              <button type="button" className="btn dark_blue" onClick={() => handleSave(false)}>
+                행사 게시
+              </button>
+            </div>
+          </div>
       </div>
     </div>
   );

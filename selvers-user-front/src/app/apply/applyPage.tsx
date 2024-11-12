@@ -94,6 +94,10 @@ const getApplySchema = (applyType: number, EventApplyInformation) => {
 const ApplyPage = () => {
   const [applyType, setApplyType] = useState(0);
   const [applyList, setApplyList] = useState([]);
+  const [applySurvey, setApplySurvey] = useState({});
+  const [multipleOption, setMultipleOption] = useState<>({});
+  const [applyLong, setApplyLong] = useState({});
+  const [surveyErr, setSurveyErr] = useState({});
   const navigate = useNavigate();
   const { id } = useParams();
   const token = localStorage.getItem("token");
@@ -158,7 +162,28 @@ const ApplyPage = () => {
     appendIfDefined("xlsx", data.xlsx);
 
     const information = {};
-    const surveys = {};
+    const surveys = {
+      ...applySurvey,
+      ...multipleOption,
+      ...applyLong,
+    };
+    const surveysList = EventApplyInformation?.data?.surveys || [];
+    for (const survey of surveysList) {
+      if (survey.required && !surveys[survey.id]) {
+        console.log("필수값을 입력해주세요.", survey.id);
+        return; // 함수 실행 중단
+      }
+    }
+
+    const transformedSurveys = Object.fromEntries(
+      Object.entries(surveys).map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return [key, value.map(item => item.toString())];
+        }
+        return [key, value];
+      })
+    );
+
     const terms_of_uses = {
       5: data.agree1,
       6: data.agree2,
@@ -182,7 +207,7 @@ const ApplyPage = () => {
     );
     appendIfDefined(
       "surveys",
-      JSON.stringify(Object.keys(surveys).length ? surveys : [])
+      JSON.stringify(Object.keys(transformedSurveys).length ? transformedSurveys : [])
     );
     appendIfDefined(
       "terms_of_uses",
@@ -209,7 +234,7 @@ const ApplyPage = () => {
       }
     );
   });
-  console.log(detailData);
+  console.log(EventApplyInformation)
   return (
     <ApplyPageWrap className="maxframe">
       <FormWrap onSubmit={onSubmit}>
@@ -225,6 +250,9 @@ const ApplyPage = () => {
               setValue={setValue}
               EventApplyInformation={EventApplyInformation}
               isEdit={isEdit}
+              setSurveyOption={setApplySurvey}
+              setMultipleOption={setMultipleOption}
+              setApplyLong={setApplyLong}
             />
           </MainForm>
         </Main>

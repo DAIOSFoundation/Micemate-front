@@ -73,17 +73,16 @@ const AcceptBtns = () => {
       reason: reason,
     };
 
-    // 병합된 데이터를 로그로 확인
-    console.log(mergedReject);
-
     // 서버로 전송할 데이터 구성
     const payload = {
       id: id ? Number(id) : undefined,
       data: {
         accept: false,
-        reject: mergedReject, // 병합된 reject 데이터 사용
+        reject: {...mergedReject}, // 병합된 reject 데이터 사용
       },
     };
+
+    console.log(payload);
 
     // 변이를 실행 (주석 해제 후 사용)
     useApplyRegisterAccept.mutate(payload, {

@@ -71,22 +71,6 @@ const EditStateInfo = () => {
     token: authInfo.token,
     event_id: id,
   });
-  console.log(RegisterState);
-  //1차개발 임시
-  useEffect(() => {
-    if (userData) {
-      useApplyRegisterFaq.mutate({
-        token: authInfo.token,
-        event_id: id,
-        data: {
-          is_FAQ: false,
-          contact_name: userData.data.company.name,
-          contact_email: userData.data.email,
-          contact_number: userData.data.company.contact,
-        },
-      });
-    }
-  }, [userData]);
   //1차개발 임시
 
   const submitHandler = () => {

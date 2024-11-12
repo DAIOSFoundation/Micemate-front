@@ -32,60 +32,37 @@ const Page: React.FC = () => {
       } else if (key === "contact") {
         newCheckResult.contact = !prev.contact;
       }
-
+      sessionStorage.setItem('EVENT_FAQ', JSON.stringify({
+        id : id,
+        reject: newCheckResult
+      }));
       return newCheckResult;
     });
   };
-
+// faqData 데이터가 로드되면 세션데이터 추가
   useEffect(() => {
+    sessionStorage.removeItem('EVENT_FAQ');
     if (faqData) {
       let sessionData;
+      const arr = faqData.faqs?.map((val) => val.is_reject) || [];
+      const initialCheckedResult: FaqCheck = {
+        faq: faqData.is_reject.faq,
+        faqs: arr,
+        contact: faqData.is_reject.contact,
+      };
 
-      const getData = sessionStorage.getItem("EVENT_FAQ");
-      let storageData = null;
-
-      if (getData) {
-        try {
-          storageData = JSON.parse(getData);
-        } catch (error) {
-          console.error("sessionStorage 데이터 파싱 실패:", error);
-        }
-      }
-      if (storageData && storageData.id === id) {
-        setCheckResult(storageData.reject);
-      } else {
-        const arr = faqData.faqs?.map((val) => val.is_reject) || [];
-        const initialCheckedResult: FaqCheck = {
-          faq: faqData.is_reject.faq,
-          faqs: arr,
-          contact: faqData.is_reject.contact,
-        };
-
-        sessionData = {
-          id: id,
-          reject: {
-            faq: initialCheckedResult.faq,
-            faqs: [...initialCheckedResult.faqs],
-            contact: initialCheckedResult.contact,
-          },
-        };
-        sessionStorage.setItem("EVENT_FAQ", JSON.stringify(sessionData));
-        setCheckResult(initialCheckedResult);
-      }
+      sessionData = {
+        id: id,
+        reject: {
+          faq: initialCheckedResult.faq,
+          faqs: [...initialCheckedResult.faqs],
+          contact: initialCheckedResult.contact,
+        },
+      };
+      sessionStorage.setItem("EVENT_FAQ", JSON.stringify(sessionData));
+      setCheckResult(initialCheckedResult);
     }
   }, [faqData, id]);
-
-  useEffect(() => {
-    const sessionData = {
-      id: id,
-      reject: {
-        faq: checkResult.faq,
-        faqs: [...checkResult.faqs],
-        contact: checkResult.contact,
-      },
-    };
-    sessionStorage.setItem("EVENT_FAQ", JSON.stringify(sessionData));
-  }, [checkResult, id]);
 
   if (isLoading) {
     return <div className="container">로딩 중...</div>;

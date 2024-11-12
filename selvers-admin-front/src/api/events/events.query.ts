@@ -176,7 +176,7 @@ export const useApplyRegisterAcceptMutation = () => {
         url: `/api/events/${id}/edit/accept`,
         headers: {
           "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         data: data,
       });

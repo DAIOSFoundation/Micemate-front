@@ -1,6 +1,6 @@
 import { ApplyFormWrap, ExcelArea } from "./applyFormStyle";
 import { InputTextD } from "./inputText";
-import { SelectBoxB } from "./selectBox";
+import {SelectBoxB, SelectBoxC, SelectBoxD} from "./selectBox";
 // import { SelectBoxB, SelectBoxC } from "./selectBox";
 import { InputCheckboxA } from "./inputCheckbox";
 // import { InputTextAreaB } from "./inputTextArea";
@@ -9,7 +9,7 @@ import IIcon from "@/assets/icon/info.svg?react";
 import {
   ChangeEvent,
   Dispatch,
-  DragEvent,
+  DragEvent, FormEvent,
   SetStateAction,
   useCallback,
   useEffect,
@@ -24,6 +24,7 @@ import {
 } from "react-hook-form";
 import { telChangeUtilHandler } from "@/util/inputChange";
 import { priceFormat } from "@/util/stringTransition";
+import {InputTextAreaB} from "@components/form/inputTextArea";
 
 const ApplyForm = ({
   EventApplyInformation,
@@ -35,6 +36,9 @@ const ApplyForm = ({
   setValue,
   isEdit,
   editData,
+  setSurveyOption,
+  setMultipleOption,
+  setApplyLong
 }: {
   EventApplyInformation;
   applyType: number;
@@ -44,7 +48,10 @@ const ApplyForm = ({
   errors: FieldErrors<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   isEdit: boolean;
+  setSurveyOption: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
   editData?;
+  setMultipleOption: Dispatch<SetStateAction<{[key: number]: number[] }>>;
+  setApplyLong: Dispatch<SetStateAction<{[key: number]: string }>>;
 }) => {
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
@@ -89,6 +96,13 @@ const ApplyForm = ({
   const handleDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   }, []);
+
+  const handleTextChange = (key: number, value: string) => {
+    setApplyLong((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   const payableInfo = (type: number, pay1: number, pay2: number) => {
     if (type === 1) {
@@ -184,57 +198,70 @@ const ApplyForm = ({
         })}
       </div>
 
-      {/* <h3>사전 설문</h3>
+      <h3>사전 설문</h3>
       <div className="field">
         {EventApplyInformation?.data?.surveys.map((data) => {
-          if (data.type && data.type === 0)
+          if (data.type === 0) {
             return (
               <div key={data.id} className="input_box">
-                <SelectBoxB
+                <SelectBoxD
+                  id={data.id}
                   label={data.title}
                   required={data.required}
-                  optionList={singleOption}
-                  setTarget={data}
+                  optionList={data.options}
+                  setTarget={setSurveyOption}
                 />
               </div>
             );
-          if (data && data.type === 1)
+          } else if (data.type === 1) {
             return (
               <div key={data.id} className="input_box">
                 <SelectBoxC
                   label={data.title}
                   required={data.required}
-                  optionList={multipleOption}
+                  optionList={data.options}
                 >
-                  {data?.options &&
-                    data.options.map((data) => {
-                      return (
-                        <InputCheckboxA
-                          label={data}
-                          id={data}
-                          register={register}
-                          onChange={(e: FormEvent<HTMLInputElement>) => {
-                            const target = e.target as HTMLInputElement;
-                            setMultipleOption((prev) =>
-                              target.checked
-                                ? [...prev, target.id]
-                                : prev.filter((option) => option !== target.id)
-                            );
-                          }}
-                        />
-                      );
-                    })}
+                  {data.options.map((option, index) => (
+                    <InputCheckboxA
+                      key={option} // 각 옵션의 고유한 값 사용
+                      label={option} // 실제 옵션 값 사용
+                      id={option} // 실제 옵션 값 사용
+                      onChange={(e: FormEvent<HTMLInputElement>) => {
+                        setMultipleOption((prev) => {
+                          return {
+                            ...prev,
+                            [data.id]: prev[data.id]
+                              ? prev[data.id].includes(index)
+                                ? prev[data.id].filter((item) => item !== index)
+                                : [...prev[data.id], index]
+                              : [index],
+                          };
+                        });
+                      }}
+                    />
+                  ))}
                 </SelectBoxC>
               </div>
             );
-          if (data.type && data.type === 2)
+          } else if (data.type === 2) {
             return (
               <div key={data.id} className="input_box">
-                <InputTextAreaB label={data.title} required={data.required} />
+                <InputTextAreaB
+                  label={data.title}
+                  required={data.required}
+                  keyId={data.id} // 고유 키 전달
+                  value={setApplyLong[data.id] || ""} // 현재 값 전달
+                  onChange={handleTextChange} // 값 변경 시 호출될 함수 전달
+                />
               </div>
             );
+          } else {
+            // 예기치 않은 data.type에 대한 처리 (선택 사항)
+            return null;
+          }
         })}
-      </div> */}
+
+      </div>
 
       {applyType === 1 && (
         <>
