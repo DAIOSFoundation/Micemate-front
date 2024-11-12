@@ -10,11 +10,15 @@ const BannerMenu = () => {
   };
 
   const activeTarget = (url: string) => {
-    if (location.pathname.indexOf(url) >= 0) {
-      return "active";
-    } else {
-      return "";
-    }
+    const path = location.pathname + location.search;
+    const type = url.split("=")[1];
+    const isActive =
+      path.includes(url) ||
+      (path.includes("/banner/detail") &&
+        location.search.includes(`type=${type}`)) ||
+      (path.includes("/banner/add") &&
+        location.search.includes(`type=${type}`));
+    return isActive ? "active" : "";
   };
 
   useEffect(() => {
