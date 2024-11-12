@@ -7,7 +7,6 @@ import DatePicker from "react-datepicker";
 import {
   useApplyRegisterRecruitQuery,
   useApplyRegisterRecruitMutation,
-  useApplySubmitMutation,
   useApplyRegisterGeneralQuery,
 } from "@/api/events/events.query";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
@@ -35,7 +34,6 @@ const EditApplyInformation = () => {
   });
 
   const registerRecruit = useApplyRegisterRecruitMutation();
-  const ApplySubmit = useApplySubmitMutation();
   const [teamWatch, setTeamWatch] = useState<boolean>();
   const [departmentWatch, setDepartmentWatch] = useState<boolean>();
   const [titleWatch, setTitleWatch] = useState<boolean>();
@@ -159,17 +157,7 @@ const EditApplyInformation = () => {
         },
         {
           onSuccess: () => {
-            ApplySubmit.mutate(
-              { token: authInfo.token, event_id: id },
-              {
-                onSuccess: () => {
-                  navigate(`/host/my/apply-register/edit/${id}/survey`);
-                },
-                onError: () => {
-                  openToast("작성중인 필드가 있습니다.");
-                },
-              }
-            );
+            navigate(`/host/my/apply-register/edit/${id}/survey`);
           },
         }
       );
