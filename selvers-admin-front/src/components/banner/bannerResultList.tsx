@@ -23,7 +23,7 @@ const BannerResultList = ({
   };
 
   if (bannerList.length === 0) {
-    return <div>배너가 없습니다.</div>;
+    return <div className="no_data">배너가 없습니다.</div>;
   }
 
   return (

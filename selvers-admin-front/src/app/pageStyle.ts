@@ -1994,4 +1994,13 @@ export const PageWrap = styled.div`
   .cursor_pointer {
     cursor: pointer;
   }
+
+  .no_data {
+    margin-top: 22px;
+    text-align: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
