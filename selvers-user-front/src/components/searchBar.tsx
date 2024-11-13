@@ -16,20 +16,26 @@ import BackBtn from "@/assets/icon/arrow_back.svg?react";
 
 const SearchBar = () => {
   const navigate = useNavigate();
-  const queryParams = useQueryParams();
+  const queryParams = useQueryParams({
+    isSetPageFirst: true,
+  });
   const [searchText, setSearchText] = useState(queryParams.get("search") || "");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterBox = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
+  const onSearch = () => {
+    if (window.location.pathname === "/event-list") {
+      queryParams.set("search", searchText);
+    } else {
+      navigate(`/event-list?search=${searchText}`);
+    }
+  };
+
   const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setIsFilterOpen(false);
-      if (window.location.pathname === "/event-list") {
-        queryParams.set("search", searchText);
-      } else {
-        navigate(`/event-list?search=${searchText}`);
-      }
+      onSearch();
     }
   };
 
@@ -80,7 +86,7 @@ const SearchBar = () => {
             onFocus={handleOpenFilter}
             onKeyDown={onKeyDownHandler}
           />
-          <button>
+          <button onClick={onSearch}>
             <SearchIcon />
           </button>
         </div>
