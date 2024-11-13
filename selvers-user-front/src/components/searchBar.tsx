@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchHistoryList from "./search/searchHistoryList";
 import SearchCategoryList from "./search/searchCategoryList";
@@ -29,19 +29,38 @@ const SearchBar = () => {
     }
   };
 
-  const handleOpenFilter = () => {
+  const handleOpenFilter = useCallback(() => {
     setIsFilterOpen(true);
     if (isMobile === true) {
       document.body.style.overflow = "hidden";
     }
-  };
+  }, [isMobile]);
 
-  const handleCloseFilter = () => {
+  const handleCloseFilter = useCallback(() => {
     setIsFilterOpen(false);
     if (isMobile === true) {
       document.body.style.overflow = "auto";
     }
-  };
+  }, [isMobile]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterBox.current &&
+        !filterBox.current.contains(event.target as Node)
+      ) {
+        handleCloseFilter();
+      }
+    };
+
+    if (isFilterOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleCloseFilter, isFilterOpen]);
 
   return (
     <SearchBarWrap>
@@ -55,7 +74,6 @@ const SearchBar = () => {
             }}
             value={searchText}
             onFocus={handleOpenFilter}
-            // onBlur={focusOutHandler}
             onKeyDown={onKeyDownHandler}
           />
           <button>
