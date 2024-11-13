@@ -16,6 +16,7 @@ const CategoryList = ({
   const queryParams = useQueryParams({
     isReplace: true,
     isDirectPush: false,
+    isSetPageFirst: true,
   });
 
   const onClickCategory = (id: number) => {

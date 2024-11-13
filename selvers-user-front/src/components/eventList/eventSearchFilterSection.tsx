@@ -25,7 +25,11 @@ interface EventSearchFilterSectionProps {
 const EventSearchFilterSection = ({
   categoryList,
 }: EventSearchFilterSectionProps) => {
-  const queryParams = useQueryParams();
+  const queryParams = useQueryParams({
+    isSetPageFirst: true,
+    isDirectPush: true,
+    isReplace: true,
+  });
   const [filterOn, setFilterOn] = useState(false);
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
