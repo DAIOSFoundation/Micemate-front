@@ -1979,4 +1979,56 @@ export const PageWrap = styled.div`
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
   }
+
+  .preview_banner_img {
+    object-fit: cover;
+    margin-top: 20px;
+  }
+  .preview_banner_img_1080 {
+    aspect-ratio: 1920 / 1080;
+  }
+  .preview_banner_img_360 {
+    aspect-ratio: 1920 / 360;
+  }
+
+  .cursor_pointer {
+    cursor: pointer;
+  }
+
+  .no_data {
+    margin-top: 22px;
+    text-align: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banner_order_input_container {
+    position: relative;
+  }
+
+  .banner_order_input_btn_container {
+    position: absolute;
+    bottom: -24px;
+    right: calc(50% - 20px);
+    display: flex;
+    gap: 15px;
+
+    span {
+      display: block;
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+  }
+
+  .banner_order_input {
+    width: 60px;
+    height: 24px !important;
+    border-radius: 5px !important;
+    border: 0.5px solid #09338c !important;
+    padding: 0 10px;
+    text-align: center;
+  }
 `;

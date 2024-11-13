@@ -38,8 +38,7 @@ const MainSwiper = ({ bannerImgs }: ImgsProps) => {
               <SwiperSlide key={index} onClick={() => goToLink(data.url)}>
                 <figure>
                   <img
-                    // src={`https://api-test.micemate.io/storage/${data.img}`}
-                    src={data.img}
+                    src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${data.img}`}
                     alt={`메인배너_${index}`}
                   />
                 </figure>

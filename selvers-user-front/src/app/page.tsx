@@ -1,25 +1,21 @@
 import MainSwiper from "@components/mainSwiper";
 // import SearchBar from "@components/searchBar";
 import EventSwiper from "@components/eventSwiper";
-import { MainPageWrap, SubBannerWrap } from "./pageStyle";
+import { MainPageWrap } from "./pageStyle";
 import { useEventList } from "@/api/events/events.query";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import { useBannerQuery } from "@/api/banners/banners.query";
+import RibbonBanner from "@components/ribbonBanner";
 
-const dummyData = [
-  { img: "./images/dummy/banner_1.png", url: "#" },
-  { img: "./images/dummy/banner_2.png", url: "#" },
-  { img: "./images/dummy/banner_3.png", url: "#" },
-];
 const MainPage = () => {
   const token = localStorage.getItem("token");
 
   //메인배너 API 조회
-  // const {
-  //   data: MainBanner,
-  //   isLoading: isLoadingMainBanner,
-  //   isError: isErrorMainBanner,
-  // } = useBannerQuery(0);
+  const {
+    data: MainBanner,
+    isLoading: isLoadingMainBanner,
+    error: isErrorMainBanner,
+  } = useBannerQuery(0);
 
   //행사리스트 API 조회
   const {
@@ -56,14 +52,14 @@ const MainPage = () => {
     isLoadingNew ||
     isLoadingHot ||
     isLoadingBest ||
-    // isLoadingMainBanner ||
+    isLoadingMainBanner ||
     isLoadingSubBanner;
   const isError =
     isErrorAI ||
     isErrorNew ||
     isErrorHot ||
     isErrorBest ||
-    // isErrorMainBanner ||
+    isErrorMainBanner ||
     isErrorSubBanner;
 
   if (isLoading) return <LoadingScreen />;
@@ -73,7 +69,7 @@ const MainPage = () => {
   return (
     <MainPageWrap>
       {/* <SearchBar /> */}
-      <MainSwiper bannerImgs={dummyData} />
+      <MainSwiper bannerImgs={MainBanner?.data?.items} />
       <EventSwiper
         title="AI 메이트가 맞추는 취향저격 전시"
         subTitle="마이스 메이트가 추천해드려요! 회원가입하면 더 정확한 추천을 받을 수 있어요 ✨"
@@ -84,15 +80,7 @@ const MainPage = () => {
         subTitle="마이스 메이트에 새롭게 등록된 행사를 모아봤어요 ✨"
         eventList={newEventList?.data?.items}
       />
-      {SubBannerImg?.data?.items.length > 0 && (
-        <SubBannerWrap>
-          <img
-            src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-              SubBannerImg.data.items[0].img
-            }`}
-          />
-        </SubBannerWrap>
-      )}
+      <RibbonBanner bannerImgs={SubBannerImg?.data?.items} />
       <EventSwiper
         title="마이스 메이트 인기 전시 모음 "
         subTitle="가장 관심을 많이 받고있는 인기 행사 놓치지마세요!"
