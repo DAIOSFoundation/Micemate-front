@@ -4,7 +4,7 @@ export const SearchBarWrap = styled.div`
   position: relative;
 `;
 
-export const SearchForm = styled.form<{ $filter?: boolean }>`
+export const SearchForm = styled.div<{ $filter?: boolean }>`
   @media (max-width: 1024px) {
     padding: 0 16px;
     position: ${(props) => props.$filter && "fixed"};

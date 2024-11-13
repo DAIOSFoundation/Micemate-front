@@ -3,7 +3,7 @@ import { useRecoilValue, useResetRecoilState } from "recoil";
 // import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 import MobileHeader from "./mobileHeader";
-// import SearchBar from "@components/searchBar";
+import SearchBar from "@components/searchBar";
 import { useTokenValidationQuery } from "@/api/auth/auth.query";
 import {
   HeaderWrap,
@@ -89,6 +89,7 @@ const Header = () => {
             )} */}
             {/* 서브페이지 검색바 */}
             {/* {mainPage === false && <SearchBar />} */}
+            <SearchBar />
           </NavWrap>
           <BtnArea>
             {/* 로그아웃 상태 */}
