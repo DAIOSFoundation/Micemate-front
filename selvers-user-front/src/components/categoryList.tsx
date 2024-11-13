@@ -18,6 +18,7 @@ const CategoryList = ({
   });
 
   const onClickCategory = (id: number) => {
+    console.log(id);
     const currentCategory = queryParams.get("category");
     console.log(currentCategory);
     if (currentCategory === id.toString()) {
@@ -32,7 +33,11 @@ const CategoryList = ({
       {!isSwiper && (
         <ul className="none_swiper_wrap">
           {categoryList.map((data) => {
-            return <CateItem key={data.id}>{data.name}</CateItem>;
+            return (
+              <CateItem key={data.id} onClick={() => onClickCategory(data.id)}>
+                {data.name}
+              </CateItem>
+            );
           })}
         </ul>
       )}
@@ -58,10 +63,11 @@ const CategoryList = ({
         >
           {categoryList.map((data) => {
             return (
-              <SwiperSlide key={data.id}>
-                <CateItem onClick={() => onClickCategory(data.id)}>
-                  {data.name}
-                </CateItem>
+              <SwiperSlide
+                key={data.id}
+                onClick={() => onClickCategory(data.id)}
+              >
+                <CateItem>{data.name}</CateItem>
               </SwiperSlide>
             );
           })}

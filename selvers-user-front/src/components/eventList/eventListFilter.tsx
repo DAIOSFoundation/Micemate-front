@@ -96,7 +96,7 @@ const EventListFilter = ({ onApply }: EventListFilterProps) => {
 
       {filterGroups.map((group) => (
         <FilterGroup
-          key={group.name}
+          key={group.name + group.title}
           title={group.title}
           filters={group.filters}
           name={group.name}

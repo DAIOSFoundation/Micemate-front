@@ -1,5 +1,5 @@
 import MainSwiper from "@components/mainSwiper";
-// import SearchBar from "@components/searchBar";
+import SearchBar from "@components/searchBar";
 import EventSwiper from "@components/eventSwiper";
 import { MainPageWrap } from "./pageStyle";
 import { useEventList } from "@/api/events/events.query";
@@ -68,7 +68,7 @@ const MainPage = () => {
 
   return (
     <MainPageWrap>
-      {/* <SearchBar /> */}
+      <SearchBar />
       <MainSwiper bannerImgs={MainBanner?.data?.items} />
       <EventSwiper
         title="AI 메이트가 맞추는 취향저격 전시"

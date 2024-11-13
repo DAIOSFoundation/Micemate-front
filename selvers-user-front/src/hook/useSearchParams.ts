@@ -63,7 +63,12 @@ const useQueryParams = ({
     return updateQueryAndNavigate();
   };
 
-  return { get, getAll, set, setAll, updateQueryAndNavigate };
+  const deleteQuery = (key: string) => {
+    query.delete(key);
+    return updateQueryAndNavigate();
+  };
+
+  return { get, getAll, set, setAll, updateQueryAndNavigate, deleteQuery };
 };
 
 export default useQueryParams;

@@ -9,14 +9,21 @@ import {
   SearchCategory,
   FilterContent,
 } from "./searchBarStyle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "usehooks-ts";
 
 const SearchBar = () => {
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [filter, setFilter] = useState(false);
   const filterBox = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 1024px)");
+
+  const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      navigate(`/event-list?search=${searchText}`);
+    }
+  };
 
   const focusOnHandler = () => {
     setFilter(true);
@@ -45,6 +52,7 @@ const SearchBar = () => {
             value={searchText}
             onFocus={focusOnHandler}
             onBlur={focusOutHandler}
+            onKeyDown={onKeyDownHandler}
           />
           <button>
             <SearchIcon />
