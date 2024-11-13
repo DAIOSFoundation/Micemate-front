@@ -72,10 +72,21 @@ const Thumbnail = ({
       setToast(false);
     }
   };
-  const checkDate = (date: string) => {
+
+  const checkApplyDate = (start, end) => {
     const today = new Date();
-    const targetDate = new Date(date.replace(" ", "T"));
-    return today < targetDate;
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    if (today < startDate) {
+      return "before";
+    } else if (today >= startDate && today <= endDate) {
+      return "apply";
+    } else if (today > endDate) {
+      return "after";
+    } else {
+      return "after";
+    }
   };
 
   const applyBtnHandler = (
@@ -155,33 +166,47 @@ const Thumbnail = ({
             <ShardIcon />
           </div>
         </div>
-        {applyBtn && (
-          <div className="apply_btn_box">
-            {checkDate(thumnaildata.event_end_date) &&
-              checkDate(thumnaildata.event_start_date) &&
-              (checkDate(thumnaildata.application_end_date) ? (
-                checkDate(thumnaildata.application_start_date) ? (
-                  <div className="btn disable">신청기간이 아닙니다.</div>
-                ) : (
-                  <div
-                    onClick={() => {
-                      applyBtnHandler(
-                        thumnaildata.payable_type,
-                        thumnaildata.payable_price_url,
-                        thumnaildata.payable_start_date,
-                        thumnaildata.payable_end_date
-                      );
-                    }}
-                    className="btn primary"
-                  >
-                    사전 신청하기
-                  </div>
-                )
-              ) : (
+        {applyBtn &&
+          checkApplyDate(
+            thumnaildata.event_start_date,
+            thumnaildata.event_end_date
+          ) !== "after" && (
+            <div className="apply_btn_box">
+              {/* 모집기간 이전 */}
+              {checkApplyDate(
+                thumnaildata.application_start_date,
+                thumnaildata.application_end_date
+              ) === "before" && (
+                <div className="btn disable">신청기간이 아닙니다.</div>
+              )}
+              {/* 모집기간 */}
+              {checkApplyDate(
+                thumnaildata.application_start_date,
+                thumnaildata.application_end_date
+              ) === "apply" && (
+                <div
+                  onClick={() => {
+                    applyBtnHandler(
+                      thumnaildata.payable_type,
+                      thumnaildata.payable_price_url,
+                      thumnaildata.payable_start_date,
+                      thumnaildata.payable_end_date
+                    );
+                  }}
+                  className="btn primary"
+                >
+                  사전 신청하기
+                </div>
+              )}
+              {/* 모집기간 이후 */}
+              {checkApplyDate(
+                thumnaildata.application_start_date,
+                thumnaildata.application_end_date
+              ) === "after" && (
                 <div className="btn disable">신청기간이 마감되었습니다.</div>
-              ))}
-          </div>
-        )}
+              )}
+            </div>
+          )}
       </InfoBox>
       <Toast $on={toast}>URL 이 복사되었습니다.</Toast>
     </ThumbnailWrap>

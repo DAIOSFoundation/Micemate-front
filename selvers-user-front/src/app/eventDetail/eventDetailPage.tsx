@@ -88,7 +88,11 @@ const EventDetailPage = () => {
         </SideTab>
       </MainContentWrap>
       <EventSwiper
-        title={`AI 메이트가 맞추는 '${JSON.parse(name)}' 님의 취향저격 전시`}
+        title={
+          name !== null
+            ? `AI 메이트가 맞추는 '${JSON.parse(name)}' 님의 취향저격 전시`
+            : `AI메이트가 맞추는 취향저격 전시`
+        }
         eventList={aiEventList.data.items}
       />
     </EventDetailPageWrap>
