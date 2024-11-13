@@ -10,5 +10,6 @@ export const useCategoryQuery = () => {
       const response = await apiClient.get(`/api/categories`);
       return response.data.data;
     },
+    staleTime: 1000 * 60 * 5,
   });
 };

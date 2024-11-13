@@ -1,7 +1,20 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SearchHistory } from "@components/searchBarStyle";
+import { useGetSearchHistoryQuery } from "@/api/etc/search.query";
 
-const SearchHistoryList = () => {
+interface SearchHistoryListProps {
+  handleCloseFilter: () => void;
+}
+
+const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
+  const navigate = useNavigate();
+  const { data: searchHistory } = useGetSearchHistoryQuery();
+
+  const handleSearchHistoryClick = (keyword: string) => {
+    navigate(`/event-list?search=${keyword}`);
+    handleCloseFilter();
+  };
+
   return (
     <SearchHistory>
       <p className="title">최근 검색어</p>
@@ -10,66 +23,15 @@ const SearchHistoryList = () => {
         <button>검색 기록 삭제</button>
       </div>
       <ul>
-        <li>
-          <Link to={""}>마케팅</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온온온온온온온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>최근 검색어</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>농축산농축산농축산</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>환경</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>test</Link>
-        </li>
-        <li>
-          <Link to={""}>온라인</Link>
-        </li>
-        <li>
-          <Link to={""}>교육</Link>
-        </li>
+        {searchHistory?.data.items.map((item) => (
+          <li
+            key={item.id + item.name}
+            onClick={() => handleSearchHistoryClick(item.name)}
+            style={{ cursor: "pointer" }}
+          >
+            {item.name}
+          </li>
+        ))}
       </ul>
     </SearchHistory>
   );

@@ -29,14 +29,14 @@ const SearchBar = () => {
     }
   };
 
-  const focusOnHandler = () => {
+  const handleOpenFilter = () => {
     setIsFilterOpen(true);
     if (isMobile === true) {
       document.body.style.overflow = "hidden";
     }
   };
 
-  const focusOutHandler = () => {
+  const handleCloseFilter = () => {
     setIsFilterOpen(false);
     if (isMobile === true) {
       document.body.style.overflow = "auto";
@@ -54,8 +54,8 @@ const SearchBar = () => {
               setSearchText(e.target.value);
             }}
             value={searchText}
-            onFocus={focusOnHandler}
-            onBlur={focusOutHandler}
+            onFocus={handleOpenFilter}
+            // onBlur={focusOutHandler}
             onKeyDown={onKeyDownHandler}
           />
           <button>
@@ -70,8 +70,8 @@ const SearchBar = () => {
             <BackBtn />
           </button>
           <FilterContent>
-            <SearchHistoryList />
-            <SearchCategoryList />
+            <SearchHistoryList handleCloseFilter={handleCloseFilter} />
+            <SearchCategoryList handleCloseFilter={handleCloseFilter} />
           </FilterContent>
         </FilterWrap>
       )}
