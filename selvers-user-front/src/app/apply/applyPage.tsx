@@ -97,7 +97,7 @@ const ApplyPage = () => {
   const [applySurvey, setApplySurvey] = useState({});
   const [multipleOption, setMultipleOption] = useState<>({});
   const [applyLong, setApplyLong] = useState({});
-  const [surveyErr, setSurveyErr] = useState({});
+  const [surveyErr, setSurveyErr] = useState<number[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
   const token = localStorage.getItem("token");
@@ -168,13 +168,17 @@ const ApplyPage = () => {
       ...applyLong,
     };
     const surveysList = EventApplyInformation?.data?.surveys || [];
+    let errArr = [];
     for (const survey of surveysList) {
       if (survey.required && !surveys[survey.id]) {
-        console.log("필수값을 입력해주세요.", survey.id);
-        return; // 함수 실행 중단
+        errArr.push(survey.id);
       }
     }
-
+    if (errArr.length > 0) {
+      setSurveyErr(errArr);
+      return;
+    }
+    setSurveyErr([]);
     const transformedSurveys = Object.fromEntries(
       Object.entries(surveys).map(([key, value]) => {
         if (Array.isArray(value)) {
@@ -253,6 +257,7 @@ const ApplyPage = () => {
               setSurveyOption={setApplySurvey}
               setMultipleOption={setMultipleOption}
               setApplyLong={setApplyLong}
+              surveyErr={surveyErr}
             />
           </MainForm>
         </Main>

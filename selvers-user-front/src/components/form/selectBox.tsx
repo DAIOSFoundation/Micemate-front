@@ -196,7 +196,7 @@ export const SelectBoxD = ({
 
   useEffect(() => {
     if (optionList) {
-      setTargetText("");
+      setTargetText(optionList[0]);
     }
   }, [optionList]);
   const handleSelect = (value: string, index) => {

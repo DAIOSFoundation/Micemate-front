@@ -38,7 +38,8 @@ const ApplyForm = ({
   editData,
   setSurveyOption,
   setMultipleOption,
-  setApplyLong
+  setApplyLong,
+  surveyErr
 }: {
   EventApplyInformation;
   applyType: number;
@@ -51,7 +52,8 @@ const ApplyForm = ({
   setSurveyOption: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
   editData?;
   setMultipleOption: Dispatch<SetStateAction<{[key: number]: number[] }>>;
-  setApplyLong: Dispatch<SetStateAction<{[key: number]: string }>>;
+  setApplyLong: Dispatch<SetStateAction<{[key: number]: string[] }>>;
+  surveyErr: number[];
 }) => {
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
@@ -100,7 +102,7 @@ const ApplyForm = ({
   const handleTextChange = (key: number, value: string) => {
     setApplyLong((prev) => ({
       ...prev,
-      [key]: value,
+      [key]: [value],
     }));
   };
 
@@ -203,6 +205,7 @@ const ApplyForm = ({
         {EventApplyInformation?.data?.surveys.map((data) => {
           if (data.type === 0) {
             return (
+              <>
               <div key={data.id} className="input_box">
                 <SelectBoxD
                   id={data.id}
@@ -211,10 +214,15 @@ const ApplyForm = ({
                   optionList={data.options}
                   setTarget={setSurveyOption}
                 />
+                {surveyErr.includes(data.id) && (
+                  <p className="err_msg">필수값 입니다.</p>
+                )}
               </div>
+              </>
             );
           } else if (data.type === 1) {
             return (
+              <>
               <div key={data.id} className="input_box">
                 <SelectBoxC
                   label={data.title}
@@ -241,7 +249,11 @@ const ApplyForm = ({
                     />
                   ))}
                 </SelectBoxC>
+                {surveyErr.includes(data.id) && (
+                  <p className="err_msg">필수값 입니다.</p>
+                )}
               </div>
+              </>
             );
           } else if (data.type === 2) {
             return (

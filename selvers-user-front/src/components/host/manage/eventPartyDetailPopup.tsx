@@ -63,7 +63,7 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                       </li>
                     );
                   })}
-                {/* <div className="fs_18 fw_600 mt_48">사전 설문</div> */}
+                <div className="fs_18 fw_600 mt_48">사전 설문</div>
 
                 {eventPartyDetail?.data?.surveys &&
                   eventPartyDetail?.data?.surveys.map((data, index) => {
@@ -79,9 +79,53 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                             : ""}
                         </div>
                         <li key={index}>
-                          <div className="key">{data?.name}</div>
-                          <div className="val">{data?.answer}</div>
+                          <div className="key">{data?.title}</div>
                         </li>
+                        {data.type === 0 && (
+                          data?.options?.map((option, idx) => {
+                            const radioId = `rad-${idx}`; // 고유한 id 생성
+                            const radioName = `rad-${idx}`; // 고유한 name 생성
+
+                            return (
+                              <div key={idx} className="mt_7">
+                                <div className="radio02">
+                                  <input
+                                    id={radioId}
+                                    type="radio"
+                                    name={radioName} // 고유한 name 사용
+                                    checked={data.answer.includes(idx)}
+                                    readOnly // 사용자 상호작용을 막고 단순히 표시 용도로 사용
+                                  />
+                                  <label htmlFor={radioId}>{option}</label>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                        {data.type === 1 && (
+                          data.options.map((option, idx) => {
+                            const checkboxId = `chk00_01 ${idx}`; // 고유한 id 생성
+
+                            return (
+                              <div key={idx} className="mt_7">
+                                <div className="radio02">
+                                  <input
+                                    id={checkboxId}
+                                    type="checkbox"
+                                    checked={data.answer.includes(String(idx))} // 타입 일치
+                                    readOnly // 사용자 상호작용 방지 (단순 표시 용도)
+                                  />
+                                  <label htmlFor={checkboxId}>{option}</label>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                        {data.type === 2 && (
+                          <li>
+                            <div className="val">{data.answer}</div>
+                          </li>
+                        )}
                       </>
                     );
                   })}
