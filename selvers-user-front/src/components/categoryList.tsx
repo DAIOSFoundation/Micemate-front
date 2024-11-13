@@ -18,9 +18,7 @@ const CategoryList = ({
   });
 
   const onClickCategory = (id: number) => {
-    console.log(id);
     const currentCategory = queryParams.get("category");
-    console.log(currentCategory);
     if (currentCategory === id.toString()) {
       queryParams.set("category", null);
     } else {
@@ -34,8 +32,12 @@ const CategoryList = ({
         <ul className="none_swiper_wrap">
           {categoryList.map((data) => {
             return (
-              <CateItem key={data.id} onClick={() => onClickCategory(data.id)}>
-                {data.name}
+              <CateItem
+                key={data.id}
+                onClick={() => onClickCategory(data.id)}
+                checked={queryParams.get("category") === data.id.toString()}
+              >
+                <span>{data.name}</span>
               </CateItem>
             );
           })}

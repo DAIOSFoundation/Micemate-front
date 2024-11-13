@@ -84,7 +84,7 @@ const SearchBar = () => {
 
       {isFilterOpen && (
         <FilterWrap ref={filterBox}>
-          <button className="back_btn">
+          <button className="back_btn" onClick={handleCloseFilter}>
             <BackBtn />
           </button>
           <FilterContent>
