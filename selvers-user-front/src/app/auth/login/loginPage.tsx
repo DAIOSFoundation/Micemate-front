@@ -16,7 +16,7 @@ import {
   SubmitBtn,
 } from "./loginPageStyle";
 import { LoginRequest, CustomError } from "@/type";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import GoogleIcon from "@/assets/icon/round_google.svg?react";
 import NaverIcon from "@/assets/icon/round_naver.svg?react";
 import KakaoIcon from "@/assets/icon/round_kakao.svg?react";
@@ -34,6 +34,7 @@ const LoginPage = () => {
   const user = useRecoilValue(userState);
   const useLogin = useLoginMutation();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     register,
@@ -55,6 +56,10 @@ const LoginPage = () => {
     }
   }, [email, password]);
 
+  //location from 값 담기면 해당 경로로 이동(리뷰페이지 사용)
+  const state = location.state as { from?: Location };
+  const from = state?.from?.pathname;
+
   const onSubmit = handleSubmit((data) => {
     const loginData: LoginRequest = {
       email: data.email,
@@ -68,13 +73,17 @@ const LoginPage = () => {
   //로그인 성공
   useEffect(() => {
     if (useLogin.isSuccess) {
-      if (user.data.is_company === true) {
-        navigate("/host-main", { replace: true });
+      if (from) {
+        navigate(from, { replace: true });
       } else {
-        navigate("/", { replace: true });
+        if (user.data.is_company === true) {
+          navigate("/host-main", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
       }
     }
-  }, [useLogin.isSuccess, navigate, user.data.is_company]);
+  }, [useLogin.isSuccess, navigate, user.data.is_company, from]);
 
   //로그인 실패
   useEffect(() => {
@@ -118,7 +127,7 @@ const LoginPage = () => {
     kakaoJoin: () => {
       const apiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
       const redirectUri = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-      location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code`;
+      window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code`;
     },
   };
 
