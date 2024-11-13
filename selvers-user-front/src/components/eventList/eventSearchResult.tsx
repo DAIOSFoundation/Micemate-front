@@ -27,7 +27,7 @@ const EventSearchResult = ({ searchData }: EventSearchResultProps) => {
   return (
     <EventListWrap className="maxframe">
       {searchData &&
-        searchData.map((data: EventListType) => {
+        searchData?.map((data: EventListType) => {
           return (
             <EventCard
               key={data.id}

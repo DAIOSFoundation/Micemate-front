@@ -7,6 +7,8 @@ import { useMediaQuery } from "usehooks-ts";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import EventSearchResult from "@components/eventList/eventSearchResult";
 import EventSearchFilterSection from "@components/eventList/eventSearchFilterSection";
+import Pagination from "@components/shared/pagination";
+import useQueryParams from "@/hook/useSearchParams";
 
 export type FilterType = {
   progress: number | null;
@@ -16,6 +18,7 @@ export type FilterType = {
 
 const EventListPage = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const queryParams = useQueryParams();
 
   const token = localStorage.getItem("token");
   const { data: searchData, isLoading, isError } = useEventSearch(token);
@@ -34,7 +37,23 @@ const EventListPage = () => {
       <CategoryList categoryList={category} />
       <ContentWrap>
         <EventSearchFilterSection categoryList={category} />
-        <EventSearchResult searchData={searchData?.data.items} />
+        <EventSearchResult searchData={searchData?.data.items || []} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            paddingBottom: "40px",
+          }}
+        >
+          <Pagination
+            total={searchData.data.total}
+            page={Number(queryParams.get("page")) || 1}
+            setPage={(page) => {
+              queryParams.set("page", page.toString());
+            }}
+            size={12}
+          />
+        </div>
       </ContentWrap>
     </EventListPageWrap>
   );
