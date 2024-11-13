@@ -57,7 +57,7 @@ const ApplyForm = ({
 }) => {
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
-
+  const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
   useEffect(() => {
     setValue("type", applyType);
     if (isEdit) {
@@ -123,6 +123,16 @@ const ApplyForm = ({
       return `유료(${priceFormat(String(pay2))})`;
     }
   };
+
+  const multipleOptionHandler = (val:string) => {
+    setMultipleSelect((prevOptions) => {
+      if (prevOptions.includes(val)) {
+        return prevOptions.filter((option) => option !== val);
+      } else {
+        return [...prevOptions, val];
+      }
+    });
+  }
 
   return (
     <ApplyFormWrap>
@@ -227,14 +237,15 @@ const ApplyForm = ({
                 <SelectBoxC
                   label={data.title}
                   required={data.required}
-                  optionList={data.options}
+                  multipleSelect={multipleSelect}
                 >
                   {data.options.map((option, index) => (
                     <InputCheckboxA
                       key={option} // 각 옵션의 고유한 값 사용
                       label={option} // 실제 옵션 값 사용
                       id={option} // 실제 옵션 값 사용
-                      onChange={() => {
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        multipleOptionHandler(e.target.id)
                         setMultipleOption((prev) => {
                           return {
                             ...prev,

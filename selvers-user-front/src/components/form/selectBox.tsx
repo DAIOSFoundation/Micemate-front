@@ -40,7 +40,7 @@ interface SelectDProps extends SelectProps {
 }
 
 interface SelectCProps extends SelectProps {
-  optionList: string[];
+  multipleSelect?: string[];
 }
 
 //회원가입 페이지 사용(관심분야)
@@ -135,11 +135,12 @@ export const SelectBoxB = ({
 export const SelectBoxC = ({
   label,
   required,
-  optionList,
   children,
+  multipleSelect,
 }: SelectCProps) => {
   const [isOn, setIsOn] = useState(false);
   const selectBoxRef = useRef<HTMLDivElement>(null);
+  const [targetText, setTargetText] = useState<string>("");
   const toggleDropdown = () => {
     setIsOn((prev) => !prev);
   };
@@ -158,6 +159,12 @@ export const SelectBoxC = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (multipleSelect) {
+      setTargetText(multipleSelect.join(" / "));
+    }
+  }, [multipleSelect]);
+
   return (
     <SelectWrapC ref={selectBoxRef} $isOn={isOn}>
       <p className="label">
@@ -167,9 +174,7 @@ export const SelectBoxC = ({
       <div className="select_box">
         <div onClick={toggleDropdown} className="select">
           <div>
-            {optionList?.map((data, index) => {
-              return <span key={index}>{data}/</span>;
-            })}
+            {targetText !== "" ? targetText : "선택해주세요"}
           </div>
           <span className="icon">
             <ArrowIconW />
@@ -197,7 +202,7 @@ export const SelectBoxD = ({
 
   useEffect(() => {
     if (optionList) {
-      setTargetText(optionList[0]);
+      setTargetText("선택해주세요");
     }
   }, [optionList]);
   const handleSelect = (value: string, index) => {
