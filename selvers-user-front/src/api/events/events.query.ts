@@ -7,7 +7,7 @@ import {
   NewApplyRegisterRequest,
   EventInformationRequest,
   ApplyRegisterSurveyData,
-  ApplyRegisterSurveyPayload
+  ApplyRegisterSurveyPayload,
   // ApplyRegisterGeneralRequest,
 } from "@/type";
 import apiClient from "@/api/index";
@@ -533,7 +533,11 @@ export const useApplyRegisterSurveyQuery = (data) => {
 
 // 행사 등록 사전 설문 정보 수정
 export const useApplyRegisterSurveyMutation = () => {
-  return useMutation<ApplyRegisterSurveyData, Error, ApplyRegisterSurveyPayload>({
+  return useMutation<
+    ApplyRegisterSurveyData,
+    Error,
+    ApplyRegisterSurveyPayload
+  >({
     mutationFn: async ({ token, event_id, data }) => {
       const response = await apiClient({
         method: "POST",
@@ -565,7 +569,7 @@ export const useApplyRegisterFaqQuery = (data) => {
       return response.data;
     },
   });
-}
+};
 
 // 행사 등록 FAQ 정보 수정
 export const useApplyRegisterFaqMutation = () => {

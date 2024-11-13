@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useMediaQuery } from "usehooks-ts";
+import useQueryParams from "@/hook/useSearchParams";
 
 const CategoryList = ({
   categoryList,
@@ -12,12 +13,34 @@ const CategoryList = ({
   categoryList: CategoryListType[];
 }) => {
   const isSwiper = useMediaQuery("(max-width:1400px)");
+  const queryParams = useQueryParams({
+    isReplace: true,
+    isDirectPush: false,
+  });
+
+  const onClickCategory = (id: number) => {
+    const currentCategory = queryParams.get("category");
+    if (currentCategory === id.toString()) {
+      queryParams.set("category", null);
+    } else {
+      queryParams.set("category", id.toString());
+    }
+  };
+
   return (
     <CategoryListWrap className="maxframe">
       {!isSwiper && (
         <ul className="none_swiper_wrap">
           {categoryList.map((data) => {
-            return <CateItem key={data.id}>{data.name}</CateItem>;
+            return (
+              <CateItem
+                key={data.id}
+                onClick={() => onClickCategory(data.id)}
+                checked={queryParams.get("category") === data.id.toString()}
+              >
+                {data.name}
+              </CateItem>
+            );
           })}
         </ul>
       )}
@@ -43,8 +66,15 @@ const CategoryList = ({
         >
           {categoryList.map((data) => {
             return (
-              <SwiperSlide key={data.id}>
-                <CateItem>{data.name}</CateItem>
+              <SwiperSlide
+                key={data.id}
+                onClick={() => onClickCategory(data.id)}
+              >
+                <CateItem
+                  checked={queryParams.get("category") === data.id.toString()}
+                >
+                  {data.name}
+                </CateItem>
               </SwiperSlide>
             );
           })}

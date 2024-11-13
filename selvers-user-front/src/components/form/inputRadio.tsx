@@ -5,13 +5,13 @@
 import { InputRadioWrapA, InputRadioWrapB } from "./inputRadioStyle";
 import { UseFormRegister, FieldValues } from "react-hook-form";
 
-type Props = {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   name: string;
   label: string;
   register?: UseFormRegister<FieldValues>;
   defaultChecked?: boolean;
-};
+}
 
 // text radio
 export const InputRadioA = ({ label, id, name, register }: Props) => {
@@ -35,10 +35,12 @@ export const InputRadioB = ({
   name,
   register,
   defaultChecked,
+  ...rest
 }: Props) => {
   return (
     <InputRadioWrapB>
       <input
+        {...rest}
         type="radio"
         id={id}
         value={id}

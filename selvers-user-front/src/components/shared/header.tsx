@@ -1,9 +1,9 @@
 import { userState } from "@/store/userState";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 // import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MobileHeader from "./mobileHeader";
-// import SearchBar from "@components/searchBar";
+import SearchBar from "@components/searchBar";
 import { useTokenValidationQuery } from "@/api/auth/auth.query";
 import {
   HeaderWrap,
@@ -29,6 +29,7 @@ const Header = () => {
   // const location = useLocation();
   const user = useRecoilValue(userState);
   const resetUserState = useResetRecoilState(userState);
+  const pathname = useLocation();
   const token = localStorage.getItem("token");
   const { data: TokenVail, isError: TokenVailError } =
     useTokenValidationQuery(token);
@@ -89,6 +90,7 @@ const Header = () => {
             )} */}
             {/* 서브페이지 검색바 */}
             {/* {mainPage === false && <SearchBar />} */}
+            {pathname.pathname !== "/" && <SearchBar />}
           </NavWrap>
           <BtnArea>
             {/* 로그아웃 상태 */}

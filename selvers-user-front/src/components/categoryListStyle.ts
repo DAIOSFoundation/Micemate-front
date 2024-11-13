@@ -3,6 +3,11 @@ import styled from "styled-components";
 export const CategoryListWrap = styled.ul`
   display: flex;
   justify-content: space-around;
+  padding-bottom: 30px;
+
+  @media (max-width: 1024px) {
+    padding: 16px 0;
+  }
 
   & .none_swiper_wrap {
     width: 100%;
@@ -18,12 +23,19 @@ export const CategorySwiper = styled.div`
   }
 `;
 
-export const CateItem = styled.li`
+export const CateItem = styled.li<{ checked?: boolean }>`
   font-size: 16px;
   font-weight: 700;
   color: #fff;
   text-align: center;
-  padding: 30px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: ${(props) => (props.checked ? "#FFFFFF1A" : "transparent")};
+
   @media (max-width: 1024px) {
     padding: 16px 0;
   }
