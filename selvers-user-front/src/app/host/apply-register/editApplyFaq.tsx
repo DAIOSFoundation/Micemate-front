@@ -18,20 +18,6 @@ const faqFieldSchema = z.object({
     .max(500, "답변은 최대 500자입니다."),
 });
 
-const faquserSchema = z.object({
-  contact_name: z
-    .string()
-    .min(1, "이름을 입력해주세요.")
-    .max(50, "이름은 최대 50자입니다."),
-  contact_email: z
-    .string()
-    .email("유효한 이메일을 입력해주세요."),
-  contact_number: z
-    .string()
-    .min(1, "휴대전화 번호를 입력해주세요.")
-    .regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
-});
-
 const editApplyFaqSchema = z.object({
   is_FAQ: z.boolean(),
   faqs: z
@@ -273,7 +259,7 @@ const EditApplyFaq: React.FC = () => {
           data: data,
         },
         {
-          onSuccess: (response) => {
+          onSuccess: () => {
             type ? openToast("FAQ가 성공적으로 저장되었습니다.") : submitHandler();
           },
           onError: (error) => {

@@ -9,7 +9,7 @@ import IIcon from "@/assets/icon/info.svg?react";
 import {
   ChangeEvent,
   Dispatch,
-  DragEvent, FormEvent,
+  DragEvent,
   SetStateAction,
   useCallback,
   useEffect,
@@ -49,11 +49,11 @@ const ApplyForm = ({
   errors: FieldErrors<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   isEdit: boolean;
-  setSurveyOption: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
+  setSurveyOption?: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
   editData?;
-  setMultipleOption: Dispatch<SetStateAction<{[key: number]: number[] }>>;
-  setApplyLong: Dispatch<SetStateAction<{[key: number]: string[] }>>;
-  surveyErr: number[];
+  setMultipleOption?: Dispatch<SetStateAction<{[key: number]: number[] }>>;
+  setApplyLong?: Dispatch<SetStateAction<{[key: number]: string[] }>>;
+  surveyErr?: number[];
 }) => {
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
@@ -234,7 +234,7 @@ const ApplyForm = ({
                       key={option} // 각 옵션의 고유한 값 사용
                       label={option} // 실제 옵션 값 사용
                       id={option} // 실제 옵션 값 사용
-                      onChange={(e: FormEvent<HTMLInputElement>) => {
+                      onChange={() => {
                         setMultipleOption((prev) => {
                           return {
                             ...prev,

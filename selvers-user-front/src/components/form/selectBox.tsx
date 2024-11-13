@@ -34,6 +34,7 @@ interface SelectBProps extends SelectProps {
 }
 
 interface SelectDProps extends SelectProps {
+  id: number;
   optionList: string[];
   setTarget: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
 }

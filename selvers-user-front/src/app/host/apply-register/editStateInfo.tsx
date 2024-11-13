@@ -7,15 +7,12 @@ import {
 import { UserInformationRequest } from "@/type";
 import {
   useApplyRegisterStateQuery,
-  useApplyRegisterFaqMutation,
   useApplySubmitMutation,
 } from "@/api/events/events.query";
 //1차개발 임시
-import { useMyInformationQuery } from "@/api/users/users.query";
-//1차개발 임시
 import LoadingScreen from "@components/shared/LoadingScreen";
 import ApplyPreview from "@/components/host/applyPreview";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToast } from "@/hook/useToast";
 
 interface UserInfoConText {
@@ -48,12 +45,6 @@ const writeNav = [
 const EditStateInfo = () => {
   //1차개발 임시
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
-  const { data: userData } = useMyInformationQuery({
-    token: token,
-    user_id: userId,
-  });
-  const useApplyRegisterFaq = useApplyRegisterFaqMutation();
   //1차개발 임시
   const useApplySubmit = useApplySubmitMutation();
   const OutletContext = useOutletContext<UserInfoConText>();

@@ -93,10 +93,10 @@ const getApplySchema = (applyType: number, EventApplyInformation) => {
 
 const ApplyPage = () => {
   const [applyType, setApplyType] = useState(0);
-  const [applyList, setApplyList] = useState([]);
-  const [applySurvey, setApplySurvey] = useState({});
-  const [multipleOption, setMultipleOption] = useState<>({});
-  const [applyLong, setApplyLong] = useState({});
+  const [applyList, setApplyList] = useState<{ type: number; value: string }[]>([]);
+  const [applySurvey, setApplySurvey] = useState<{ [key: number]: number[] }>({});
+  const [multipleOption, setMultipleOption] = useState<{[key: number]: number[] }>({});
+  const [applyLong, setApplyLong] = useState<{[key: number]: string[] }>({});
   const [surveyErr, setSurveyErr] = useState<number[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
