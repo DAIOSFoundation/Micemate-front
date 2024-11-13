@@ -15,6 +15,7 @@ const CategoryList = ({
   const isSwiper = useMediaQuery("(max-width:1400px)");
   const queryParams = useQueryParams({
     isReplace: true,
+    isDirectPush: false,
   });
 
   const onClickCategory = (id: number) => {
@@ -37,7 +38,7 @@ const CategoryList = ({
                 onClick={() => onClickCategory(data.id)}
                 checked={queryParams.get("category") === data.id.toString()}
               >
-                <span>{data.name}</span>
+                {data.name}
               </CateItem>
             );
           })}
@@ -69,7 +70,11 @@ const CategoryList = ({
                 key={data.id}
                 onClick={() => onClickCategory(data.id)}
               >
-                <CateItem>{data.name}</CateItem>
+                <CateItem
+                  checked={queryParams.get("category") === data.id.toString()}
+                >
+                  {data.name}
+                </CateItem>
               </SwiperSlide>
             );
           })}

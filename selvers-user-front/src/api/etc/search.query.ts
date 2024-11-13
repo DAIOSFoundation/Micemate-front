@@ -16,8 +16,7 @@ export const useDeleteSearchHistoryMutation = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (searchId: number) =>
-      deleteSearchHistory(Number(userId), searchId),
+    mutationFn: () => deleteSearchHistory(Number(userId)),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.SEARCH_HISTORY(Number(userId))],

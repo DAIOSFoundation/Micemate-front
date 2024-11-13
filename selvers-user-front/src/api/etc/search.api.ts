@@ -21,9 +21,12 @@ export const getSearchHistory = async (
   return response.data;
 };
 
-export const deleteSearchHistory = async (userId: number, searchId: number) => {
-  const response = await apiClient.delete(
-    `/api/users/${userId}/searches/${searchId}`
-  );
+export const deleteSearchHistory = async (userId: number) => {
+  const response = await apiClient.delete(`/api/users/${userId}/searches`);
+  return response.data;
+};
+
+export const putToggleSearchHistory = async (userId: number) => {
+  const response = await apiClient.put(`/api/users/${userId}/searches`);
   return response.data;
 };

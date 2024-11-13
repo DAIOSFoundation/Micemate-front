@@ -9,19 +9,31 @@ interface SearchHistoryListProps {
 const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
   const navigate = useNavigate();
   const { data: searchHistory } = useGetSearchHistoryQuery();
+  const userId = localStorage.getItem("user_id");
 
   const handleSearchHistoryClick = (keyword: string) => {
     navigate(`/event-list?search=${keyword}`);
     handleCloseFilter();
   };
 
-  return (
-    <SearchHistory>
-      <p className="title">최근 검색어</p>
-      <div className="btn_area">
-        <button>검색 기록 끄기</button>
-        <button>검색 기록 삭제</button>
-      </div>
+  const renderHistoryList = () => {
+    console.log(!userId);
+    if (!userId)
+      return (
+        <div
+          style={{
+            textAlign: "center",
+            color: "white",
+            height: "90%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          로그인 후 이용해주세요.
+        </div>
+      );
+    return (
       <ul>
         {searchHistory?.data.items.map((item) => (
           <li
@@ -33,6 +45,16 @@ const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
           </li>
         ))}
       </ul>
+    );
+  };
+  return (
+    <SearchHistory>
+      <p className="title">최근 검색어</p>
+      <div className="btn_area">
+        <button>검색 기록 끄기</button>
+        <button>검색 기록 삭제</button>
+      </div>
+      {renderHistoryList()}
     </SearchHistory>
   );
 };

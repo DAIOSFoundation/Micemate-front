@@ -23,7 +23,7 @@ const SearchBar = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
   const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchText !== "") {
+    if (e.key === "Enter") {
       setIsFilterOpen(false);
       navigate(`/event-list?search=${searchText}`);
     }
