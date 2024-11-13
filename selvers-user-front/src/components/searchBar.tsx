@@ -25,7 +25,11 @@ const SearchBar = () => {
   const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setIsFilterOpen(false);
-      navigate(`/event-list?search=${searchText}`);
+      if (window.location.pathname === "/event-list") {
+        queryParams.set("search", searchText);
+      } else {
+        navigate(`/event-list?search=${searchText}`);
+      }
     }
   };
 
