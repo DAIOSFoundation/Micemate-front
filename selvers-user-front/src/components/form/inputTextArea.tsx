@@ -55,7 +55,7 @@ export const InputTextAreaB: React.FC<Props> = ({
         </label>
       </p>
       <div className="select_box">
-        <textarea id={textareaId} onChange={handleChange} required={required} />
+        <textarea id={textareaId} onChange={handleChange} required={required} maxLength={150} />
       </div>
     </InputTextAreaWrapB>
   );
