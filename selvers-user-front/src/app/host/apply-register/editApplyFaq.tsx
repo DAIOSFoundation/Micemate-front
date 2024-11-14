@@ -231,11 +231,16 @@ const EditApplyFaq: React.FC = () => {
       faqs: fields.map((field) => ({
         question: field.question,
         answer: field.answer,
+        is_reject: false,
         // required 및 is_reject 필드 제거
       })),
       contact_name: faquser.contact_name || "",
       contact_email: faquser.contact_email || "",
       contact_number: faquser.contact_number || "",
+      is_reject: {
+        faq: false,
+        contact: false,
+      }
     };
 
     console.log("API   : ", data);

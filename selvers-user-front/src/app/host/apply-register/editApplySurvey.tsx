@@ -253,7 +253,7 @@ const EditApplySurvey: React.FC = () => {
             ? field.options.map((opt) => opt.text)
             : [],
         required: field.required,
-        is_reject: field.isReject,
+        is_reject: false,
       })),
       is_reject: {
         survey: false, // 필요에 따라 설정
