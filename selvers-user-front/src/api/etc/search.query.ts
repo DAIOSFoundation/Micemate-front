@@ -12,6 +12,7 @@ export const useGetSearchHistoryQuery = () => {
     queryKey: [QUERY_KEY.SEARCH_HISTORY(Number(userId))],
     queryFn: () => getSearchHistory(Number(userId)),
     enabled: !!userId,
+    staleTime: 1000 * 60 * 3,
   });
 };
 

@@ -22,24 +22,26 @@ const SearchBar = () => {
   });
   const [searchText, setSearchText] = useState(queryParams.get("search") || "");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
   const filterBox = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
-  const onSearch = () => {
-    if (inputRef.current) {
-      inputRef.current.blur();
-    }
+  const onSearch = useCallback(async () => {
     if (window.location.pathname === "/event-list") {
       queryParams.set("search", searchText);
     } else {
       navigate(`/event-list?search=${searchText}`);
     }
-  };
+  }, [searchText, navigate, queryParams]);
 
-  const onKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+  const onKeyDownHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isComposing) {
+      e.preventDefault();
       setIsFilterOpen(false);
-      onSearch();
+      if (inputRef.current) {
+        inputRef.current.blur();
+      }
+      await onSearch();
     }
   };
 
@@ -57,24 +59,26 @@ const SearchBar = () => {
     }
   }, [isMobile]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
       if (
         filterBox.current &&
         !filterBox.current.contains(event.target as Node)
       ) {
         handleCloseFilter();
       }
-    };
+    },
+    [handleCloseFilter]
+  );
 
+  useEffect(() => {
     if (isFilterOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("pointerdown", handleClickOutside);
+      return () => {
+        document.removeEventListener("pointerdown", handleClickOutside);
+      };
     }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [handleCloseFilter, isFilterOpen]);
+  }, [isFilterOpen, handleCloseFilter, handleClickOutside]);
 
   return (
     <SearchBarWrap>
@@ -90,6 +94,8 @@ const SearchBar = () => {
             value={searchText}
             onFocus={handleOpenFilter}
             onKeyDown={onKeyDownHandler}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
           />
           <button onClick={onSearch}>
             <SearchIcon />
