@@ -13,51 +13,72 @@ import { useToast } from "@/hook/useToast";
 import { z } from "zod";
 
 // 전체 설문 데이터 스키마
-const editApplySurveySchema = z.object({
-  is_survey: z.boolean(),
-  surveys: z
-    .array(
-      z
-        .object({
-          type: z.union([z.literal(0), z.literal(1), z.literal(2)], {
-            invalid_type_error: "설문 유형이 유효하지 않습니다.",
-          }),
-          title: z
-            .string()
-            .min(1, { message: "설문 제목을 입력해주세요." })
-            .max(50, { message: "설문 제목은 최대 50자입니다." }),
-          options: z
-            .array(
-              z
-                .string()
-                .min(1, { message: "옵션을 입력해주세요." })
-                .max(20, {
-                  message: "옵션 텍스트는 20자를 초과할 수 없습니다.",
-                })
-            )
-            .max(10, { message: "옵션은 최대 10개까지 추가할 수 있습니다." })
-            .optional(),
-          required: z.boolean(),
-          is_reject: z.boolean(),
-        })
-        .superRefine((data, ctx) => {
-          if (
-            (data.type === 0 || data.type === 1) &&
-            (!data.options || data.options.length < 1)
-          ) {
-            ctx.addIssue({
-              path: ["options"],
-              code: z.ZodIssueCode.custom,
-              message: "옵션을 최소 1개 이상 입력해주세요.",
-            });
-          }
-        })
-    )
-    .max(5, { message: "최대 5개의 설문을 추가할 수 있습니다." }),
-  is_reject: z.object({
-    survey: z.boolean(),
-  }),
-});
+const editApplySurveySchema = z
+  .object({
+    is_survey: z.boolean(),
+    surveys: z
+      .array(
+        z
+          .object({
+            type: z.union([z.literal(0), z.literal(1), z.literal(2)], {
+              invalid_type_error: "설문 유형이 유효하지 않습니다.",
+            }),
+            title: z
+              .string()
+              .min(1, { message: "설문 제목을 입력해주세요." })
+              .max(50, { message: "설문 제목은 최대 50자입니다." }),
+            options: z
+              .array(
+                z
+                  .string()
+                  .min(1, { message: "옵션을 입력해주세요." })
+                  .max(20, {
+                    message: "옵션 텍스트는 20자를 초과할 수 없습니다.",
+                  })
+              )
+              .max(10, { message: "옵션은 최대 10개까지 추가할 수 있습니다." })
+              .optional(),
+            required: z.boolean(),
+            is_reject: z.boolean(),
+          })
+          .superRefine((data, ctx) => {
+            if (
+              (data.type === 0 || data.type === 1) &&
+              (!data.options || data.options.length < 1)
+            ) {
+              ctx.addIssue({
+                path: ["options"],
+                code: z.ZodIssueCode.custom,
+                message: "옵션을 최소 1개 이상 입력해주세요.",
+              });
+            }
+          })
+      )
+      .max(5, { message: "최대 5개의 설문을 추가할 수 있습니다." })
+      .optional(), // is_survey가 false일 때 surveys가 없을 수 있으므로 optional로 설정
+    is_reject: z.object({
+      survey: z.boolean(),
+    }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.is_survey) {
+      if (!data.surveys || data.surveys.length === 0) {
+        ctx.addIssue({
+          path: ["surveys"],
+          code: z.ZodIssueCode.custom,
+          message: "is_survey가 true일 때는 최소 1개의 설문이 필요합니다.",
+        });
+      }
+    } else {
+      if (data.surveys && data.surveys.length > 0) {
+        ctx.addIssue({
+          path: ["surveys"],
+          code: z.ZodIssueCode.custom,
+          message: "is_survey가 false일 때는 설문을 추가할 수 없습니다.",
+        });
+      }
+    }
+  });
 
 interface UserInfoContext {
   authInfo: UserInformationRequest;
@@ -207,7 +228,7 @@ const EditApplySurvey: React.FC = () => {
     setFields([]);
     setIsSurveyUsed(useSurvey);
     if (!useSurvey) {
-      setFields([defaultField]);
+      setFields([]);
     } else {
       if (initialFields.length > 0) {
         setFields(initialFields);

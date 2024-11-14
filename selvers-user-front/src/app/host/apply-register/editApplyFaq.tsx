@@ -6,7 +6,7 @@ import { useToast } from "@/hook/useToast";
 import { z } from "zod";
 
 
-// Zod 스키마 정의
+// FAQ 필드 스키마 정의
 const faqFieldSchema = z.object({
   question: z
     .string()
@@ -18,15 +18,42 @@ const faqFieldSchema = z.object({
     .max(500, "답변은 최대 500자입니다."),
 });
 
+// 전체 스키마 정의
 const editApplyFaqSchema = z.object({
   is_FAQ: z.boolean(),
   faqs: z
     .array(faqFieldSchema)
-    .max(5, "최대 5개의 FAQ를 추가할 수 있습니다."),
-  contact_name: z.string().min(1, "이름을 입력해주세요.").max(50, "이름은 최대 50자입니다."),
+    .max(5, "최대 5개의 FAQ를 추가할 수 있습니다.")
+    .optional(),
+  contact_name: z
+    .string()
+    .min(1, "이름을 입력해주세요.")
+    .max(50, "이름은 최대 50자입니다."),
   contact_email: z.string().email("유효한 이메일을 입력해주세요."),
-  contact_number: z.string().min(1, "휴대전화 번호를 입력해주세요.").regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
-});
+  contact_number: z
+    .string()
+    .min(1, "휴대전화 번호를 입력해주세요.")
+    .regex(/^[0-9\-+\s()]*$/, "유효한 전화번호를 입력해주세요."),
+})
+  .superRefine((data, ctx) => {
+    if (data.is_FAQ) {
+      if (!data.faqs || data.faqs.length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "is_FAQ가 true일 때는 최소 1개의 FAQ가 필요합니다.",
+          path: ["faqs"],
+        });
+      }
+    } else {
+      if (data.faqs && data.faqs.length > 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "is_FAQ가 false일 때는 faqs가 비어 있어야 합니다.",
+          path: ["faqs"],
+        });
+      }
+    }
+  });
 
 // 에러 메시지 타입 정의
 type FormErrors = {
@@ -169,7 +196,7 @@ const EditApplyFaq: React.FC = () => {
     setFields([]);
     setIsFaqUsed(useFaq);
     if (!useFaq) {
-      setFields([defaultFaqField]);
+      setFields([]);
     } else {
       if (initialFields.length > 0) {
         setFields(initialFields); // 초기 데이터를 복원
@@ -202,9 +229,9 @@ const EditApplyFaq: React.FC = () => {
         answer: field.answer,
         // required 및 is_reject 필드 제거
       })),
-      contact_name: faquser.contact_name,
-      contact_email: faquser.contact_email,
-      contact_number: faquser.contact_number,
+      contact_name: faquser.contact_name || "",
+      contact_email: faquser.contact_email || "",
+      contact_number: faquser.contact_number || "",
     };
 
     console.log("API   : ", data);
