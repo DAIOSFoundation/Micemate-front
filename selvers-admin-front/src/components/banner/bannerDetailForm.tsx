@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { UseFormReturn } from "react-hook-form";
+import { FieldError, UseFormReturn } from "react-hook-form";
 import { BannerType, type CreateBannerForm } from "@/types";
 
 interface BannerDetailFormProps {
@@ -55,6 +55,7 @@ const BannerDetailForm = ({
             })}
           />
         </div>
+        {errors.title && <ErrorMessage errorMessage={errors.title.message} />}
 
         <div className="tit_wrap mt_25">
           <h3 className="tit02">
@@ -100,6 +101,13 @@ const BannerDetailForm = ({
             </div>
           </div>
         </div>
+        {(errors.start_date || errors.end_date) && (
+          <ErrorMessage
+            errorMessage={
+              errors.start_date?.message || errors.end_date?.message
+            }
+          />
+        )}
 
         <div className="tit_wrap mt_25">
           <h3 className="tit02">
@@ -114,7 +122,7 @@ const BannerDetailForm = ({
             </div>
             <div className="mt_8 fs_12 fw_500 pl_15">
               · 10MB 이하의 JPG, JPEG, PNG 파일
-              <br />· 해상도 1920*{bannerType === 0 ? 1080 : 360}픽셀
+              <br />· 해상도 1920*{bannerType === 0 ? 840 : 360}픽셀
             </div>
           </div>
         </div>
@@ -130,7 +138,7 @@ const BannerDetailForm = ({
             alt="Preview"
             className={`w_767 preview_banner_img ${
               bannerType === 0
-                ? "preview_banner_img_1080"
+                ? "preview_banner_img_840"
                 : "preview_banner_img_360"
             }`}
           />
@@ -172,6 +180,7 @@ const BannerDetailForm = ({
             })}
           />
         </div>
+        {errors.url && <ErrorMessage errorMessage={errors.url.message} />}
 
         <div className="mt_48">
           <div className="checkbox">
@@ -206,3 +215,7 @@ const BannerDetailForm = ({
 };
 
 export default BannerDetailForm;
+
+const ErrorMessage = ({ errorMessage }: { errorMessage: string }) => {
+  return <p className="fs_12 col_red mt_10">{errorMessage}</p>;
+};
