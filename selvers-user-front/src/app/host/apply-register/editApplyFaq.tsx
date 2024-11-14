@@ -130,7 +130,11 @@ const EditApplyFaq: React.FC = () => {
         setFields(mappedFields);
         setFaquser(User);
       } else {
-        setFields([defaultFaqField]);
+        if (is_FAQ === true) {
+          setFields([defaultFaqField]);
+        } else {
+          setFields([]);
+        }
       }
     }
   }, [faqData]);

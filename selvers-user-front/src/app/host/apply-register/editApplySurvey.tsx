@@ -145,7 +145,11 @@ const EditApplySurvey: React.FC = () => {
         setInitialFields(mappedFields);
         setFields(mappedFields);
       } else {
-        setFields([defaultField]);
+        if (is_survey == true) {
+          setFields([defaultField]);
+        } else {
+          setFields([]);
+        }
       }
     }
   }, [surveyData]);
