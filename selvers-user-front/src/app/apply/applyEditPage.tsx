@@ -4,7 +4,6 @@ import * as z from "zod";
 
 import LoadingScreen from "@components/shared/LoadingScreen";
 import Thumbnail from "@components/eventDetail/thumbnailArea";
-import ApplyForm from "@components/form/applyForm";
 import ApplyAgreeFrom from "@components/form/applyAgreeFrom";
 import { useEventDetail, useApplyEditQuery } from "@/api/events/events.query";
 import { useState, useEffect } from "react";
@@ -20,6 +19,7 @@ import {
   MainForm,
   SideForm,
 } from "./applyPageStyle";
+import ApplyEditForm from "@components/form/applyEditForm";
 
 const applyOption = (type: number) => {
   if (type === 0) {
@@ -97,9 +97,13 @@ const ApplyEditPage = () => {
   const token = localStorage.getItem("token");
   const [applyType, setApplyType] = useState(0);
   const [applyList, setApplyList] = useState([]);
-  const [applySurvey, setApplySurvey] = useState<{ [key: number]: number[] }>({});
-  const [multipleOption, setMultipleOption] = useState<{[key: number]: number[] }>({});
-  const [applyLong, setApplyLong] = useState<{[key: number]: string[] }>({});
+  const [applySurvey, setApplySurvey] = useState<{
+    [key: number]: (number | string)[];
+  }>({});
+  const [multipleOption, setMultipleOption] = useState<{
+    [key: number]: number[];
+  }>({});
+  const [applyLong, setApplyLong] = useState<{ [key: number]: string[] }>({});
   const [surveyErr, setSurveyErr] = useState<number[]>([]);
 
   const eventApply = useEventApplyMutation();
@@ -133,6 +137,20 @@ const ApplyEditPage = () => {
     isError: isErrorDetail,
   } = useEventDetail(id, token);
 
+  // 사전 질문 값 세팅
+  useEffect(() => {
+    if (editData && EventApplyInformation) {
+      const surveys = EventApplyInformation?.data?.surveys || [];
+      const newApplySurvey = surveys.reduce((acc, survey, i) => {
+        acc[survey.id] = Array.isArray(editData.data.surveys[i].answer)
+          ? editData.data.surveys[i].answer
+          : [editData.data.surveys[i].answer];
+        return acc;
+      }, {});
+      setApplySurvey(newApplySurvey);
+    }
+  }, [editData, EventApplyInformation]);
+
   if (isLoadingDetail) {
     return <LoadingScreen />;
   }
@@ -165,7 +183,7 @@ const ApplyEditPage = () => {
       ...applyLong,
     };
     const surveysList = EventApplyInformation?.data?.surveys || [];
-    let errArr = [];
+    const errArr = [];
     for (const survey of surveysList) {
       if (survey.required && !surveys[survey.id]) {
         errArr.push(survey.id);
@@ -176,14 +194,14 @@ const ApplyEditPage = () => {
       return;
     }
     setSurveyErr([]);
-    const transformedSurveys = Object.fromEntries(
-      Object.entries(surveys).map(([key, value]) => {
-        if (Array.isArray(value)) {
-          return [key, value.map(item => item.toString())];
-        }
-        return [key, value];
-      })
-    );
+    // const transformedSurveys = Object.fromEntries(
+    //   Object.entries(surveys).map(([key, value]) => {
+    //     if (Array.isArray(value)) {
+    //       return [key, value.map((item) => item.toString())];
+    //     }
+    //     return [key, value];
+    //   })
+    // );
 
     const terms_of_uses = {
       5: data?.agree1,
@@ -241,7 +259,7 @@ const ApplyEditPage = () => {
         <Main>
           <Thumbnail thumnaildata={detailData?.data} applyBtn={false} />
           <MainForm>
-            <ApplyForm
+            <ApplyEditForm
               register={register}
               applyType={applyType}
               setApplyType={setApplyType}
@@ -251,6 +269,7 @@ const ApplyEditPage = () => {
               EventApplyInformation={EventApplyInformation}
               isEdit={isEdit}
               editData={editData?.data}
+              surveyOption={applySurvey}
               setSurveyOption={setApplySurvey}
               setMultipleOption={setMultipleOption}
               setApplyLong={setApplyLong}
