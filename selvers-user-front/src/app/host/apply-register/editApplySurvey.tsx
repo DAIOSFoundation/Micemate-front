@@ -303,7 +303,7 @@ const EditApplySurvey: React.FC = () => {
 
       setFormErrors(errors);
       console.log(validation.error);
-      openToast("잘못된 입력값 입니다.");
+      openToast("입력하지 않은 항목이 있습니다.");
       return;
     }
 
@@ -410,7 +410,7 @@ const EditApplySurvey: React.FC = () => {
                       }
                       maxLength={50}
                       className={
-                        formErrors.surveys?.[fieldIndex]?.title ? "red" : ""
+                        formErrors.surveys?.[fieldIndex] ? "red" : ""
                       }
                     />
                     <select

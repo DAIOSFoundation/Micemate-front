@@ -288,7 +288,7 @@ const EditApplyFaq: React.FC = () => {
         });
         setFormErrors(errors);
         console.log(error);
-        openToast("잘못된 입력값 입니다.");
+        openToast("입력하지 않은 항목이 있습니다.");
         return;
       }
       openToast("예기치 못한 오류가 발생했습니다.");
