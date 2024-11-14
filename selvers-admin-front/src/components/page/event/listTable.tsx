@@ -74,6 +74,7 @@ const ListTable = ({ eventList, checkedList, setCheckedList }) => {
               <th>행사 일시</th>
               <th>행사 개설일</th>
               <th></th>
+              <th>미리보기</th>
               <th>진행 상태</th>
             </tr>
           </thead>
@@ -138,6 +139,15 @@ const ListTable = ({ eventList, checkedList, setCheckedList }) => {
                       ) : (
                         ""
                       )}
+                    </td>
+                    <td>
+                      <Link
+                        to={`/preview/${data.id}`}
+                        target="_blank"
+                        className="btn small gray w_72"
+                      >
+                        미리보기
+                      </Link>
                     </td>
                     <td>
                       <i className={`btn small  w_72 ${stateClass}`}>{text}</i>

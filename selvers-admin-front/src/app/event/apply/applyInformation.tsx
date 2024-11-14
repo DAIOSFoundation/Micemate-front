@@ -4,7 +4,6 @@ import SideMenu from "@components/shared/sideMenu/sideMenu";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import { useApplyRegisterInfoQuery } from "@/api/events/events.query";
 import { useEffect, useState } from "react";
-import AcceptBtns from "@components/page/event/acceptBtns";
 
 const Page = () => {
   const { id } = useParams();

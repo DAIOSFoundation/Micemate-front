@@ -39,10 +39,12 @@ export const dateTimeToString = (date) => {
 };
 
 export const dateStringFormat = (str: string) => {
-  const datePart = str.split(" ")[0];
-  const [year, month, day] = datePart.split("-"); // 하이픈으로 나누기
+  if (str) {
+    const datePart = str.split(" ")[0];
+    const [year, month, day] = datePart.split("-"); // 하이픈으로 나누기
 
-  return `${year}년 ${month}월 ${day}일`;
+    return `${year}년 ${month}월 ${day}일`;
+  }
 };
 
 export const dateStringFormatB = (dateString: string) => {

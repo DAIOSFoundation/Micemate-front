@@ -20,6 +20,7 @@ import BandBannerDetail from "@/app/banner/band/detailPage";
 import BannerPage from "@/app/banner/bannerPage";
 import AddBannerPage from "./banner/addBannerPage";
 import BannerDetailPage from "./banner/bannerDetailPage";
+import ApplyPreviewPage from "@/app/applyPreview";
 
 const router = createBrowserRouter([
   {
@@ -115,6 +116,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "/preview/:id", element: <ApplyPreviewPage /> },
 ]);
 
 const Router = () => {

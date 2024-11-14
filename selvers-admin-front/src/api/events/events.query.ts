@@ -75,6 +75,24 @@ export const useUsersEventQuery = (id?: number, type?: string) => {
   });
 };
 
+//행사 조회
+export const useEventDetail = (id: string, token?: string) => {
+  return useQuery({
+    queryKey: ["eventDetail", id, token],
+    queryFn: async () => {
+      const response = await apiClient({
+        method: "GET",
+        url: `/api/events/${id}`,
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
 // 행사 작성 상태 확인
 export const useApplyRegisterStateQuery = (id: number) => {
   const token = localStorage.getItem("token");
@@ -364,4 +382,4 @@ export const useApplyRegisterFaqQuery = (data) => {
       return response.data;
     },
   });
-}
+};

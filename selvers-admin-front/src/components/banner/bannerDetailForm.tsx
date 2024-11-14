@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FieldError, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { BannerType, type CreateBannerForm } from "@/types";
 
 interface BannerDetailFormProps {
