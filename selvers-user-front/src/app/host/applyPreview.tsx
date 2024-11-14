@@ -9,8 +9,7 @@ const ApplyPreviewPage = () => {
   const { id } = useParams();
   const { data: eventDetail } = useEventDetail(id, token);
   const [preview, setPreview] = useState(false);
-
-  // const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const payableInfo = (type: number, pay1: number, pay2: number) => {
     if (type === 1) {
       return `무료`;
@@ -29,13 +28,13 @@ const ApplyPreviewPage = () => {
     }
   };
 
-  // const accordionheadler = (idx: number) => {
-  //   if (activeIndex === idx) {
-  //     setActiveIndex(null);
-  //   } else {
-  //     setActiveIndex(idx);
-  //   }
-  // };
+  const accordionheadler = (idx: number) => {
+    if (activeIndex === idx) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(idx);
+    }
+  };
 
   if (!eventDetail) {
     <div>표시할 내용이 없습니다.</div>;
@@ -90,9 +89,9 @@ const ApplyPreviewPage = () => {
                 <a href="#_detail" className="tab_btn">
                   상세정보
                 </a>
-                {/* <a href="#_faq" className="tab_btn">
+                <a href="#_faq" className="tab_btn">
                   FAQ
-                </a> */}
+                </a>
                 <a href="#_call" className="tab_btn">
                   문의하기
                 </a>
@@ -155,7 +154,7 @@ const ApplyPreviewPage = () => {
                   </div>
                 </div>
 
-                {/* <div id="_faq">
+                <div id="_faq">
                   <div className="tit">FAQ</div>
 
                   <ul className="faq_list">
@@ -175,7 +174,7 @@ const ApplyPreviewPage = () => {
                       );
                     })}
                   </ul>
-                </div> */}
+                </div>
 
                 <div id="_call">
                   <div className="tit">문의하기</div>
