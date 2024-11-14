@@ -49,7 +49,6 @@ const Content = ({ contentdata }: { contentdata: EventDetailDataType }) => {
       setActiveIndex(idx);
     }
   };
-  console.log(contentdata);
 
   return (
     <>

@@ -13,7 +13,7 @@ const Footer = () => {
         <p className="logo">
           <Logo />
         </p>
-        {/* <ul className="footer_nav">
+        <ul className="footer_nav">
           <li>
             <Link to="/event-list?page=1&date=1">이번주 행사</Link>
           </li>
@@ -26,7 +26,7 @@ const Footer = () => {
           <li>
             <Link to="/event-list">메이트 PICK</Link>
           </li>
-        </ul> */}
+        </ul>
       </LeftArea>
       <RightArea>
         <div className="link_area">

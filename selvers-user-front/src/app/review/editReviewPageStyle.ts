@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const EditReviewPageWrap = styled.form`
+export const EditReviewPageWrap = styled.div`
   max-width: 584px;
   width: 100%;
   margin: 0 auto;
@@ -9,7 +9,18 @@ export const EditReviewPageWrap = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  & .star-ratings {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    @media (max-width: 400px) {
+      gap: 5px;
+    }
+    & .star-container {
+      padding: 0 !important;
+    }
+  }
   @media (max-width: 1024px) {
     padding: 0 30px;
   }
@@ -20,9 +31,9 @@ export const ThumbnailArea = styled.figure`
   position: relative;
   overflow: hidden;
   aspect-ratio: 584/328;
-  border-radius: 10px;
   & img {
     width: 100%;
+    border-radius: 10px;
     position: absolute;
     top: 50%;
     left: 50%;

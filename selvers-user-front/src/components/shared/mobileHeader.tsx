@@ -8,8 +8,8 @@ import {
   TopMenu,
   LogoImg,
   NavWrap,
-  // Nav,
-  // NavItem,
+  Nav,
+  NavItem,
   BtnArea,
   DescBtn,
 } from "./headerStyle";
@@ -18,13 +18,13 @@ import MenuIcon from "@/assets/icon/menu.svg?react";
 import { useResetRecoilState } from "recoil";
 import { useConfirm } from "@/hook/useConfirm";
 import { confirmState } from "@/store/modalState";
-// import SearchIcon from "@/assets/icon/search.svg?react";
+import SearchIcon from "@/assets/icon/search.svg?react";
 
 const MobileHeader = () => {
   const [toggle, setToggle] = useState(false);
   const [mainPage, setMainPage] = useState(true);
   const { openConfirm, confirmValue } = useConfirm();
-  // const [searchLink, setSearchLink] = useState(false);
+  const [searchLink, setSearchLink] = useState(false);
   const user = useRecoilValue(userState);
   const loginState = user.isLogin;
   const location = useLocation();
@@ -46,11 +46,11 @@ const MobileHeader = () => {
       setMainPage(false);
     }
 
-    // if (location.pathname === "/" || location.pathname === "/list") {
-    //   setSearchLink(false);
-    // } else {
-    //   setSearchLink(true);
-    // }
+    if (location.pathname === "/" || location.pathname === "/event-list") {
+      setSearchLink(false);
+    } else {
+      setSearchLink(true);
+    }
   }, [location.pathname]);
 
   const logoutHandler = () => {
@@ -86,13 +86,13 @@ const MobileHeader = () => {
             </Link>
             {/* <button className="btn2">AI챗봇</button> */}
           </DescBtn>
-          {/* {searchLink && (
+          {searchLink && (
             <p className="searh_page_link">
-              <Link to="/list">
+              <Link to="/event-list">
                 <SearchIcon />
               </Link>
             </p>
-          )} */}
+          )}
           <button onClick={() => menuOpenHandler()} className="toggle_menu">
             <MenuIcon />
           </button>
@@ -100,7 +100,7 @@ const MobileHeader = () => {
       </TopMenu>
       {mainPage && (
         <NavWrap>
-          {/* <Nav>
+          <Nav>
             <NavItem>
               <Link to="/event-list?page=1&date=1">이번주 행사</Link>
             </NavItem>
@@ -113,7 +113,7 @@ const MobileHeader = () => {
             <NavItem>
               <Link to="/event-list">메이트 PICK</Link>
             </NavItem>
-          </Nav> */}
+          </Nav>
         </NavWrap>
       )}
 

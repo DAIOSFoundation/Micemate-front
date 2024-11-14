@@ -133,7 +133,7 @@ const router = createBrowserRouter(
       element: <LinkPage />,
     },
     {
-      path: "/edit-review",
+      path: "/edit-review/:id",
       element: <EditReviewPage />,
     },
     {
