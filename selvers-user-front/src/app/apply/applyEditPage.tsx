@@ -286,6 +286,7 @@ const ApplyEditPage = () => {
             setValue={setValue}
             register={register}
             applyType={applyType}
+            isEdit={isEdit}
           />
         </SideForm>
       </FormWrap>
