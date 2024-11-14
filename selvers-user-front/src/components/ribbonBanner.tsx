@@ -8,7 +8,8 @@ interface RibbonBannerProps {
 
 const RibbonBanner = ({ bannerImgs }: RibbonBannerProps) => {
   const goToLink = (link: string) => {
-    window.open(link);
+    const httpLink = link.startsWith("http") ? link : `https://${link}`;
+    window.open(httpLink);
   };
   return (
     <SubBannerWrap>

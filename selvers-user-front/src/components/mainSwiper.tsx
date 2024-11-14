@@ -9,7 +9,8 @@ type ImgsProps = {
 
 const MainSwiper = ({ bannerImgs }: ImgsProps) => {
   const goToLink = (link: string) => {
-    window.open(link);
+    const httpLink = link.startsWith("http") ? link : `https://${link}`;
+    window.open(httpLink);
   };
   return (
     <MainSwiperWrap>
