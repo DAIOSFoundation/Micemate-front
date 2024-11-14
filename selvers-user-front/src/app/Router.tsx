@@ -196,7 +196,7 @@ const router = createBrowserRouter(
         },
       ],
     },
-    { path: "/host/:id/priview", element: <ApplyPreviewPage /> },
+    { path: "/host/:id/preview", element: <ApplyPreviewPage /> },
   ]
   // { basename: "/root/home/micemate-frontend/dist" }
 );

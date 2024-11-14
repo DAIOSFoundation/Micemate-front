@@ -118,7 +118,7 @@ const ApplyListTable = ({ eventList, checkedList, setCheckedList }) => {
                   <td></td>
                   <td>
                     <Link
-                      to={`/host/${data.id}/priview`}
+                      to={`/host/${data.id}/preview`}
                       target="_blank"
                       className="btn small gray w_72"
                     >

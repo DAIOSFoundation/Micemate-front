@@ -166,7 +166,7 @@ const EditStateInfo = () => {
           <div className="btn_wrap"></div>
           <div className="btn_wrap gap23">
             <Link
-              to={`/host/${id}/priview`}
+              to={`/host/${id}/preview`}
               target="_blank"
               className="btn blue_bor"
             >

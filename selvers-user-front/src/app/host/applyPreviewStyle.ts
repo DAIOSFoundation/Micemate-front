@@ -221,6 +221,7 @@ export const ApplyPrivewWrap = styled.div<{ $preview: boolean }>`
     margin-top: 18px;
   }
   .cont_wrap .info_wrap .info_box .detail_imgs {
+    min-height: 800px;
     max-height: ${(prev) => (prev.$preview ? "auto" : "800px")};
     overflow: hidden;
     position: relative;
