@@ -32,6 +32,12 @@ const CategoryList = ({
     <CategoryListWrap className="maxframe">
       {!isSwiper && (
         <ul className="none_swiper_wrap">
+          <CateItem
+            onClick={() => queryParams.deleteQuery("category")}
+            checked={queryParams.get("category") === null}
+          >
+            전체
+          </CateItem>
           {categoryList.map((data) => {
             return (
               <CateItem
@@ -65,6 +71,11 @@ const CategoryList = ({
           }}
           className="category_swiper"
         >
+          <SwiperSlide onClick={() => queryParams.deleteQuery("category")}>
+            <CateItem checked={queryParams.get("category") === null}>
+              전체
+            </CateItem>
+          </SwiperSlide>
           {categoryList.map((data) => {
             return (
               <SwiperSlide
