@@ -37,6 +37,7 @@ interface SelectDProps extends SelectProps {
   id: number;
   optionList: string[];
   setTarget: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
+  surveyType?: { [key: number]: number[] }[];
 }
 
 interface SelectCProps extends SelectProps {
@@ -192,6 +193,7 @@ export const SelectBoxD = ({
     required,
     optionList,
     setTarget,
+    surveyType,
     }: SelectDProps) => {
   const [isOn, setIsOn] = useState(false);
   const [targetText, setTargetText] = useState("");
@@ -202,7 +204,17 @@ export const SelectBoxD = ({
 
   useEffect(() => {
     if (optionList) {
-      setTargetText("선택해주세요");
+      if (surveyType.length > 0) {
+        surveyType.map((data) => {
+          console.log(data)
+          if (data[id]) {
+            setTargetText(optionList[data[id][0]]);
+            handleSelect(optionList[data[id][0]], data[id][0]);
+          }
+        })
+      } else {
+        setTargetText("선택해주세요");
+      }
     }
   }, [optionList]);
   const handleSelect = (value: string, index) => {

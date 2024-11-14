@@ -97,6 +97,10 @@ const ApplyEditPage = () => {
   const token = localStorage.getItem("token");
   const [applyType, setApplyType] = useState(0);
   const [applyList, setApplyList] = useState([]);
+  const [applySurvey, setApplySurvey] = useState<{ [key: number]: number[] }>({});
+  const [multipleOption, setMultipleOption] = useState<{[key: number]: number[] }>({});
+  const [applyLong, setApplyLong] = useState<{[key: number]: string[] }>({});
+  const [surveyErr, setSurveyErr] = useState<number[]>([]);
 
   const eventApply = useEventApplyMutation();
   const { data: EventApplyInformation } = useEventApplyInformationQuery(
@@ -155,7 +159,32 @@ const ApplyEditPage = () => {
     appendIfDefined("xlsx", data?.xlsx ? data.xlsx[0] : undefined);
 
     const information = {};
-    const surveys = {};
+    const surveys = {
+      ...applySurvey,
+      ...multipleOption,
+      ...applyLong,
+    };
+    const surveysList = EventApplyInformation?.data?.surveys || [];
+    let errArr = [];
+    for (const survey of surveysList) {
+      if (survey.required && !surveys[survey.id]) {
+        errArr.push(survey.id);
+      }
+    }
+    if (errArr.length > 0) {
+      setSurveyErr(errArr);
+      return;
+    }
+    setSurveyErr([]);
+    const transformedSurveys = Object.fromEntries(
+      Object.entries(surveys).map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return [key, value.map(item => item.toString())];
+        }
+        return [key, value];
+      })
+    );
+
     const terms_of_uses = {
       5: data?.agree1,
       6: data?.agree2,
@@ -190,14 +219,14 @@ const ApplyEditPage = () => {
       { token: token, event_id: id, data: formData },
       {
         onSuccess: () => {
-          if (
-            EventApplyInformation?.data?.payable_type === 1 ||
-            EventApplyInformation?.data?.payable_type === 2
-          ) {
-            navigate("/detail/finish");
-          } else {
-            window.open(EventApplyInformation?.data?.payable_price_url);
-          }
+          // if (
+          //   EventApplyInformation?.data?.payable_type === 1 ||
+          //   EventApplyInformation?.data?.payable_type === 2
+          // ) {
+          navigate("/detail/finish");
+          // } else {
+          //   window.open(EventApplyInformation?.data?.payable_price_url);
+          // }
         },
         onError: (error) => {
           console.log(error);
@@ -222,6 +251,10 @@ const ApplyEditPage = () => {
               EventApplyInformation={EventApplyInformation}
               isEdit={isEdit}
               editData={editData?.data}
+              setSurveyOption={setApplySurvey}
+              setMultipleOption={setMultipleOption}
+              setApplyLong={setApplyLong}
+              surveyErr={surveyErr}
             />
           </MainForm>
         </Main>

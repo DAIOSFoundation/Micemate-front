@@ -58,6 +58,10 @@ const ApplyForm = ({
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
+  const [surveyType, setSurveyType] = useState<{ [key: number]: number[] }[]>([]);
+  const [surveyType1, setSurveyType1] = useState<{ [key: number]: number[] }[]>([]);
+  const [surveyType2, setSurveyType2] = useState<{ [key: number]: string[] }>({});
+
   useEffect(() => {
     setValue("type", applyType);
     if (isEdit) {
@@ -70,6 +74,25 @@ const ApplyForm = ({
         editData.information.forEach((field) => {
           setValue(`${field.name}`, field.answer);
         });
+      }
+      if (editData?.surveys) {
+        editData?.surveys.forEach((survey, idx) => {
+          const id = EventApplyInformation?.data?.surveys[idx].id;
+          if (survey.type === 0 ) {
+            surveyType.push({ [id]: [survey.answer] });
+            setSurveyType(surveyType);
+          }
+          if (survey.type === 1 ) {
+            survey.answer.map((answer) => {
+              multipleOptionHandler(survey.options[answer])
+            })
+          }
+          if (survey.type === 2 ) {
+            handleTextChange(id, survey.answer);
+            setSurveyType2({ [id]: [survey.answer] });
+            console.log(surveyType2)
+          }
+        })
       }
     }
   }, [editData, isEdit, applyType]);
@@ -125,7 +148,6 @@ const ApplyForm = ({
   };
 
   const multipleOptionHandler = (val: string) => {
-    console.log(val);
     setMultipleSelect((prevOptions) => {
       if (val && prevOptions?.includes(val)) {
         return prevOptions.filter((option) => option !== val);
@@ -225,6 +247,7 @@ const ApplyForm = ({
                         required={data.required}
                         optionList={data.options}
                         setTarget={setSurveyOption}
+                        surveyType={surveyType}
                       />
                       {surveyErr?.includes(data.id) && (
                         <p className="err_msg">필수값 입니다.</p>
@@ -277,7 +300,7 @@ const ApplyForm = ({
                       label={data.title}
                       required={data.required}
                       keyId={data.id} // 고유 키 전달
-                      value={setApplyLong[data.id] || ""} // 현재 값 전달
+                      value={setApplyLong[data.id] || surveyType2[data.id]} // 현재 값 전달
                       onChange={handleTextChange} // 값 변경 시 호출될 함수 전달
                     />
                   </div>
