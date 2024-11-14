@@ -15,7 +15,6 @@ import { QUERY_KEY } from "@/constants/queryKeys";
 
 /*리뷰 조회*/
 export const useReviewList = (event_id: string, token?: string) => {
-  console.log("asdasd");
   return useQuery({
     queryKey: ["reviewList", event_id],
     queryFn: async () => {

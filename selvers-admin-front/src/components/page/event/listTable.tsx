@@ -1,4 +1,3 @@
-import { commonUserUrl } from "@/constants/config";
 import { dateStringFormatB } from "@/util/stringTransition";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -104,7 +103,9 @@ const ListTable = ({ eventList, checkedList, setCheckedList }) => {
                       data.state === 5 ||
                       data.state === 6 ? (
                         <Link
-                          to={`${commonUserUrl}/${data.id}`}
+                          to={`${import.meta.env.VITE_USER_URL}detail/${
+                            data.id
+                          }`}
                           target="_blank"
                         >
                           {data.title ?? "-"}

@@ -1,6 +1,6 @@
 import { ApplyFormWrap, ExcelArea } from "./applyFormStyle";
 import { InputTextD } from "./inputText";
-import {SelectBoxB, SelectBoxC, SelectBoxD} from "./selectBox";
+import { SelectBoxB, SelectBoxC, SelectBoxD } from "./selectBox";
 // import { SelectBoxB, SelectBoxC } from "./selectBox";
 import { InputCheckboxA } from "./inputCheckbox";
 // import { InputTextAreaB } from "./inputTextArea";
@@ -24,7 +24,7 @@ import {
 } from "react-hook-form";
 import { telChangeUtilHandler } from "@/util/inputChange";
 import { priceFormat } from "@/util/stringTransition";
-import {InputTextAreaB} from "@components/form/inputTextArea";
+import { InputTextAreaB } from "@components/form/inputTextArea";
 
 const ApplyForm = ({
   EventApplyInformation,
@@ -39,7 +39,7 @@ const ApplyForm = ({
   setSurveyOption,
   setMultipleOption,
   setApplyLong,
-  surveyErr
+  surveyErr,
 }: {
   EventApplyInformation;
   applyType: number;
@@ -51,8 +51,8 @@ const ApplyForm = ({
   isEdit: boolean;
   setSurveyOption?: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
   editData?;
-  setMultipleOption?: Dispatch<SetStateAction<{[key: number]: number[] }>>;
-  setApplyLong?: Dispatch<SetStateAction<{[key: number]: string[] }>>;
+  setMultipleOption?: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
+  setApplyLong?: Dispatch<SetStateAction<{ [key: number]: string[] }>>;
   surveyErr?: number[];
 }) => {
   const [excelAgree, setExcelAgree] = useState(false);
@@ -124,15 +124,16 @@ const ApplyForm = ({
     }
   };
 
-  const multipleOptionHandler = (val:string) => {
+  const multipleOptionHandler = (val: string) => {
+    console.log(val);
     setMultipleSelect((prevOptions) => {
-      if (prevOptions.includes(val)) {
+      if (val && prevOptions?.includes(val)) {
         return prevOptions.filter((option) => option !== val);
       } else {
         return [...prevOptions, val];
       }
     });
-  }
+  };
 
   return (
     <ApplyFormWrap>
@@ -211,80 +212,82 @@ const ApplyForm = ({
       </div>
       {EventApplyInformation?.data?.surveys.length > 0 && (
         <>
-        <h3>사전 설문</h3>
-        <div className="field">
-          {EventApplyInformation?.data?.surveys.map((data) => {
-            if (data.type === 0) {
-              return (
-                <>
-                <div key={data.id} className="input_box">
-                  <SelectBoxD
-                    id={data.id}
-                    label={data.title}
-                    required={data.required}
-                    optionList={data.options}
-                    setTarget={setSurveyOption}
-                  />
-                  {surveyErr.includes(data.id) && (
-                    <p className="err_msg">필수값 입니다.</p>
-                  )}
-                </div>
-                </>
-              );
-            } else if (data.type === 1) {
-              return (
-                <>
-                <div key={data.id} className="input_box">
-                  <SelectBoxC
-                    label={data.title}
-                    required={data.required}
-                    multipleSelect={multipleSelect}
-                  >
-                    {data.options.map((option, index) => (
-                      <InputCheckboxA
-                        key={option} // 각 옵션의 고유한 값 사용
-                        label={option} // 실제 옵션 값 사용
-                        id={option} // 실제 옵션 값 사용
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                          multipleOptionHandler(e.target.id)
-                          setMultipleOption((prev) => {
-                            return {
-                              ...prev,
-                              [data.id]: prev[data.id]
-                                ? prev[data.id].includes(index)
-                                  ? prev[data.id].filter((item) => item !== index)
-                                  : [...prev[data.id], index]
-                                : [index],
-                            };
-                          });
-                        }}
+          <h3>사전 설문</h3>
+          <div className="field">
+            {EventApplyInformation?.data?.surveys.map((data) => {
+              if (data.type === 0) {
+                return (
+                  <>
+                    <div key={data.id} className="input_box">
+                      <SelectBoxD
+                        id={data.id}
+                        label={data.title}
+                        required={data.required}
+                        optionList={data.options}
+                        setTarget={setSurveyOption}
                       />
-                    ))}
-                  </SelectBoxC>
-                  {surveyErr.includes(data.id) && (
-                    <p className="err_msg">필수값 입니다.</p>
-                  )}
-                </div>
-                </>
-              );
-            } else if (data.type === 2) {
-              return (
-                <div key={data.id} className="input_box">
-                  <InputTextAreaB
-                    label={data.title}
-                    required={data.required}
-                    keyId={data.id} // 고유 키 전달
-                    value={setApplyLong[data.id] || ""} // 현재 값 전달
-                    onChange={handleTextChange} // 값 변경 시 호출될 함수 전달
-                  />
-                </div>
-              );
-            } else {
-              // 예기치 않은 data.type에 대한 처리 (선택 사항)
-              return null;
-            }
-          })}
-        </div>
+                      {surveyErr?.includes(data.id) && (
+                        <p className="err_msg">필수값 입니다.</p>
+                      )}
+                    </div>
+                  </>
+                );
+              } else if (data.type === 1) {
+                return (
+                  <>
+                    <div key={data.id} className="input_box">
+                      <SelectBoxC
+                        label={data.title}
+                        required={data.required}
+                        multipleSelect={multipleSelect}
+                      >
+                        {data.options.map((option, index) => (
+                          <InputCheckboxA
+                            key={option} // 각 옵션의 고유한 값 사용
+                            label={option} // 실제 옵션 값 사용
+                            id={option} // 실제 옵션 값 사용
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                              multipleOptionHandler(e.target.id);
+                              setMultipleOption((prev) => {
+                                return {
+                                  ...prev,
+                                  [data.id]: prev[data.id]
+                                    ? prev[data.id].includes(index)
+                                      ? prev[data.id].filter(
+                                          (item) => item !== index
+                                        )
+                                      : [...prev[data.id], index]
+                                    : [index],
+                                };
+                              });
+                            }}
+                          />
+                        ))}
+                      </SelectBoxC>
+                      {surveyErr?.includes(data.id) && (
+                        <p className="err_msg">필수값 입니다.</p>
+                      )}
+                    </div>
+                  </>
+                );
+              } else if (data.type === 2) {
+                return (
+                  <div key={data.id} className="input_box">
+                    <InputTextAreaB
+                      label={data.title}
+                      required={data.required}
+                      keyId={data.id} // 고유 키 전달
+                      value={setApplyLong[data.id] || ""} // 현재 값 전달
+                      onChange={handleTextChange} // 값 변경 시 호출될 함수 전달
+                    />
+                  </div>
+                );
+              } else {
+                // 예기치 않은 data.type에 대한 처리 (선택 사항)
+                return null;
+              }
+            })}
+          </div>
         </>
       )}
 

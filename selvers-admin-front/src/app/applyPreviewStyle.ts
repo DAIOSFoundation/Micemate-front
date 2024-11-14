@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 export const ApplyPrivewWrap = styled.div<{ $preview: boolean }>`
   color: #fff;
+  li {
+    list-style: none;
+  }
   /* button */
   .btn {
     display: inline-flex;
