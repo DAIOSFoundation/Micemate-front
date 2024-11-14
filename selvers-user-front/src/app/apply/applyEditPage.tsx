@@ -100,10 +100,8 @@ const ApplyEditPage = () => {
   const [applySurvey, setApplySurvey] = useState<{
     [key: number]: (number | string)[];
   }>({});
-  const [multipleOption, setMultipleOption] = useState<{
-    [key: number]: number[];
-  }>({});
-  const [applyLong, setApplyLong] = useState<{ [key: number]: string[] }>({});
+
+  // const [applyLong, setApplyLong] = useState<{ [key: number]: string[] }>({});
   const [surveyErr, setSurveyErr] = useState<number[]>([]);
 
   const eventApply = useEventApplyMutation();
@@ -151,12 +149,6 @@ const ApplyEditPage = () => {
     }
   }, [editData, EventApplyInformation]);
 
-  if (isLoadingDetail) {
-    return <LoadingScreen />;
-  }
-  if (isErrorDetail) {
-    return <div>데이터 없음</div>;
-  }
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     const appendIfDefined = (key, value) => {
@@ -179,29 +171,35 @@ const ApplyEditPage = () => {
     const information = {};
     const surveys = {
       ...applySurvey,
-      ...multipleOption,
-      ...applyLong,
     };
     const surveysList = EventApplyInformation?.data?.surveys || [];
     const errArr = [];
-    for (const survey of surveysList) {
-      if (survey.required && !surveys[survey.id]) {
-        errArr.push(survey.id);
+
+    // 빈 값 체크 로직 추가
+    for (const [key, value] of Object.entries(surveys)) {
+      if (
+        value === null ||
+        (Array.isArray(value) && value.length === 0) ||
+        (Array.isArray(value) && value.every((item) => item === ""))
+      ) {
+        errArr.push(Number(key));
       }
     }
+
+    // 필수 항목 체크
+    for (const survey of surveysList) {
+      if (survey.required && !surveys[survey.id]) {
+        if (!errArr.includes(survey.id)) {
+          errArr.push(survey.id);
+        }
+      }
+    }
+
     if (errArr.length > 0) {
       setSurveyErr(errArr);
       return;
     }
     setSurveyErr([]);
-    // const transformedSurveys = Object.fromEntries(
-    //   Object.entries(surveys).map(([key, value]) => {
-    //     if (Array.isArray(value)) {
-    //       return [key, value.map((item) => item.toString())];
-    //     }
-    //     return [key, value];
-    //   })
-    // );
 
     const terms_of_uses = {
       5: data?.agree1,
@@ -253,6 +251,13 @@ const ApplyEditPage = () => {
     );
   });
 
+  if (isLoadingDetail) {
+    return <LoadingScreen />;
+  }
+  if (isErrorDetail) {
+    return <div>데이터 없음</div>;
+  }
+
   return (
     <ApplyPageWrap className="maxframe">
       <FormWrap onSubmit={onSubmit}>
@@ -271,8 +276,6 @@ const ApplyEditPage = () => {
               editData={editData?.data}
               surveyOption={applySurvey}
               setSurveyOption={setApplySurvey}
-              setMultipleOption={setMultipleOption}
-              setApplyLong={setApplyLong}
               surveyErr={surveyErr}
             />
           </MainForm>
