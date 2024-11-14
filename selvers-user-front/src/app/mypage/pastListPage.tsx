@@ -19,7 +19,6 @@ const PastListPage = () => {
   return (
     <PastListPageWrap>
       <MyEventList list={useMyEvent.data?.data.items} />
-      <MyEventList list={useMyEvent.data?.data.items} />
       {useMyEvent.data?.data.total >= 4 && (
         <Pagination
           total={useMyEvent.data?.data.total}

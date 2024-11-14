@@ -1,6 +1,5 @@
 import { userState } from "@/store/userState";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MobileHeader from "./mobileHeader";
 import SearchBar from "@components/searchBar";
@@ -10,8 +9,8 @@ import {
   LogoImg,
   NavMenu,
   NavWrap,
-  // NavItem,
-  // Nav,
+  NavItem,
+  Nav,
   BtnArea,
   AuthBtn,
   DescBtn,
@@ -20,13 +19,12 @@ import Logo from "@/assets/logo_w.svg?react";
 import Cart from "@/assets/icon/cart.svg?react";
 import Calendar from "@/assets/icon/calendar.svg?react";
 import Person from "@/assets/icon/person.svg?react";
-// import { useEffect, useLayoutEffect, useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useAlret } from "@/hook/useAlret";
 
 const Header = () => {
-  // const [mainPage, setMainPage] = useState(true);
-  // const location = useLocation();
+  const [mainPage, setMainPage] = useState(true);
+  const location = useLocation();
   const user = useRecoilValue(userState);
   const resetUserState = useResetRecoilState(userState);
   const pathname = useLocation();
@@ -49,18 +47,18 @@ const Header = () => {
         },
       };
       openAlret(alretData);
-      // localStorage.removeItem("user_type");
+      localStorage.removeItem("user_type");
       resetUserState();
     }
   }, [TokenVail, TokenVailError, resetUserState]);
 
-  // useLayoutEffect(() => {
-  //   if (location.pathname === "/") {
-  //     setMainPage(true);
-  //   } else {
-  //     setMainPage(false);
-  //   }
-  // }, [location.pathname])
+  useLayoutEffect(() => {
+    if (location.pathname === "/") {
+      setMainPage(true);
+    } else {
+      setMainPage(false);
+    }
+  }, [location.pathname]);
 
   return (
     <div>
@@ -72,7 +70,7 @@ const Header = () => {
         </LogoImg>
         <NavMenu>
           <NavWrap>
-            {/* {mainPage === true && (
+            {mainPage === true && (
               <Nav>
                 <NavItem>
                   <Link to="/event-list?page=1&date=1">이번주 행사</Link>
@@ -87,7 +85,7 @@ const Header = () => {
                   <Link to="/event-list">메이트 PICK</Link>
                 </NavItem>
               </Nav>
-            )} */}
+            )}
             {/* 서브페이지 검색바 */}
             {/* {mainPage === false && <SearchBar />} */}
             {pathname.pathname !== "/" && <SearchBar />}

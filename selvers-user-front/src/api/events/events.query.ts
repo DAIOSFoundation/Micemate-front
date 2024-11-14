@@ -14,6 +14,7 @@ import apiClient from "@/api/index";
 
 /*리뷰 조회*/
 export const useReviewList = (event_id: string, token?: string) => {
+  console.log("asdasd");
   return useQuery({
     queryKey: ["reviewList", event_id],
     queryFn: async () => {
@@ -23,6 +24,58 @@ export const useReviewList = (event_id: string, token?: string) => {
         headers: {
           "Content-Type": "application/json",
           ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+      });
+      return response.data;
+    },
+    staleTime: 0,
+  });
+};
+
+/*리뷰 추가*/
+export const useReviewPostMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      token,
+      event_id,
+      data,
+    }: {
+      token: string;
+      event_id: string;
+      data;
+    }) => {
+      const response = await apiClient({
+        method: "POST",
+        url: `/api/events/${event_id}/reviews`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        data: data,
+      });
+      return response.data;
+    },
+  });
+};
+
+/*리뷰 좋아요 등록*/
+export const useReviewLikeMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      token,
+      user_id,
+      review_id,
+    }: {
+      token: string;
+      user_id: string;
+      review_id: number;
+    }) => {
+      const response = await apiClient({
+        method: "POST",
+        url: `/api/users/${user_id}/reviews/${review_id}`,
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
         },
       });
       return response.data;

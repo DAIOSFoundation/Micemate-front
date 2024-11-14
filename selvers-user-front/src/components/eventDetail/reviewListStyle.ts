@@ -73,11 +73,11 @@ export const RatingsWrap = styled.div`
   }
 `;
 
-export const ReviewBody = styled.ul`
+export const ReviewBody = styled.div`
   padding: 10px 0 0;
 `;
 
-export const Item = styled.li`
+export const Item = styled.div`
   position: relative;
   padding: 12px 16px 55px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);

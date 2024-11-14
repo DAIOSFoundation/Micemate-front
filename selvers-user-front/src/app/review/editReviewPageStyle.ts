@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const EditReviewPageWrap = styled.form`
+export const EditReviewPageWrap = styled.div`
   max-width: 584px;
   width: 100%;
   margin: 0 auto;
