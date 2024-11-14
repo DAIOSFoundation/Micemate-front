@@ -55,7 +55,7 @@ const Footer = () => {
           <div className="fnb">
             <Link to="/event-list?page=1&date=1">이번주 행사</Link>
             <Link to="/event-list?page=1&price=2">무료 행사</Link>
-            <Link to="/event-list?page=1&progress=2">온라인 행사</Link>
+            <Link to="/event-list?page=1&progress=1">온라인 행사</Link>
             <Link to="/event-list">메이트 PICK</Link>
           </div>
           <div className="address_wrap">

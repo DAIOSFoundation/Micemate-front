@@ -21,7 +21,7 @@ const Footer = () => {
             <Link to="/event-list?page=1&price=2">무료 행사</Link>
           </li>
           <li>
-            <Link to="/event-list?page=1&progress=2">온라인 행사</Link>
+            <Link to="/event-list?page=1&progress=1">온라인 행사</Link>
           </li>
           <li>
             <Link to="/event-list">메이트 PICK</Link>
