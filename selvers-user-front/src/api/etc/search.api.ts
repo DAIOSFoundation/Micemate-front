@@ -2,6 +2,7 @@ import apiClient from "..";
 
 interface GetSearchHistoryResponse {
   data: {
+    history: boolean;
     items: { id: number; name: string }[];
   };
 }
@@ -22,11 +23,25 @@ export const getSearchHistory = async (
 };
 
 export const deleteSearchHistory = async (userId: number) => {
-  const response = await apiClient.delete(`/api/users/${userId}/searches`);
+  const token = localStorage.getItem("token");
+  const response = await apiClient.delete(`/api/users/${userId}/searches`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
 export const putToggleSearchHistory = async (userId: number) => {
-  const response = await apiClient.put(`/api/users/${userId}/searches`);
+  const token = localStorage.getItem("token");
+  const response = await apiClient.put(
+    `/api/users/${userId}/searches`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   return response.data;
 };

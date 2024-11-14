@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { SearchHistory } from "@components/searchBarStyle";
-import { useGetSearchHistoryQuery } from "@/api/etc/search.query";
+import {
+  useDeleteSearchHistoryMutation,
+  useGetSearchHistoryQuery,
+  usePutToggleSearchHistoryMutation,
+} from "@/api/etc/search.query";
+import useQueryParams from "@/hook/useSearchParams";
 
 interface SearchHistoryListProps {
   handleCloseFilter: () => void;
@@ -8,16 +13,30 @@ interface SearchHistoryListProps {
 
 const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
   const navigate = useNavigate();
-  const { data: searchHistory } = useGetSearchHistoryQuery();
   const userId = localStorage.getItem("user_id");
+  const queryParams = useQueryParams();
+  const { data: searchHistory } = useGetSearchHistoryQuery();
+  const putToggleSearchHistoryMutation = usePutToggleSearchHistoryMutation();
+  const deleteSearchHistoryMutation = useDeleteSearchHistoryMutation();
 
   const handleSearchHistoryClick = (keyword: string) => {
-    navigate(`/event-list?search=${keyword}`);
+    if (window.location.pathname === "/event-list") {
+      queryParams.set("search", keyword);
+    } else {
+      navigate(`/event-list?search=${keyword}`);
+    }
     handleCloseFilter();
   };
 
+  const handleToggleSearchHistory = () => {
+    putToggleSearchHistoryMutation.mutate();
+  };
+
+  const handleDeleteSearchHistory = () => {
+    deleteSearchHistoryMutation.mutate();
+  };
+
   const renderHistoryList = () => {
-    console.log(!userId);
     if (!userId)
       return (
         <div
@@ -33,6 +52,23 @@ const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
           로그인 후 이용해주세요.
         </div>
       );
+
+    if (searchHistory?.data?.items?.length === 0)
+      return (
+        <div
+          style={{
+            textAlign: "center",
+            color: "white",
+            height: "90%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          최근 검색어가 없습니다.
+        </div>
+      );
+
     return (
       <ul>
         {searchHistory?.data.items.map((item) => (
@@ -50,10 +86,22 @@ const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
   return (
     <SearchHistory>
       <p className="title">최근 검색어</p>
-      <div className="btn_area">
-        <button>검색 기록 끄기</button>
-        <button>검색 기록 삭제</button>
-      </div>
+      {userId && (
+        <div className="btn_area">
+          <button
+            onClick={handleToggleSearchHistory}
+            disabled={putToggleSearchHistoryMutation.isPending}
+          >
+            {searchHistory?.data.history ? "검색 기록 끄기" : "검색 기록 켜기"}
+          </button>
+          <button
+            onClick={handleDeleteSearchHistory}
+            disabled={deleteSearchHistoryMutation.isPending}
+          >
+            검색 기록 삭제
+          </button>
+        </div>
+      )}
       {renderHistoryList()}
     </SearchHistory>
   );
