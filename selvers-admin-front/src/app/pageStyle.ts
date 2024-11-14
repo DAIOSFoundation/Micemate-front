@@ -1984,8 +1984,8 @@ export const PageWrap = styled.div`
     object-fit: cover;
     margin-top: 20px;
   }
-  .preview_banner_img_1080 {
-    aspect-ratio: 1920 / 1080;
+  .preview_banner_img_840 {
+    aspect-ratio: 1920 / 840;
   }
   .preview_banner_img_360 {
     aspect-ratio: 1920 / 360;
