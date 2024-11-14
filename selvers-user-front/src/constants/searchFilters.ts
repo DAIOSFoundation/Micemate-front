@@ -9,7 +9,7 @@ export const FILTER_PROGRESS: FilterType[] = [
   { name: "오프라인", value: 2 },
 ];
 
-export const FILTER_PERIOD: FilterType[] = [
+export const FILTER_DATE: FilterType[] = [
   { name: "모든 날짜", value: 0 },
   { name: "이번주 행사", value: 1 },
   { name: "지난 행사", value: 2 },

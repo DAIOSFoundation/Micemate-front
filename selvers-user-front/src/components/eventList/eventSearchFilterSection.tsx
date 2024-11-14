@@ -5,7 +5,7 @@ import { PageInfo, FilterWrap } from "@/app/eventList/eventListPageStyle";
 import useQueryParams from "@/hook/useSearchParams";
 import { useCallback, useState } from "react";
 import {
-  FILTER_PERIOD,
+  FILTER_DATE,
   FILTER_PRICE,
   FILTER_PROGRESS,
 } from "@/constants/searchFilters";
@@ -14,7 +14,7 @@ import { CategoryListType } from "@/type";
 
 export type FilterType = {
   progress: number | null;
-  period: number | null;
+  date: number | null;
   price: number | null;
 };
 
@@ -80,14 +80,14 @@ const EventSearchFilterSection = ({
       });
     }
 
-    const currentPeriod = FILTER_PERIOD.find(
-      (item) => item.value === Number(currentFilter.period)
+    const currentDate = FILTER_DATE.find(
+      (item) => item.value === Number(currentFilter.date)
     );
-    if (currentPeriod) {
+    if (currentDate) {
       hashList.push({
-        key: "period",
-        name: currentPeriod.name,
-        id: currentPeriod.value,
+        key: "date",
+        name: currentDate.name,
+        id: currentDate.value,
       });
     }
 

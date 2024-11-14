@@ -12,7 +12,7 @@ import useQueryParams from "@/hook/useSearchParams";
 
 export type FilterType = {
   progress: number | null;
-  period: number | null;
+  date: number | null;
   price: number | null;
 };
 

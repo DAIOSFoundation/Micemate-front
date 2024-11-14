@@ -2,7 +2,7 @@ import { Filter } from "@/app/eventList/eventListPageStyle";
 import { InputRadioB } from "@components/form/inputRadio";
 import {
   FILTER_PROGRESS,
-  FILTER_PERIOD,
+  FILTER_DATE,
   FILTER_PRICE,
 } from "@/constants/searchFilters";
 import { useState } from "react";
@@ -54,7 +54,7 @@ const EventListFilter = ({ onApply }: EventListFilterProps) => {
   const queryParams = useQueryParams();
   const initialFilter: FilterType = {
     progress: Number(queryParams.get("progress")) || 0,
-    period: Number(queryParams.get("period")) || 0,
+    date: Number(queryParams.get("date")) || 0,
     price: Number(queryParams.get("price")) || 0,
   };
 
@@ -70,7 +70,7 @@ const EventListFilter = ({ onApply }: EventListFilterProps) => {
   const resetFilter = () => {
     setCurrentFilter({
       progress: 0,
-      period: 0,
+      date: 0,
       price: 0,
     });
   };
@@ -81,7 +81,7 @@ const EventListFilter = ({ onApply }: EventListFilterProps) => {
       filters: FILTER_PROGRESS,
       name: "progress" as const,
     },
-    { title: "날짜별", filters: FILTER_PERIOD, name: "period" as const },
+    { title: "날짜별", filters: FILTER_DATE, name: "date" as const },
     { title: "참가비", filters: FILTER_PRICE, name: "price" as const },
   ];
 
