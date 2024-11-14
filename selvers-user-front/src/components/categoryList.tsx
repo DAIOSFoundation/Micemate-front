@@ -38,7 +38,7 @@ const CategoryList = ({
           >
             전체
           </CateItem>
-          {categoryList.map((data) => {
+          {categoryList?.map((data) => {
             return (
               <CateItem
                 key={data.id}

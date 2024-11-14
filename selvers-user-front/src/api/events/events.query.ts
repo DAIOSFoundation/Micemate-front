@@ -1,5 +1,5 @@
 // import axios from "axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import {
   CancelEventRequest,
@@ -11,6 +11,7 @@ import {
   // ApplyRegisterGeneralRequest,
 } from "@/type";
 import apiClient from "@/api/index";
+import { QUERY_KEY } from "@/constants/queryKeys";
 
 /*리뷰 조회*/
 export const useReviewList = (event_id: string, token?: string) => {
@@ -341,6 +342,8 @@ export const useEventReview = (data: EventReviewRequest) => {
 /*사용자 행사 검색*/
 export const useEventSearch = (token: string) => {
   const location = useLocation();
+  const queryClient = useQueryClient();
+  const userId = localStorage.getItem("user_id");
   return useQuery({
     queryKey: ["eventSearch", location.search],
     queryFn: async () => {
@@ -351,6 +354,10 @@ export const useEventSearch = (token: string) => {
           "Content-Type": "application/json",
           authorization: `Bearer ${token}`,
         },
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.SEARCH_HISTORY(Number(userId))],
       });
       return response.data;
     },
