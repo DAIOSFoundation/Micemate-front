@@ -62,14 +62,14 @@ const AcceptBtns = () => {
     const getData = sessionStorage.getItem("EVENT_ACCEPT");
     const storageData = JSON.parse(getData);
 
-    const surveyData = JSON.parse(sessionStorage.getItem('EVENT_SURVEY'));
-    const faqData = JSON.parse(sessionStorage.getItem('EVENT_FAQ'));
+    const surveyData = JSON.parse(sessionStorage.getItem("EVENT_SURVEY"));
+    const faqData = JSON.parse(sessionStorage.getItem("EVENT_FAQ"));
 
     // Reject 데이터를 병합
     const mergedReject = {
       ...storageData?.reject,
-      ...surveyData.reject,
-      ...faqData.reject,
+      ...surveyData?.reject,
+      ...faqData?.reject,
       reason: reason,
     };
 
@@ -78,7 +78,7 @@ const AcceptBtns = () => {
       id: id ? Number(id) : undefined,
       data: {
         accept: false,
-        reject: {...mergedReject}, // 병합된 reject 데이터 사용
+        reject: { ...mergedReject }, // 병합된 reject 데이터 사용
       },
     };
 
@@ -101,7 +101,6 @@ const AcceptBtns = () => {
       },
     });
   };
-
 
   useEffect(() => {
     if (confirmValue.confirm === true) {
