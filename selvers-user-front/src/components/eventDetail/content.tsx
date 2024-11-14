@@ -126,34 +126,38 @@ const Content = ({ contentdata }: { contentdata: EventDetailDataType }) => {
             </div>
           </div>
         </DetailInfo>
-        <FaQ id="section3">
-          <h3>FAQ</h3>
-          <ul className="faq_list">
-            {contentdata.faqs.map((data, index) => {
-              return (
-                <li key={index} className="faq_item">
-                  <div
-                    onClick={() => accordionheadler(index)}
-                    className="question"
-                  >
-                    <span className="icon">
-                      <QIcon />
-                    </span>
-                    <span className="txt">{data.question}</span>
-                  </div>
-                  {activeIndex === index && (
-                    <div className="answer">
-                      <span className="icon">
-                        <FIcon />
-                      </span>
-                      <span className="txt">{data.answer}</span>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </FaQ>
+        {contentdata.faqs.length > 0 && (
+          <>
+            <FaQ id="section3">
+              <h3>FAQ</h3>
+              <ul className="faq_list">
+                {contentdata.faqs.map((data, index) => {
+                  return (
+                    <li key={index} className="faq_item">
+                      <div
+                        onClick={() => accordionheadler(index)}
+                        className="question"
+                      >
+                        <span className="icon">
+                          <QIcon />
+                        </span>
+                        <span className="txt">{data.question}</span>
+                      </div>
+                      {activeIndex === index && (
+                        <div className="answer">
+                          <span className="icon">
+                            <FIcon />
+                          </span>
+                          <span className="txt">{data.answer}</span>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </FaQ>
+          </>
+        )}
         <ContactUs id="section4">
           <h3>문의하기</h3>
           <ul className="info_list">

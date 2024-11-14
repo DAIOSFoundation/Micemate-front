@@ -287,7 +287,6 @@ const Page = () => {
                 &lt; 리스트로 돌아가기
               </Link>
             </div>
-            <AcceptBtns />
             <div className="btn_wrap gap23">
               <Link to={`/event/apply/${id}/detail`} className="btn gray">
                 뒤로
