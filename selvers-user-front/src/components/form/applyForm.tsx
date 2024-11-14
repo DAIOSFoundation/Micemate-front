@@ -58,9 +58,15 @@ const ApplyForm = ({
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
   const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
-  const [surveyType, setSurveyType] = useState<{ [key: number]: number[] }[]>([]);
-  const [surveyType1, setSurveyType1] = useState<{ [key: number]: number[] }[]>([]);
-  const [surveyType2, setSurveyType2] = useState<{ [key: number]: string[] }>({});
+  const [surveyType, setSurveyType] = useState<{ [key: number]: number[] }[]>(
+    []
+  );
+  const [surveyType1, setSurveyType1] = useState<{ [key: number]: number[] }[]>(
+    []
+  );
+  const [surveyType2, setSurveyType2] = useState<{ [key: number]: string[] }>(
+    {}
+  );
 
   useEffect(() => {
     setValue("type", applyType);
@@ -78,21 +84,21 @@ const ApplyForm = ({
       if (editData?.surveys) {
         editData?.surveys.forEach((survey, idx) => {
           const id = EventApplyInformation?.data?.surveys[idx].id;
-          if (survey.type === 0 ) {
+          if (survey.type === 0) {
             surveyType.push({ [id]: [survey.answer] });
             setSurveyType(surveyType);
           }
-          if (survey.type === 1 ) {
+          if (survey.type === 1) {
             survey.answer.map((answer) => {
-              multipleOptionHandler(survey.options[answer])
-            })
+              multipleOptionHandler(survey.options[answer]);
+            });
           }
-          if (survey.type === 2 ) {
+          if (survey.type === 2) {
             handleTextChange(id, survey.answer);
             setSurveyType2({ [id]: [survey.answer] });
-            console.log(surveyType2)
+            console.log(surveyType2);
           }
-        })
+        });
       }
     }
   }, [editData, isEdit, applyType]);
@@ -269,6 +275,7 @@ const ApplyForm = ({
                             key={option} // 각 옵션의 고유한 값 사용
                             label={option} // 실제 옵션 값 사용
                             id={option} // 실제 옵션 값 사용
+                            checked={multipleSelect?.includes(option)}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
                               multipleOptionHandler(e.target.id);
                               setMultipleOption((prev) => {
