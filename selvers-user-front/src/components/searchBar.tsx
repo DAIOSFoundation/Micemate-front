@@ -16,6 +16,7 @@ import BackBtn from "@/assets/icon/arrow_back.svg?react";
 
 const SearchBar = () => {
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
   const queryParams = useQueryParams({
     isSetPageFirst: true,
   });
@@ -25,6 +26,9 @@ const SearchBar = () => {
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
   const onSearch = () => {
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
     if (window.location.pathname === "/event-list") {
       queryParams.set("search", searchText);
     } else {
@@ -77,6 +81,7 @@ const SearchBar = () => {
       <SearchForm $filter={isFilterOpen}>
         <div>
           <input
+            ref={inputRef}
             type="text"
             placeholder="마이스 메이트에서 나의 맞춤 행사를 찾아보세요!"
             onChange={(e) => {
