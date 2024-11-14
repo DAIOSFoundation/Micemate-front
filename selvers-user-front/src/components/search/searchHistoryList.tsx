@@ -43,6 +43,7 @@ const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
           style={{
             textAlign: "center",
             color: "white",
+            minHeight: "100px",
             height: "90%",
             display: "flex",
             alignItems: "center",
@@ -60,6 +61,7 @@ const SearchHistoryList = ({ handleCloseFilter }: SearchHistoryListProps) => {
             textAlign: "center",
             color: "white",
             height: "90%",
+            minHeight: "100px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
