@@ -37,7 +37,7 @@ const EventListPage = () => {
       <CategoryList categoryList={category} />
       <ContentWrap>
         <EventSearchFilterSection categoryList={category} />
-        <EventSearchResult searchData={searchData?.data.items || []} />
+        <EventSearchResult searchData={searchData?.data?.items || []} />
         <div
           style={{
             display: "flex",
@@ -46,7 +46,7 @@ const EventListPage = () => {
           }}
         >
           <Pagination
-            total={searchData.data.total}
+            total={searchData?.data?.total || 0}
             page={Number(queryParams.get("page")) || 1}
             setPage={(page) => {
               queryParams.set("page", page.toString());
