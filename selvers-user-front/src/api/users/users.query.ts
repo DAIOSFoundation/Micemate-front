@@ -1,6 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-// import axios from "axios";
-import { useLocation } from "react-router-dom";
 import {
   WishEventType,
   MyEventQueryType,
@@ -123,14 +121,14 @@ export const useCompanyCorporateMutation = () => {
 
 //사용자의 행사 관련 정보 조회
 export const useMyEventQuery = (data: MyEventQueryType) => {
-  const location = useLocation();
   return useQuery({
     queryKey: ["myEvent", data],
     queryFn: async () => {
       const response = await apiClient({
         method: "GET",
-        url: `/api/users/${data.user_id}/events?${location.search}`,
+        url: `/api/users/${data.user_id}/events`,
         params: {
+          ...data,
           type: data.type,
         },
         headers: {
