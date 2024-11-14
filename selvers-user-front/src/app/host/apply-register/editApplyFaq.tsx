@@ -11,11 +11,11 @@ const faqFieldSchema = z.object({
   question: z
     .string()
     .min(1, "질문을 입력해주세요.")
-    .max(100, "질문은 최대 100자입니다."),
+    .max(50, "질문은 최대 50자입니다."),
   answer: z
     .string()
     .min(1, "답변을 입력해주세요.")
-    .max(500, "답변은 최대 500자입니다."),
+    .max(100, "답변은 최대 100자입니다."),
 });
 
 // 전체 스키마 정의
@@ -371,7 +371,7 @@ const EditApplyFaq: React.FC = () => {
                           e.target.value
                         )
                       }
-                      maxLength={100} // 질문 최대 100자
+                      maxLength={50}
                       placeholder="질문을 입력해주세요."
                       required
                     />
@@ -390,7 +390,7 @@ const EditApplyFaq: React.FC = () => {
                           e.target.value
                         )
                       }
-                      maxLength={500} // 답변 최대 500자
+                      maxLength={100}
                       placeholder="답변을 입력해주세요."
                       required
                     />
