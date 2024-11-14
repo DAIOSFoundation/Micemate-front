@@ -109,7 +109,6 @@ const EditApplySurvey: React.FC = () => {
       }
 
       if (is_survey === true && surveys.length > 0) {
-        // is_survey가 0일 때만 필드 초기화
         const mappedFields: SurveyField[] = surveys.map((field: any) => ({
           type: field.type as 0 | 1 | 2,
           title: field.title,
@@ -125,10 +124,19 @@ const EditApplySurvey: React.FC = () => {
         setInitialFields(mappedFields);
         setFields(mappedFields);
       } else {
-        setFields([]);
+        setFields([defaultField]);
       }
     }
   }, [surveyData]);
+
+  const defaultField: SurveyField = {
+    type: 0, // 기본 타입 설정
+    title: '',
+    options: [{ text: '' }],
+    required: false,
+    isReject: false,
+  };
+
 
   const addField = () => {
     if (fields.length >= 5) {
@@ -196,14 +204,15 @@ const EditApplySurvey: React.FC = () => {
   };
 
   const handleSurveyUsageChange = (useSurvey: boolean) => {
+    setFields([]);
     setIsSurveyUsed(useSurvey);
     if (!useSurvey) {
-      setFields([]);
+      setFields([defaultField]);
     } else {
       if (initialFields.length > 0) {
         setFields(initialFields);
       } else {
-        addField();
+        setFields([defaultField]);
       }
     }
   };

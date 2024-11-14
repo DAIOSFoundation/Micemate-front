@@ -103,10 +103,17 @@ const EditApplyFaq: React.FC = () => {
         setFields(mappedFields);
         setFaquser(User);
       } else {
-        setFields([]);
+        setFields([defaultFaqField]);
       }
     }
   }, [faqData]);
+
+  const defaultFaqField: FaqField = {
+    question: "",
+    answer: "",
+    required: true,
+    is_reject: false,
+  }
 
   // FAQ 필드 추가 함수
   const addField = () => {
@@ -159,14 +166,15 @@ const EditApplyFaq: React.FC = () => {
 
   // FAQ 사용 여부 변경 함수
   const handleFaqUsageChange = (useFaq: boolean) => {
+    setFields([]);
     setIsFaqUsed(useFaq);
     if (!useFaq) {
-      setFields([]);
+      setFields([defaultFaqField]);
     } else {
       if (initialFields.length > 0) {
         setFields(initialFields); // 초기 데이터를 복원
       } else {
-        addField();
+        setFields([defaultFaqField]);
       }
     }
   };
