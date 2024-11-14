@@ -8,7 +8,7 @@ type ImgsProps = {
 };
 
 const MainSwiper = ({ bannerImgs }: ImgsProps) => {
-  const goToLink = (link) => {
+  const goToLink = (link: string) => {
     window.open(link);
   };
   return (
@@ -35,7 +35,11 @@ const MainSwiper = ({ bannerImgs }: ImgsProps) => {
         {bannerImgs &&
           bannerImgs.map((data, index) => {
             return (
-              <SwiperSlide key={index} onClick={() => goToLink(data.url)}>
+              <SwiperSlide
+                key={index}
+                onClick={() => goToLink(data.url)}
+                style={{ cursor: data.url ? "pointer" : "default" }}
+              >
                 <figure>
                   <img
                     src={`${import.meta.env.VITE_IMAGE_BASE_URL}/${data.img}`}

@@ -37,7 +37,7 @@ const SearchBar = () => {
   const onKeyDownHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !isComposing) {
       e.preventDefault();
-      setIsFilterOpen(false);
+      handleCloseFilter();
       if (inputRef.current) {
         inputRef.current.blur();
       }
