@@ -25,6 +25,7 @@ const SearchCategoryList = ({ handleCloseFilter }: SearchCategoryListProps) => {
   };
 
   const onClickAll = () => {
+    handleCloseFilter();
     if (window.location.pathname === "/event-list") {
       queryParams.deleteQuery("category");
     } else {
