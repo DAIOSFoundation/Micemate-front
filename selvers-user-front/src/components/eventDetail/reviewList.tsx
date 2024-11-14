@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import SortSelectBox from "@components/form/sortSelectBox";
 import Pagination from "@components/shared/pagination";
 import StarRatings from "react-star-ratings";
@@ -28,6 +28,14 @@ const ReviewList = ({
   setSortType: Dispatch<SetStateAction<number>>;
 }) => {
   const [infoClose, setInfoClose] = useState(true);
+  const [totalRate, setTotalRate] = useState(null);
+
+  useEffect(() => {
+    if (reviewData?.data?.rate) {
+      const rate = reviewData?.data?.rate.toFixed(1);
+      setTotalRate(rate);
+    }
+  }, [reviewData]);
 
   return (
     <>
@@ -64,7 +72,7 @@ const ReviewList = ({
               }개 평점`}</p>
             </div>
 
-            <div className="average">{reviewData?.data?.rate}</div>
+            <div className="average">{totalRate}</div>
           </RatingsWrap>
           <SortSelectBox width={122} setSortType={setSortType} />
         </ReviewHeader>

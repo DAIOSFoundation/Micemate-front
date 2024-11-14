@@ -27,12 +27,20 @@ const Thumbnail = ({
   const navigate = useNavigate();
   const { openAlret } = useAlret();
   const [likeState, setLikeState] = useState(false);
+  const [totalRate, setTotalRate] = useState(null);
   const user = useRecoilValue(userState);
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("user_id");
 
   const { data: reviewList } = useReviewList(id, token);
+
+  useEffect(() => {
+    if (reviewList?.data?.rate) {
+      const rate = reviewList?.data?.rate.toFixed(1);
+      setTotalRate(rate);
+    }
+  }, [reviewList]);
 
   useEffect(() => {
     if (thumnaildata.like) {
@@ -153,9 +161,7 @@ const Thumbnail = ({
           <span className="icon">
             <StarIcon />
           </span>
-          <span className="rating">
-            {reviewList?.data?.rate === null ? 0 : reviewList?.data?.rate}
-          </span>
+          <span className="rating">{totalRate === null ? 0 : totalRate}</span>
           <span className="count">{`(${reviewList?.data?.total})`}</span>
         </div>
         <div className="public_btn_box">
