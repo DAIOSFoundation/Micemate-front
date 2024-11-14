@@ -13,10 +13,6 @@ import EventApplyDetail from "@/app/event/apply/applyDetail";
 import EventApplyInformation from "@/app/event/apply/applyInformation";
 import EventApplySurvey from "@/app/event/apply/applySurvey";
 import EventApplyFaq from "@/app/event/apply/applyFaq";
-import MainBannerList from "@/app/banner/main/listPage";
-import MainBannerDetail from "@/app/banner/main/detailPage";
-import BandBannerList from "@/app/banner/band/listPage";
-import BandBannerDetail from "@/app/banner/band/detailPage";
 import BannerPage from "@/app/banner/bannerPage";
 import AddBannerPage from "./banner/addBannerPage";
 import BannerDetailPage from "./banner/bannerDetailPage";
@@ -88,30 +84,6 @@ const router = createBrowserRouter([
       {
         path: "/banner/add",
         element: <AddBannerPage />,
-      },
-      {
-        path: "/banner/main",
-        element: <MainBannerList />,
-      },
-      {
-        path: "/banner/main/detail",
-        element: <MainBannerDetail />,
-      },
-      {
-        path: "/banner/main/detail/:id",
-        element: <MainBannerDetail />,
-      },
-      {
-        path: "/banner/band",
-        element: <BandBannerList />,
-      },
-      {
-        path: "/banner/band/detail",
-        element: <BandBannerDetail />,
-      },
-      {
-        path: "/banner/band/detail/:id",
-        element: <BandBannerDetail />,
       },
     ],
   },
