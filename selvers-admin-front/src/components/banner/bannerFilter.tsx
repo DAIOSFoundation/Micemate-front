@@ -1,5 +1,6 @@
 import useQueryParams from "@/hook/useSearchParams";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const getFormattedDate = (date: Date): string => {
   return date.toISOString().split("T")[0];
@@ -7,6 +8,7 @@ const getFormattedDate = (date: Date): string => {
 
 const BannerFilter = () => {
   const today = new Date();
+  const navigate = useNavigate();
   const queryParams = useQueryParams({
     isDirectPush: true,
     isReplace: true,
@@ -33,6 +35,15 @@ const BannerFilter = () => {
   const onClickDate = (start: string, end: string) => {
     setStart(start);
     setEnd(end);
+  };
+
+  const onClickReset = () => {
+    setSearch("");
+    setDateType("1");
+    setState("1");
+    setStart("");
+    setEnd("");
+    navigate(`/banner?type=${queryParams.get("type")}`);
   };
 
   const dateButtonList = [
@@ -77,6 +88,7 @@ const BannerFilter = () => {
                     onChange={(e) => {
                       setDateType(e.target.value);
                     }}
+                    value={dateType}
                   >
                     <option value={1}>등록일</option>
                     <option value={2}>게시일</option>
@@ -133,10 +145,11 @@ const BannerFilter = () => {
                     onChange={(e) => {
                       setState(e.target.value);
                     }}
+                    value={state}
                   >
-                    <option value={1}>노출</option>
-                    <option value={2}>노출 안함</option>
-                    <option value={3}>종료</option>
+                    <option value={"1"}>노출</option>
+                    <option value={"2"}>노출 안함</option>
+                    <option value={"3"}>종료</option>
                   </select>
                 </div>
                 <div className="dis_inblock">
@@ -170,17 +183,7 @@ const BannerFilter = () => {
         >
           검색
         </button>
-        <button
-          className="btn small gray"
-          onClick={() => {
-            setSearch("");
-            setDateType("1");
-            setState("1");
-            setStart("");
-            setEnd("");
-            queryParams.setAll({});
-          }}
-        >
+        <button className="btn small gray" onClick={onClickReset}>
           초기화
         </button>
       </div>
