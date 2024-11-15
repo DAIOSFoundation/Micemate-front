@@ -33,8 +33,9 @@ const SearchFilter = ({
   setFilterData: Dispatch<SetStateAction<FilterType>>;
   resetFilter: () => void;
 }) => {
-  const [selectedDateType, setSelectedDateType] = useState<string | null>();
-  const today = dayjs().format("YYYY-MM-DD");
+  const [selectedDateType, setSelectedDateType] = useState<string | null>(
+    "all"
+  );
 
   const {
     register,
@@ -135,7 +136,7 @@ const SearchFilter = ({
                     id="startDate"
                     onClick={handleDateInputClick}
                     onChange={(e) => setValue("startDate", e.target.value)}
-                    defaultValue={today}
+                    defaultValue={""}
                     className="small w_104"
                   />
                   <label htmlFor="startDate" className="date_icon"></label>
@@ -148,7 +149,7 @@ const SearchFilter = ({
                     id="endDate"
                     onClick={handleDateInputClick}
                     onChange={(e) => setValue("endDate", e.target.value)}
-                    defaultValue={today}
+                    defaultValue={""}
                     className="small w_104"
                   />
                   <label htmlFor="endDate" className="date_icon"></label>
