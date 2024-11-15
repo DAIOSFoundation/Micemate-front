@@ -36,13 +36,13 @@ const MemberMenu = () => {
       {isOn && (
         <div className="depth02_list active">
           <Link
-            to="/member/general"
+            to={`/member/general${location.search}`}
             className={`depth02 ${activeTarget("/member/general")}`}
           >
             회원 리스트
           </Link>
           <Link
-            to="/member/corporate"
+            to={`/member/corporate${location.search}`}
             className={`depth02 ${activeTarget("/member/corporate")}`}
           >
             기업회원 리스트

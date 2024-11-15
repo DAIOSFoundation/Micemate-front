@@ -111,10 +111,10 @@ const Page = () => {
   return (
     <div className="container">
       <div className="history_tit">
-        <Link className="item" to="/event">
+        <Link className="item" to={`/event?${filterQueryString}`}>
           행사관리
         </Link>
-        <Link className="item" to="/event">
+        <Link className="item" to={`/event?${filterQueryString}`}>
           행사 리스트
         </Link>
       </div>

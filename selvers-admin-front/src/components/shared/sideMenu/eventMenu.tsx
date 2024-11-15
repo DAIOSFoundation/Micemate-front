@@ -35,7 +35,10 @@ const EventMenu = () => {
       </p>
       {isOn && (
         <div className="depth02_list active">
-          <Link to="/event" className={`depth02 ${activeTarget("/event")}`}>
+          <Link
+            to={`/event${location.search}`}
+            className={`depth02 ${activeTarget("/event")}`}
+          >
             행사 리스트
           </Link>
         </div>
