@@ -14,11 +14,13 @@ const ApplyAgreeFrom = ({
   register,
   setValue,
   watch,
+  isEdit = false,
 }: {
   applyType: number;
   register: UseFormRegister<FieldValues>;
   watch: UseFormWatch<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
+  isEdit?: boolean;
 }) => {
   // // 약관동의 전체선택
   const checkList = ["agree1", "agree2", "agree3", "agree4"];
@@ -121,7 +123,7 @@ const ApplyAgreeFrom = ({
           type="submit"
           disabled={!(watch("agree1") && watch("agree2") && watch("agree3"))}
         >
-          사전 신청하기
+          {isEdit ? "수정하기" : "사전 신청하기"}
         </button>
       </div>
     </ApplyAgreeFromWrap>

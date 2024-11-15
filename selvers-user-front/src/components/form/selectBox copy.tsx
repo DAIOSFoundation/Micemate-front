@@ -37,10 +37,11 @@ interface SelectDProps extends SelectProps {
   id: number;
   optionList: string[];
   setTarget: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
-  surveyType?: { [key: number]: number[] }[];
+  value: number | string;
 }
 
 interface SelectCProps extends SelectProps {
+  targetText?: string;
   multipleSelect?: string[];
 }
 
@@ -137,11 +138,10 @@ export const SelectBoxC = ({
   label,
   required,
   children,
-  multipleSelect,
+  targetText,
 }: SelectCProps) => {
   const [isOn, setIsOn] = useState(false);
   const selectBoxRef = useRef<HTMLDivElement>(null);
-  const [targetText, setTargetText] = useState<string>("");
   const toggleDropdown = () => {
     setIsOn((prev) => !prev);
   };
@@ -160,12 +160,6 @@ export const SelectBoxC = ({
     };
   }, []);
 
-  useEffect(() => {
-    if (multipleSelect) {
-      setTargetText(multipleSelect.join(" / "));
-    }
-  }, [multipleSelect]);
-
   return (
     <SelectWrapC ref={selectBoxRef} $isOn={isOn}>
       <p className="label">
@@ -174,9 +168,7 @@ export const SelectBoxC = ({
       </p>
       <div className="select_box">
         <div onClick={toggleDropdown} className="select">
-          <div>
-            {targetText !== "" ? targetText : "선택해주세요"}
-          </div>
+          <div>{targetText}</div>
           <span className="icon">
             <ArrowIconW />
           </span>
@@ -188,47 +180,32 @@ export const SelectBoxC = ({
 };
 
 export const SelectBoxD = ({
-    id,
-    label,
-    required,
-    optionList,
-    setTarget,
-    surveyType,
-    }: SelectDProps) => {
+  id,
+  label,
+  required,
+  optionList,
+  setTarget,
+  value,
+}: SelectDProps) => {
   const [isOn, setIsOn] = useState(false);
-  const [targetText, setTargetText] = useState("");
+
   const selectBoxRef = useRef<HTMLDivElement>(null);
   const toggleDropdown = () => {
     setIsOn((prev) => !prev);
   };
 
-  useEffect(() => {
-    if (optionList) {
-      if (surveyType.length > 0) {
-        surveyType.map((data) => {
-          console.log(data)
-          if (data[id]) {
-            setTargetText(optionList[data[id][0]]);
-            handleSelect(optionList[data[id][0]], data[id][0]);
-          }
-        })
-      } else {
-        setTargetText("선택해주세요");
-      }
-    }
-  }, [optionList]);
   const handleSelect = (value: string, index) => {
     // 각 id 마다 선택된 index 저장
+    console.log("index", index);
     setTarget((prev) => {
-      return { ...prev, [id]: [index]}
+      return { ...prev, [id]: [index.toString()] };
     });
-    setTargetText(value);
     setIsOn(false);
   };
   const handleClickOutside = (event: MouseEvent) => {
     if (
-        selectBoxRef.current &&
-        !selectBoxRef.current.contains(event.target as Node)
+      selectBoxRef.current &&
+      !selectBoxRef.current.contains(event.target as Node)
     ) {
       setIsOn(false);
     }
@@ -239,33 +216,34 @@ export const SelectBoxD = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
-      <SelectWrapB ref={selectBoxRef} $isOn={isOn}>
-        <p className="label">
-          <span className="txt">{label}</span>
-          {required && <span className="req">&nbsp;*</span>}
-        </p>
-        <div className="select_box">
-          <div onClick={toggleDropdown} className="select">
-            <span>{targetText}</span>
-            <span className="icon">
+    <SelectWrapB ref={selectBoxRef} $isOn={isOn}>
+      <p className="label">
+        <span className="txt">{label}</span>
+        {required && <span className="req">&nbsp;*</span>}
+      </p>
+      <div className="select_box">
+        <div onClick={toggleDropdown} className="select">
+          <span>{optionList[Number(value)]}</span>
+          <span className="icon">
             <ArrowIconW />
           </span>
-          </div>
-          <ul className="option_box">
-            {optionList.map((data, index) => {
-              return (
-                  <li
-                      key={index}
-                      onClick={() => handleSelect(data, index)}
-                      className="option"
-                  >
-                    {data}
-                  </li>
-              );
-            })}
-          </ul>
         </div>
-      </SelectWrapB>
+        <ul className="option_box">
+          {optionList.map((data, index) => {
+            return (
+              <li
+                key={index}
+                onClick={() => handleSelect(data, index)}
+                className="option"
+              >
+                {data}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </SelectWrapB>
   );
 };

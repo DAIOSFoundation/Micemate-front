@@ -1,9 +1,7 @@
 import { ApplyFormWrap, ExcelArea } from "./applyFormStyle";
 import { InputTextD } from "./inputText";
-import { SelectBoxB, SelectBoxC, SelectBoxD } from "./selectBox";
-// import { SelectBoxB, SelectBoxC } from "./selectBox";
+import { SelectBoxB, SelectBoxC, SelectBoxD } from "./selectBox copy";
 import { InputCheckboxA } from "./inputCheckbox";
-// import { InputTextAreaB } from "./inputTextArea";
 import ExcelIcon from "@/assets/icon/excel_download.svg?react";
 import IIcon from "@/assets/icon/info.svg?react";
 import {
@@ -15,7 +13,6 @@ import {
   useEffect,
   useState,
 } from "react";
-// import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import {
   FieldErrors,
   FieldValues,
@@ -24,9 +21,9 @@ import {
 } from "react-hook-form";
 import { telChangeUtilHandler } from "@/util/inputChange";
 import { priceFormat } from "@/util/stringTransition";
-import { InputTextAreaB } from "@components/form/inputTextArea";
+import { InputTextAreaB } from "@components/form/inputTextArea copy";
 
-const ApplyForm = ({
+const ApplyEditForm = ({
   EventApplyInformation,
   applyType,
   setApplyType,
@@ -37,9 +34,8 @@ const ApplyForm = ({
   isEdit,
   editData,
   setSurveyOption,
-  setMultipleOption,
-  setApplyLong,
   surveyErr,
+  surveyOption,
 }: {
   EventApplyInformation;
   applyType: number;
@@ -49,24 +45,17 @@ const ApplyForm = ({
   errors: FieldErrors<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   isEdit: boolean;
-  setSurveyOption?: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
+  setSurveyOption?: Dispatch<
+    SetStateAction<{ [key: number]: (number | string)[] }>
+  >;
   editData?;
   setMultipleOption?: Dispatch<SetStateAction<{ [key: number]: number[] }>>;
   setApplyLong?: Dispatch<SetStateAction<{ [key: number]: string[] }>>;
   surveyErr?: number[];
+  surveyOption?: { [key: number]: (number | string)[] };
 }) => {
   const [excelAgree, setExcelAgree] = useState(false);
   const [excelFile, setExcelFile] = useState<File>();
-  const [multipleSelect, setMultipleSelect] = useState<string[]>([]);
-  const [surveyType, setSurveyType] = useState<{ [key: number]: number[] }[]>(
-    []
-  );
-  const [surveyType1, setSurveyType1] = useState<{ [key: number]: number[] }[]>(
-    []
-  );
-  const [surveyType2, setSurveyType2] = useState<{ [key: number]: string[] }>(
-    {}
-  );
 
   useEffect(() => {
     setValue("type", applyType);
@@ -79,25 +68,6 @@ const ApplyForm = ({
       if (editData?.information) {
         editData.information.forEach((field) => {
           setValue(`${field.name}`, field.answer);
-        });
-      }
-      if (editData?.surveys) {
-        editData?.surveys.forEach((survey, idx) => {
-          const id = EventApplyInformation?.data?.surveys[idx].id;
-          if (survey.type === 0) {
-            surveyType.push({ [id]: [survey.answer] });
-            setSurveyType(surveyType);
-          }
-          if (survey.type === 1) {
-            survey.answer.map((answer) => {
-              multipleOptionHandler(survey.options[answer]);
-            });
-          }
-          if (survey.type === 2) {
-            handleTextChange(id, survey.answer);
-            setSurveyType2({ [id]: [survey.answer] });
-            console.log(surveyType2);
-          }
         });
       }
     }
@@ -128,13 +98,6 @@ const ApplyForm = ({
     event.preventDefault();
   }, []);
 
-  const handleTextChange = (key: number, value: string) => {
-    setApplyLong((prev) => ({
-      ...prev,
-      [key]: [value],
-    }));
-  };
-
   const payableInfo = (type: number, pay1: number, pay2: number) => {
     if (type === 1) {
       return `무료`;
@@ -151,16 +114,6 @@ const ApplyForm = ({
     } else if (type === 5) {
       return `유료(${priceFormat(String(pay2))})`;
     }
-  };
-
-  const multipleOptionHandler = (val: string) => {
-    setMultipleSelect((prevOptions) => {
-      if (val && prevOptions?.includes(val)) {
-        return prevOptions.filter((option) => option !== val);
-      } else {
-        return [...prevOptions, val];
-      }
-    });
   };
 
   return (
@@ -244,6 +197,7 @@ const ApplyForm = ({
           <div className="field">
             {EventApplyInformation?.data?.surveys.map((data) => {
               if (data.type === 0) {
+                const value = surveyOption[data.id];
                 return (
                   <>
                     <div key={data.id} className="input_box">
@@ -253,7 +207,7 @@ const ApplyForm = ({
                         required={data.required}
                         optionList={data.options}
                         setTarget={setSurveyOption}
-                        surveyType={surveyType}
+                        value={value?.toString() || ""}
                       />
                       {surveyErr?.includes(data.id) && (
                         <p className="err_msg">필수값 입니다.</p>
@@ -262,37 +216,44 @@ const ApplyForm = ({
                   </>
                 );
               } else if (data.type === 1) {
+                const value = surveyOption[data.id] || [];
+                const targetText =
+                  value.length > 0
+                    ? value?.map((item) => data.options[item]).join(" / ")
+                    : "옵션을 선택해주세요.";
+
                 return (
                   <>
                     <div key={data.id} className="input_box">
                       <SelectBoxC
                         label={data.title}
                         required={data.required}
-                        multipleSelect={multipleSelect}
+                        targetText={targetText}
                       >
-                        {data.options.map((option, index) => (
-                          <InputCheckboxA
-                            key={option} // 각 옵션의 고유한 값 사용
-                            label={option} // 실제 옵션 값 사용
-                            id={option} // 실제 옵션 값 사용
-                            checked={multipleSelect?.includes(option)}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                              multipleOptionHandler(e.target.id);
-                              setMultipleOption((prev) => {
-                                return {
-                                  ...prev,
-                                  [data.id]: prev[data.id]
-                                    ? prev[data.id].includes(index)
-                                      ? prev[data.id].filter(
-                                          (item) => item !== index
-                                        )
-                                      : [...prev[data.id], index]
-                                    : [index],
-                                };
-                              });
-                            }}
-                          />
-                        ))}
+                        {data.options.map((option, index) => {
+                          return (
+                            <InputCheckboxA
+                              key={index} // 각 옵션의 고유한 값 사용
+                              label={option} // 실제 옵션 값 사용
+                              id={index.toString()} // 실제 옵션 값 사용
+                              checked={value?.includes(index.toString())}
+                              onChange={() => {
+                                setSurveyOption((prev) => {
+                                  return {
+                                    ...prev,
+                                    [data.id]: prev[data.id]
+                                      ? prev[data.id].includes(index.toString())
+                                        ? prev[data.id].filter(
+                                            (item) => item !== index.toString()
+                                          )
+                                        : [...prev[data.id], index.toString()]
+                                      : [index.toString()],
+                                  };
+                                });
+                              }}
+                            />
+                          );
+                        })}
                       </SelectBoxC>
                       {surveyErr?.includes(data.id) && (
                         <p className="err_msg">필수값 입니다.</p>
@@ -301,14 +262,23 @@ const ApplyForm = ({
                   </>
                 );
               } else if (data.type === 2) {
+                const value = surveyOption[data.id] || [];
+
                 return (
                   <div key={data.id} className="input_box">
                     <InputTextAreaB
                       label={data.title}
                       required={data.required}
                       keyId={data.id} // 고유 키 전달
-                      value={setApplyLong[data.id] || surveyType2[data.id]} // 현재 값 전달
-                      onChange={handleTextChange} // 값 변경 시 호출될 함수 전달
+                      value={value?.toString() || ""} // 현재 값 전달
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                        setSurveyOption((prev) => {
+                          return {
+                            ...prev,
+                            [data.id]: [e.target.value.toString()],
+                          };
+                        });
+                      }} // 값 변경 시 호출될 함수 전달
                     />
                   </div>
                 );
@@ -411,4 +381,4 @@ const ApplyForm = ({
   );
 };
 
-export default ApplyForm;
+export default ApplyEditForm;

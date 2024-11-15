@@ -4,7 +4,6 @@ import * as z from "zod";
 
 import LoadingScreen from "@components/shared/LoadingScreen";
 import Thumbnail from "@components/eventDetail/thumbnailArea";
-import ApplyForm from "@components/form/applyForm";
 import ApplyAgreeFrom from "@components/form/applyAgreeFrom";
 import { useEventDetail, useApplyEditQuery } from "@/api/events/events.query";
 import { useState, useEffect } from "react";
@@ -20,6 +19,7 @@ import {
   MainForm,
   SideForm,
 } from "./applyPageStyle";
+import ApplyEditForm from "@components/form/applyEditForm";
 
 const applyOption = (type: number) => {
   if (type === 0) {
@@ -97,6 +97,12 @@ const ApplyEditPage = () => {
   const token = localStorage.getItem("token");
   const [applyType, setApplyType] = useState(0);
   const [applyList, setApplyList] = useState([]);
+  const [applySurvey, setApplySurvey] = useState<{
+    [key: number]: (number | string)[];
+  }>({});
+
+  // const [applyLong, setApplyLong] = useState<{ [key: number]: string[] }>({});
+  const [surveyErr, setSurveyErr] = useState<number[]>([]);
 
   const eventApply = useEventApplyMutation();
   const { data: EventApplyInformation } = useEventApplyInformationQuery(
@@ -129,12 +135,20 @@ const ApplyEditPage = () => {
     isError: isErrorDetail,
   } = useEventDetail(id, token);
 
-  if (isLoadingDetail) {
-    return <LoadingScreen />;
-  }
-  if (isErrorDetail) {
-    return <div>데이터 없음</div>;
-  }
+  // 사전 질문 값 세팅
+  useEffect(() => {
+    if (editData && EventApplyInformation) {
+      const surveys = EventApplyInformation?.data?.surveys || [];
+      const newApplySurvey = surveys.reduce((acc, survey, i) => {
+        acc[survey.id] = Array.isArray(editData.data.surveys[i].answer)
+          ? editData.data.surveys[i].answer
+          : [editData.data.surveys[i].answer];
+        return acc;
+      }, {});
+      setApplySurvey(newApplySurvey);
+    }
+  }, [editData, EventApplyInformation]);
+
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     const appendIfDefined = (key, value) => {
@@ -155,7 +169,38 @@ const ApplyEditPage = () => {
     appendIfDefined("xlsx", data?.xlsx ? data.xlsx[0] : undefined);
 
     const information = {};
-    const surveys = {};
+    const surveys = {
+      ...applySurvey,
+    };
+    const surveysList = EventApplyInformation?.data?.surveys || [];
+    const errArr = [];
+
+    // 빈 값 체크 로직 추가
+    for (const [key, value] of Object.entries(surveys)) {
+      if (
+        value === null ||
+        (Array.isArray(value) && value.length === 0) ||
+        (Array.isArray(value) && value.every((item) => item === ""))
+      ) {
+        errArr.push(Number(key));
+      }
+    }
+
+    // 필수 항목 체크
+    for (const survey of surveysList) {
+      if (survey.required && !surveys[survey.id]) {
+        if (!errArr.includes(survey.id)) {
+          errArr.push(survey.id);
+        }
+      }
+    }
+
+    if (errArr.length > 0) {
+      setSurveyErr(errArr);
+      return;
+    }
+    setSurveyErr([]);
+
     const terms_of_uses = {
       5: data?.agree1,
       6: data?.agree2,
@@ -190,14 +235,14 @@ const ApplyEditPage = () => {
       { token: token, event_id: id, data: formData },
       {
         onSuccess: () => {
-          if (
-            EventApplyInformation?.data?.payable_type === 1 ||
-            EventApplyInformation?.data?.payable_type === 2
-          ) {
-            navigate("/detail/finish");
-          } else {
-            window.open(EventApplyInformation?.data?.payable_price_url);
-          }
+          // if (
+          //   EventApplyInformation?.data?.payable_type === 1 ||
+          //   EventApplyInformation?.data?.payable_type === 2
+          // ) {
+          navigate("/detail/finish");
+          // } else {
+          //   window.open(EventApplyInformation?.data?.payable_price_url);
+          // }
         },
         onError: (error) => {
           console.log(error);
@@ -206,13 +251,20 @@ const ApplyEditPage = () => {
     );
   });
 
+  if (isLoadingDetail) {
+    return <LoadingScreen />;
+  }
+  if (isErrorDetail) {
+    return <div>데이터 없음</div>;
+  }
+
   return (
     <ApplyPageWrap className="maxframe">
       <FormWrap onSubmit={onSubmit}>
         <Main>
           <Thumbnail thumnaildata={detailData?.data} applyBtn={false} />
           <MainForm>
-            <ApplyForm
+            <ApplyEditForm
               register={register}
               applyType={applyType}
               setApplyType={setApplyType}
@@ -222,6 +274,9 @@ const ApplyEditPage = () => {
               EventApplyInformation={EventApplyInformation}
               isEdit={isEdit}
               editData={editData?.data}
+              surveyOption={applySurvey}
+              setSurveyOption={setApplySurvey}
+              surveyErr={surveyErr}
             />
           </MainForm>
         </Main>
@@ -231,6 +286,7 @@ const ApplyEditPage = () => {
             setValue={setValue}
             register={register}
             applyType={applyType}
+            isEdit={isEdit}
           />
         </SideForm>
       </FormWrap>
