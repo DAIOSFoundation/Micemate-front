@@ -20,6 +20,8 @@ const EventPartyCompanyList = () => {
 
   const { data: eventBooth } = useEventBooth(id, token);
 
+  console.log(excelFile);
+
   useEffect(() => {
     if (eventBooth?.data?.img_name) {
       setUploadedFile(new File([], eventBooth.data.img_name));
@@ -252,9 +254,11 @@ const EventPartyCompanyList = () => {
                   <i className="file_icon"></i>
                   <div className="flex1">
                     <p className="fs_12">{uploadedFile.name}</p>
-                    <p className="fs_10">{`${bytesToMB(
-                      uploadedFile.size
-                    )}mb`}</p>
+                    {uploadedFile.size > 0 && (
+                      <p className="fs_10">{`${bytesToMB(
+                        uploadedFile.size
+                      )}mb`}</p>
+                    )}
                   </div>
                   <i className="chk_icon"></i>
                 </div>
@@ -266,7 +270,11 @@ const EventPartyCompanyList = () => {
                   <i className="file_icon"></i>
                   <div className="flex1">
                     <p className="fs_12">{excelFile.name}</p>
-                    <p className="fs_10">{`${bytesToMB(excelFile.size)}mb`}</p>
+                    {excelFile.size > 0 && (
+                      <p className="fs_10">{`${bytesToMB(
+                        excelFile.size
+                      )}mb`}</p>
+                    )}
                   </div>
                   <i className="chk_icon"></i>
                 </div>

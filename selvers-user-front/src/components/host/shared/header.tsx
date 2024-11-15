@@ -77,9 +77,9 @@ const Header = () => {
                   행사등록
                 </Link>
               )}
-              <Link to="" className="btn blue round">
+              {/* <Link to="" className="btn blue round">
                 AI챗봇
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
