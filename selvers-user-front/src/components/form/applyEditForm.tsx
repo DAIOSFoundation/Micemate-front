@@ -1,6 +1,6 @@
 import { ApplyFormWrap, ExcelArea } from "./applyFormStyle";
 import { InputTextD } from "./inputText";
-import { SelectBoxB, SelectBoxC, SelectBoxD } from "./selectBox copy";
+import { SelectBoxB, SelectBoxC, SelectBoxD } from "./selectBoxEdit";
 import { InputCheckboxA } from "./inputCheckbox";
 import ExcelIcon from "@/assets/icon/excel_download.svg?react";
 import IIcon from "@/assets/icon/info.svg?react";
@@ -21,7 +21,7 @@ import {
 } from "react-hook-form";
 import { telChangeUtilHandler } from "@/util/inputChange";
 import { priceFormat } from "@/util/stringTransition";
-import { InputTextAreaB } from "@components/form/inputTextArea copy";
+import { InputTextAreaB } from "@components/form/inputTextAreaEdit";
 
 const ApplyEditForm = ({
   EventApplyInformation,

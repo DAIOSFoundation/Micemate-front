@@ -61,9 +61,9 @@ const ApplyForm = ({
   const [surveyType, setSurveyType] = useState<{ [key: number]: number[] }[]>(
     []
   );
-  const [surveyType1, setSurveyType1] = useState<{ [key: number]: number[] }[]>(
-    []
-  );
+  // const [surveyType1, setSurveyType1] = useState<{ [key: number]: number[] }[]>(
+  //   []
+  // );
   const [surveyType2, setSurveyType2] = useState<{ [key: number]: string[] }>(
     {}
   );

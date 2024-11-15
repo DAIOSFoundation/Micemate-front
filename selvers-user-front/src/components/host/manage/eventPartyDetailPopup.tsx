@@ -63,25 +63,16 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                       </li>
                     );
                   })}
-                <div className="fs_18 fw_600 mt_48">사전 설문</div>
+                {eventPartyDetail?.data?.surveys.length > 0 && (
+                  <div className="fs_18 fw_600 mt_48">사전 설문</div>
+                )}
 
                 {eventPartyDetail?.data?.surveys &&
-                  eventPartyDetail?.data?.surveys.map((data, index) => {
+                  eventPartyDetail?.data?.surveys.map((data) => {
                     return (
                       <>
-                        <div className="fs_16 fw_600 mt_16">
-                          {data.type === 0
-                            ? "단일 선택"
-                            : data.type === 1
-                            ? "다중 선택"
-                            : data.type === 2
-                            ? "단답/장문형"
-                            : ""}
-                        </div>
-                        <li key={index}>
-                          <div className="key">{data?.title}</div>
-                        </li>
-                        {data.type === 0 && (
+                        <div className="fs_16 fw_600 mt_16">{data.title}</div>
+                        {data.type === 0 &&
                           data?.options?.map((option, idx) => {
                             const radioId = `rad-${idx}`; // 고유한 id 생성
                             const radioName = `rad-${idx}`; // 고유한 name 생성
@@ -100,9 +91,8 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                                 </div>
                               </div>
                             );
-                          })
-                        )}
-                        {data.type === 1 && (
+                          })}
+                        {data.type === 1 &&
                           data.options.map((option, idx) => {
                             const checkboxId = `chk00_01 ${idx}`; // 고유한 id 생성
 
@@ -119,8 +109,7 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                                 </div>
                               </div>
                             );
-                          })
-                        )}
+                          })}
                         {data.type === 2 && (
                           <li>
                             <div className="val">{data.answer}</div>
@@ -191,23 +180,25 @@ const EventPartyDetailPopup = ({ applyId, setDetailPopUp }: Props) => {
                   </div>
                 </li>
               </ul> */}
-              <a
-                href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
-                  eventPartyDetail.data.xlsx
-                }`}
-                style={{
-                  backgroundColor: "#1E9EFF",
-                  padding: "6px 10px",
-                  borderRadius: "5px",
-                  display: "block",
-                  width: "180px",
-                  textAlign: "center",
-                  margin: "64px auto 0",
-                  fontSize: "16px",
-                }}
-              >
-                참가자 엑셀 다운로드
-              </a>
+              {eventPartyDetail?.data?.xlsx !== null && (
+                <a
+                  href={`${import.meta.env.VITE_IMAGE_BASE_URL}/${
+                    eventPartyDetail.data.xlsx
+                  }`}
+                  style={{
+                    backgroundColor: "#1E9EFF",
+                    padding: "6px 10px",
+                    borderRadius: "5px",
+                    display: "block",
+                    width: "180px",
+                    textAlign: "center",
+                    margin: "64px auto 0",
+                    fontSize: "16px",
+                  }}
+                >
+                  참가자 엑셀 다운로드
+                </a>
+              )}
             </div>
           </div>
         </div>
