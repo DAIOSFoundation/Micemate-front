@@ -166,21 +166,16 @@ const BannerDetailForm = ({
         )}
 
         <div className="tit_wrap mt_25">
-          <h3 className="tit02">
-            URL <i className="col_red">*</i>
-          </h3>
+          <h3 className="tit02">URL</h3>
         </div>
         <div className="dis_flex mt_10">
           <input
             className="w_767"
             type="text"
             placeholder="URL 입력"
-            {...register("url", {
-              required: "URL을 입력해주세요.",
-            })}
+            {...register("url")}
           />
         </div>
-        {errors.url && <ErrorMessage errorMessage={errors.url.message} />}
 
         <div className="mt_48">
           <div className="checkbox">
