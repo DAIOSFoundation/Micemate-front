@@ -87,8 +87,8 @@ const MainPage = () => {
         eventList={hotEventList?.data?.items}
       />
       <EventSwiper
-        title="마이스 메이트 주말 특급 정보"
-        subTitle="이번 주말, 마이스 메이트가 추천하는 핫한 행사 ✨"
+        title="함께 가면 더 좋은 행사"
+        subTitle="혼자보다 둘이, 둘 보다 셋! 함께가면 더 좋아요 ✨"
         eventList={bestEventList?.data?.items}
       />
     </MainPageWrap>
