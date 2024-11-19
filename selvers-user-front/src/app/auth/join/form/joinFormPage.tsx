@@ -98,6 +98,12 @@ const JoinFormPage = () => {
   const { openAlret } = useAlret();
   const navigate = useNavigate();
   const joinFormSchema = getJoinFormSchma(isSocial);
+  const [socialEmail, setSocialEmail] = useState(null);
+  const [socialName, setSocialName] = useState(null);
+  useEffect(() => {
+    setSocialEmail(localStorage.getItem("social_email"));
+    setSocialName(localStorage.getItem("social_name"));
+  }, []);
 
   console.log(isSocial);
 
@@ -184,8 +190,7 @@ const JoinFormPage = () => {
   }, [agree01, agree03, agree04]);
 
   // 소셜 로그인시 기본정보 입력
-  const socialEmail = localStorage.getItem("social_email");
-  const socialName = localStorage.getItem("social_name");
+
   useEffect(() => {
     if (socialEmail !== null && socialName !== null) {
       setIsSocial(true);
@@ -316,7 +321,6 @@ const JoinFormPage = () => {
         )}
         {isSocial === false && (
           <>
-            {" "}
             <TdForm className="password">
               <InputTextB
                 type="password"
