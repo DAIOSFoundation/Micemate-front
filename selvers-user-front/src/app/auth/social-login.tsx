@@ -72,7 +72,6 @@ const SocialLoginPage = () => {
       navigate("/social-token-valid");
     }
   }, []);
-
   return <LoadingScreen />;
 };
 
