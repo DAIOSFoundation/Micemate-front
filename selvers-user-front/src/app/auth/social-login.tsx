@@ -58,6 +58,8 @@ const SocialLoginPage = () => {
   useEffect(() => {
     const provider = localStorage.getItem("social_provider");
     const provider_id = localStorage.getItem("social_provider_id");
+    const email = localStorage.getItem("social_email");
+    const name = localStorage.getItem("social_name");
     const token = localStorage.getItem("social_token");
 
     if (
