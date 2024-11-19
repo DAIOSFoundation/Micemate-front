@@ -44,8 +44,6 @@ const BoothCheckPage = () => {
         return URL.createObjectURL(blob);
       });
   };
-  // console.log(pdfFile);
-  console.log(pdfjs);
 
   const downloadFile = async (url: string, fileName?: string) => {
     const a = document.createElement("a");

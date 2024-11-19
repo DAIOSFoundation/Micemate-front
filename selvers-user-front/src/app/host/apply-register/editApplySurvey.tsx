@@ -29,12 +29,9 @@ const editApplySurveySchema = z
               .max(50, { message: "설문 제목은 최대 50자입니다." }),
             options: z
               .array(
-                z
-                  .string()
-                  .min(1, { message: "옵션을 입력해주세요." })
-                  .max(20, {
-                    message: "옵션 텍스트는 20자를 초과할 수 없습니다.",
-                  })
+                z.string().min(1, { message: "옵션을 입력해주세요." }).max(20, {
+                  message: "옵션 텍스트는 20자를 초과할 수 없습니다.",
+                })
               )
               .max(10, { message: "옵션은 최대 10개까지 추가할 수 있습니다." })
               .optional(),
@@ -156,12 +153,11 @@ const EditApplySurvey: React.FC = () => {
 
   const defaultField: SurveyField = {
     type: 0, // 기본 타입 설정
-    title: '',
-    options: [{ text: '' }],
+    title: "",
+    options: [{ text: "" }],
     required: false,
     isReject: false,
   };
-
 
   const addField = () => {
     if (fields.length >= 5) {
@@ -260,8 +256,6 @@ const EditApplySurvey: React.FC = () => {
       },
     };
 
-    console.log("API 데이터:", data);
-
     // Zod 유효성 검사 수행
     const validation = editApplySurveySchema.safeParse(data);
 
@@ -302,7 +296,6 @@ const EditApplySurvey: React.FC = () => {
       });
 
       setFormErrors(errors);
-      console.log(validation.error);
       openToast("입력하지 않은 항목이 있습니다.");
       return;
     }
@@ -409,9 +402,7 @@ const EditApplySurvey: React.FC = () => {
                         updateField(fieldIndex, "title", e.target.value)
                       }
                       maxLength={50}
-                      className={
-                        formErrors.surveys?.[fieldIndex] ? "red" : ""
-                      }
+                      className={formErrors.surveys?.[fieldIndex] ? "red" : ""}
                     />
                     <select
                       value={field.type}

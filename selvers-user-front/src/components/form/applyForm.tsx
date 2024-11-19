@@ -96,7 +96,6 @@ const ApplyForm = ({
           if (survey.type === 2) {
             handleTextChange(id, survey.answer);
             setSurveyType2({ [id]: [survey.answer] });
-            console.log(surveyType2);
           }
         });
       }

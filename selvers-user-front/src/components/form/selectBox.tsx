@@ -174,9 +174,7 @@ export const SelectBoxC = ({
       </p>
       <div className="select_box">
         <div onClick={toggleDropdown} className="select">
-          <div>
-            {targetText !== "" ? targetText : "선택해주세요"}
-          </div>
+          <div>{targetText !== "" ? targetText : "선택해주세요"}</div>
           <span className="icon">
             <ArrowIconW />
           </span>
@@ -188,13 +186,13 @@ export const SelectBoxC = ({
 };
 
 export const SelectBoxD = ({
-    id,
-    label,
-    required,
-    optionList,
-    setTarget,
-    surveyType,
-    }: SelectDProps) => {
+  id,
+  label,
+  required,
+  optionList,
+  setTarget,
+  surveyType,
+}: SelectDProps) => {
   const [isOn, setIsOn] = useState(false);
   const [targetText, setTargetText] = useState("");
   const selectBoxRef = useRef<HTMLDivElement>(null);
@@ -206,12 +204,11 @@ export const SelectBoxD = ({
     if (optionList) {
       if (surveyType.length > 0) {
         surveyType.map((data) => {
-          console.log(data)
           if (data[id]) {
             setTargetText(optionList[data[id][0]]);
             handleSelect(optionList[data[id][0]], data[id][0]);
           }
-        })
+        });
       } else {
         setTargetText("선택해주세요");
       }
@@ -220,15 +217,15 @@ export const SelectBoxD = ({
   const handleSelect = (value: string, index) => {
     // 각 id 마다 선택된 index 저장
     setTarget((prev) => {
-      return { ...prev, [id]: [index]}
+      return { ...prev, [id]: [index] };
     });
     setTargetText(value);
     setIsOn(false);
   };
   const handleClickOutside = (event: MouseEvent) => {
     if (
-        selectBoxRef.current &&
-        !selectBoxRef.current.contains(event.target as Node)
+      selectBoxRef.current &&
+      !selectBoxRef.current.contains(event.target as Node)
     ) {
       setIsOn(false);
     }
@@ -240,32 +237,32 @@ export const SelectBoxD = ({
     };
   }, []);
   return (
-      <SelectWrapB ref={selectBoxRef} $isOn={isOn}>
-        <p className="label">
-          <span className="txt">{label}</span>
-          {required && <span className="req">&nbsp;*</span>}
-        </p>
-        <div className="select_box">
-          <div onClick={toggleDropdown} className="select">
-            <span>{targetText}</span>
-            <span className="icon">
+    <SelectWrapB ref={selectBoxRef} $isOn={isOn}>
+      <p className="label">
+        <span className="txt">{label}</span>
+        {required && <span className="req">&nbsp;*</span>}
+      </p>
+      <div className="select_box">
+        <div onClick={toggleDropdown} className="select">
+          <span>{targetText}</span>
+          <span className="icon">
             <ArrowIconW />
           </span>
-          </div>
-          <ul className="option_box">
-            {optionList.map((data, index) => {
-              return (
-                  <li
-                      key={index}
-                      onClick={() => handleSelect(data, index)}
-                      className="option"
-                  >
-                    {data}
-                  </li>
-              );
-            })}
-          </ul>
         </div>
-      </SelectWrapB>
+        <ul className="option_box">
+          {optionList.map((data, index) => {
+            return (
+              <li
+                key={index}
+                onClick={() => handleSelect(data, index)}
+                className="option"
+              >
+                {data}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </SelectWrapB>
   );
 };

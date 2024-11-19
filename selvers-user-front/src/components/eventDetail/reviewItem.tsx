@@ -50,9 +50,7 @@ const ReviewItem = ({
           review_id: reviewId,
         },
         {
-          onSuccess: () => {
-            console.log("좋아요");
-          },
+          onSuccess: () => {},
         }
       );
     } else {

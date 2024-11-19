@@ -105,8 +105,6 @@ const JoinFormPage = () => {
     setSocialName(localStorage.getItem("social_name"));
   }, []);
 
-  console.log(isSocial);
-
   //카테고리 api
   const { data: category } = useCategoryQuery();
 
@@ -246,7 +244,6 @@ const JoinFormPage = () => {
         },
         onError: (error) => {
           const customError = error as CustomError;
-          console.log(customError.response.data);
           if (
             customError.response?.data.message === "이미 회원이 존재합니다."
           ) {
@@ -288,7 +285,6 @@ const JoinFormPage = () => {
         },
         onError: (error) => {
           const customError = error as CustomError;
-          console.log(customError.response.data);
           if (
             customError.response?.data.message === "이미 회원이 존재합니다."
           ) {

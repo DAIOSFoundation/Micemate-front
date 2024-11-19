@@ -196,7 +196,6 @@ export const SelectBoxD = ({
 
   const handleSelect = (_value: string, index) => {
     // 각 id 마다 선택된 index 저장
-    console.log("index", index);
     setTarget((prev) => {
       return { ...prev, [id]: [index.toString()] };
     });

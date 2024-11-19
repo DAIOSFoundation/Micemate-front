@@ -20,8 +20,6 @@ const EventPartyCompanyList = () => {
 
   const { data: eventBooth } = useEventBooth(id, token);
 
-  console.log(excelFile);
-
   useEffect(() => {
     if (eventBooth?.data?.img_name) {
       setUploadedFile(new File([], eventBooth.data.img_name));
@@ -41,9 +39,7 @@ const EventPartyCompanyList = () => {
 
   const handleFileChange = (files: FileList | null, type: "img" | "xlsx") => {
     if (files && files.length > 0) {
-      // console.log("files", files);
       const file = files[0];
-      console.log(file);
       const validImageTypes = [
         "image/jpeg",
         "image/tiff",

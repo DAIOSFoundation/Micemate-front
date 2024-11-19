@@ -93,10 +93,16 @@ const getApplySchema = (applyType: number, EventApplyInformation) => {
 
 const ApplyPage = () => {
   const [applyType, setApplyType] = useState(0);
-  const [applyList, setApplyList] = useState<{ type: number; value: string }[]>([]);
-  const [applySurvey, setApplySurvey] = useState<{ [key: number]: number[] }>({});
-  const [multipleOption, setMultipleOption] = useState<{[key: number]: number[] }>({});
-  const [applyLong, setApplyLong] = useState<{[key: number]: string[] }>({});
+  const [applyList, setApplyList] = useState<{ type: number; value: string }[]>(
+    []
+  );
+  const [applySurvey, setApplySurvey] = useState<{ [key: number]: number[] }>(
+    {}
+  );
+  const [multipleOption, setMultipleOption] = useState<{
+    [key: number]: number[];
+  }>({});
+  const [applyLong, setApplyLong] = useState<{ [key: number]: string[] }>({});
   const [surveyErr, setSurveyErr] = useState<number[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -168,7 +174,7 @@ const ApplyPage = () => {
       ...applyLong,
     };
     const surveysList = EventApplyInformation?.data?.surveys || [];
-    let errArr = [];
+    const errArr = [];
     for (const survey of surveysList) {
       if (survey.required && !surveys[survey.id]) {
         errArr.push(survey.id);
@@ -182,7 +188,7 @@ const ApplyPage = () => {
     const transformedSurveys = Object.fromEntries(
       Object.entries(surveys).map(([key, value]) => {
         if (Array.isArray(value)) {
-          return [key, value.map(item => item.toString())];
+          return [key, value.map((item) => item.toString())];
         }
         return [key, value];
       })
@@ -211,7 +217,9 @@ const ApplyPage = () => {
     );
     appendIfDefined(
       "surveys",
-      JSON.stringify(Object.keys(transformedSurveys).length ? transformedSurveys : [])
+      JSON.stringify(
+        Object.keys(transformedSurveys).length ? transformedSurveys : []
+      )
     );
     appendIfDefined(
       "terms_of_uses",
@@ -238,7 +246,6 @@ const ApplyPage = () => {
       }
     );
   });
-  console.log(EventApplyInformation)
   return (
     <ApplyPageWrap className="maxframe">
       <FormWrap onSubmit={onSubmit}>

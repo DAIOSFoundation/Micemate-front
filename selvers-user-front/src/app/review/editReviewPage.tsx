@@ -33,7 +33,7 @@ const EditReviewPage = () => {
   const [score, setScore] = useState(0);
   // const [desc, setDesc] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { openAlret, alretData } = useAlret();
+  const { openAlret } = useAlret();
 
   const useReviewPost = useReviewPostMutation();
 
@@ -55,7 +55,6 @@ const EditReviewPage = () => {
   const changeStarHandler = (rating) => {
     setScore(rating);
   };
-  console.log(alretData);
   const onSubmit = handleSubmit((data, e) => {
     e.preventDefault();
     if (score === 0 && !data.desc) {
@@ -86,7 +85,6 @@ const EditReviewPage = () => {
           openAlret(alretData);
         },
         onError: (error: AxiosError) => {
-          console.log(error.status === 400);
           if (error.status === 400) {
             const alretData = {
               text: "신청행사가 아니거나 종료된 행사가 아닙니다.",
@@ -106,7 +104,6 @@ const EditReviewPage = () => {
   // const submitHandler = (e: FormEvent<HTMLElement>) => {
   //   e.preventDefault();
   // };
-  console.log(errorMessage);
   return (
     <EditReviewPageWrap>
       {DetailData && (

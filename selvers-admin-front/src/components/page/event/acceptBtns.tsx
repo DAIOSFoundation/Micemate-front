@@ -82,8 +82,6 @@ const AcceptBtns = () => {
       },
     };
 
-    console.log(payload);
-
     // 변이를 실행 (주석 해제 후 사용)
     useApplyRegisterAccept.mutate(payload, {
       onSuccess: () => {
