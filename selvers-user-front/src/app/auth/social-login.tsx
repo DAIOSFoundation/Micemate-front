@@ -1,9 +1,7 @@
-// import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useLayoutEffect } from "react";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import { useAlret } from "@/hook/useAlret";
-// import { useTokenValidationQuery } from "@/api/auth/auth.query";
 const SocialLoginPage = () => {
   // state가 false면 실패
   // state가 true면서 provider이 있으면 추가 정보 입력
@@ -66,7 +64,7 @@ const SocialLoginPage = () => {
       email !== null &&
       name !== null
     ) {
-      navigate("/join/form", { state: { from: "isSocial" }, replace: true });
+      navigate("/join/form");
     } else if (token !== null) {
       navigate("/social-token-valid");
     }
