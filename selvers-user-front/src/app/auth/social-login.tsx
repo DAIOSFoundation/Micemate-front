@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useLayoutEffect } from "react";
 import LoadingScreen from "@components/shared/LoadingScreen";
 import { useAlret } from "@/hook/useAlret";
+
 const SocialLoginPage = () => {
   // state가 false면 실패
   // state가 true면서 provider이 있으면 추가 정보 입력
