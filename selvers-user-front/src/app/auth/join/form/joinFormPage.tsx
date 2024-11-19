@@ -28,22 +28,25 @@ interface FavorList {
   name: string;
 }
 
-const joinSchema = z
-  .object({
+const getJoinFormSchma = (isSocial) => {
+  const baseSchema = {
     email: z
       .string()
       .trim()
       .min(1, "아이디를 입력해주세요.")
       .email({ message: "올바른 이메일을 입력해주세요." }),
-    password: z
-      .string()
-      .trim()
-      .min(1, "비밀번호를 입력해주세요.")
-      .regex(
-        /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/,
-        " 영문,숫자조합 8자리 이상 입력해주세요."
-      ),
-    passwordChk: z.string(),
+    password:
+      isSocial === false
+        ? z
+            .string()
+            .trim()
+            .min(1, "비밀번호를 입력해주세요.")
+            .regex(
+              /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/,
+              " 영문,숫자조합 8자리 이상 입력해주세요."
+            )
+        : z.string().optional(),
+    passwordChk: isSocial === false ? z.string() : z.string().optional(),
     name: z
       .string()
       .trim()
@@ -68,16 +71,22 @@ const joinSchema = z
     agree_02: z.boolean().default(false).optional(),
     agree_03: z.boolean(),
     agree_04: z.boolean(),
-  })
-  .superRefine(({ passwordChk, password }, ctx) => {
-    if (passwordChk !== password) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "비밀번호를 확인해주세요.",
-        path: ["passwordChk"],
-      });
-    }
-  });
+  };
+
+  return z
+    .object({
+      ...baseSchema,
+    })
+    .superRefine(({ passwordChk, password }, ctx) => {
+      if (passwordChk !== password) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "비밀번호를 확인해주세요.",
+          path: ["passwordChk"],
+        });
+      }
+    });
+};
 
 const JoinFormPage = () => {
   const [interestList, setInterestList] = useState<number[]>([]);
@@ -88,6 +97,15 @@ const JoinFormPage = () => {
   const useJoinSocial = useSocialMutation();
   const { openAlret } = useAlret();
   const navigate = useNavigate();
+  const joinFormSchema = getJoinFormSchma(isSocial);
+  const [socialEmail, setSocialEmail] = useState(null);
+  const [socialName, setSocialName] = useState(null);
+  useEffect(() => {
+    setSocialEmail(localStorage.getItem("social_email"));
+    setSocialName(localStorage.getItem("social_name"));
+  }, []);
+
+  console.log(isSocial);
 
   //카테고리 api
   const { data: category } = useCategoryQuery();
@@ -101,7 +119,7 @@ const JoinFormPage = () => {
     setError,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(joinSchema),
+    resolver: zodResolver(joinFormSchema),
   });
   // 생년월일 문자금지 하이픈 추가
   const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -172,8 +190,7 @@ const JoinFormPage = () => {
   }, [agree01, agree03, agree04]);
 
   // 소셜 로그인시 기본정보 입력
-  const socialEmail = localStorage.getItem("social_email");
-  const socialName = localStorage.getItem("social_name");
+
   useEffect(() => {
     if (socialEmail !== null && socialName !== null) {
       setIsSocial(true);
@@ -302,26 +319,33 @@ const JoinFormPage = () => {
         {errors.email?.message && (
           <p className="err_msg">{errors.email?.message?.toString()}</p>
         )}
-        <TdForm className="password">
-          <InputTextB
-            type="password"
-            id="password"
-            register={register}
-            placeholder="비밀번호"
-          />
-          <InputTextB
-            type="password"
-            id="passwordChk"
-            register={register}
-            placeholder="비밀번호 확인"
-          />
-        </TdForm>
-        {errors.password?.message && (
-          <p className="err_msg">{errors.password?.message?.toString()}</p>
+        {isSocial === false && (
+          <>
+            <TdForm className="password">
+              <InputTextB
+                type="password"
+                id="password"
+                register={register}
+                placeholder="비밀번호"
+              />
+              <InputTextB
+                type="password"
+                id="passwordChk"
+                register={register}
+                placeholder="비밀번호 확인"
+              />
+            </TdForm>
+            {errors.password?.message && (
+              <p className="err_msg">{errors.password?.message?.toString()}</p>
+            )}
+            {errors.passwordChk?.message && (
+              <p className="err_msg">
+                {errors.passwordChk?.message?.toString()}
+              </p>
+            )}
+          </>
         )}
-        {errors.passwordChk?.message && (
-          <p className="err_msg">{errors.passwordChk?.message?.toString()}</p>
-        )}
+
         <TdForm>
           <InputTextB
             type="text"

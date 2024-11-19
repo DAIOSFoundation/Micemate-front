@@ -66,7 +66,7 @@ const SocialLoginPage = () => {
       email !== null &&
       name !== null
     ) {
-      navigate("/join/form");
+      navigate("/join/form", { state: { from: "isSocial" }, replace: true });
     } else if (token !== null) {
       navigate("/social-token-valid");
     }
