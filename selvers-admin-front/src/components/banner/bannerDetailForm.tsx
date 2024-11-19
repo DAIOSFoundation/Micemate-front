@@ -166,9 +166,7 @@ const BannerDetailForm = ({
         )}
 
         <div className="tit_wrap mt_25">
-          <h3 className="tit02">
-            URL <i className="col_red">*</i>
-          </h3>
+          <h3 className="tit02">URL</h3>
         </div>
         <div className="dis_flex mt_10">
           <input
