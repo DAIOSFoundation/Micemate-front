@@ -243,7 +243,7 @@ const Page = () => {
                           {userDetailData?.data?.password_updated_at
                             ? dayjs(
                                 userDetailData?.data?.password_updated_at
-                              ).format("YYYY-MM-DD hh:mm:ss")
+                              ).format("YYYY-MM-DD HH:mm:ss")
                             : "-"}
                         </span>
                       </td>
@@ -305,7 +305,7 @@ const Page = () => {
                         <span className="col_gray">
                           {userDetailData?.data?.created_at
                             ? dayjs(userDetailData?.data?.created_at).format(
-                                "YYYY-MM-DD hh:mm:ss"
+                                "YYYY-MM-DD HH:mm:ss"
                               )
                             : "-"}
                         </span>

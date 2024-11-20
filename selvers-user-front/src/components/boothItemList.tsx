@@ -29,6 +29,8 @@ const BoothItemList = ({
     return index !== -1 ? index + 1 : "";
   };
 
+  console.log(boothList);
+
   return (
     <BoothList>
       {boothList &&
@@ -58,9 +60,11 @@ const BoothItemList = ({
                   <span className="name">{data.name}</span>
                 )}
               </figure>
-              <Link to={data.url} target="_blank">
-                홈페이지 바로가기
-              </Link>
+              {data.url !== null && (
+                <Link to={data.url} target="_blank">
+                  홈페이지 바로가기
+                </Link>
+              )}
             </BoothItem>
           );
         })}

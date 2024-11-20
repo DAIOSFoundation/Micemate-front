@@ -117,15 +117,16 @@ const MyEventCard = ({
           {date && (
             <div className="apply">
               <span className="state">{eventState.label}</span>
-              <span className="date">신청일 : {date}</span>
+              <span className="date">신청일 : {date.slice(0, 10)}</span>
             </div>
           )}
 
           <div className="txt_box">
             <span className="title">{title}</span>
-            <span className="date">{`${dateFormat(
-              event_start_date
-            )} ~ ${dateFormat(event_end_date)}`}</span>
+            <span className="date">{`${dateFormat(event_start_date).slice(
+              0,
+              10
+            )} ~ ${dateFormat(event_end_date).slice(0, 10)}`}</span>
             <span className="location">{position}</span>
           </div>
         </TextBox>

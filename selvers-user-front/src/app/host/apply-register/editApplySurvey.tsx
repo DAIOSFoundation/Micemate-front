@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
 import {
+  useApplyRegisterRecruitQuery,
   useApplyRegisterSurveyMutation,
   useApplyRegisterSurveyQuery,
 } from "@/api/events/events.query";
@@ -103,6 +104,10 @@ const EditApplySurvey: React.FC = () => {
     token: authInfo.token,
     event_id: id,
   });
+  const { data: recruitData } = useApplyRegisterRecruitQuery({
+    token: authInfo.token,
+    event_id: id,
+  });
   const [isSurveyUsed, setIsSurveyUsed] = useState<boolean>(true); // 기본값을 true로 설정
   const [initialFields, setInitialFields] = useState<SurveyField[]>([]);
   const [fields, setFields] = useState<SurveyField[]>([]);
@@ -116,14 +121,19 @@ const EditApplySurvey: React.FC = () => {
 
   // API 응답 데이터를 기반으로 상태 초기화
   useEffect(() => {
-    if (surveyData && surveyData.success) {
+    if (surveyData && surveyData.success && recruitData) {
       setIsReject(surveyData.data.is_reject.survey);
       const { is_survey, surveys } = surveyData.data;
 
-      if (is_survey !== undefined) {
-        setIsSurveyUsed(is_survey);
+      if (recruitData && recruitData.data.application_type === 1) {
+        setIsSurveyUsed(false); // 모집정보 단체신청 선택시 false
+        setFields([]);
       } else {
-        setIsSurveyUsed(true); // is_survey 값이 없으면 기본값 유지
+        if (is_survey !== undefined) {
+          setIsSurveyUsed(is_survey);
+        } else {
+          setIsSurveyUsed(true); // is_survey 값이 없으면 기본값 유지
+        }
       }
 
       if (is_survey === true && surveys.length > 0) {
@@ -143,13 +153,17 @@ const EditApplySurvey: React.FC = () => {
         setFields(mappedFields);
       } else {
         if (is_survey == true) {
-          setFields([defaultField]);
+          if (recruitData && recruitData.data.application_type === 1) {
+            setFields([]); // 모집정보 단체신청 선택시 필드 비우기
+          } else {
+            setFields([defaultField]);
+          }
         } else {
           setFields([]);
         }
       }
     }
-  }, [surveyData]);
+  }, [surveyData, recruitData]);
 
   const defaultField: SurveyField = {
     type: 0, // 기본 타입 설정
@@ -241,16 +255,19 @@ const EditApplySurvey: React.FC = () => {
   const handleSave = (type: boolean) => {
     const data: ApplyRegisterSurveyData = {
       is_survey: isSurveyUsed,
-      surveys: fields.map((field) => ({
-        type: field.type,
-        title: field.title,
-        options:
-          field.type === 0 || field.type === 1
-            ? field.options.map((opt) => opt.text)
-            : [],
-        required: field.required,
-        is_reject: false,
-      })),
+      surveys:
+        isSurveyUsed === true
+          ? fields.map((field) => ({
+              type: field.type,
+              title: field.title,
+              options:
+                field.type === 0 || field.type === 1
+                  ? field.options.map((opt) => opt.text)
+                  : [],
+              required: field.required,
+              is_reject: false,
+            }))
+          : [],
       is_reject: {
         survey: false, // 필요에 따라 설정
       },
@@ -348,6 +365,9 @@ const EditApplySurvey: React.FC = () => {
                 value="yes"
                 checked={isSurveyUsed}
                 onChange={() => handleSurveyUsageChange(true)}
+                disabled={
+                  recruitData?.data?.application_type === 1 ? true : false
+                }
               />
               <label
                 htmlFor="useSurvey_yes"
@@ -364,6 +384,9 @@ const EditApplySurvey: React.FC = () => {
                 value="no"
                 checked={!isSurveyUsed}
                 onChange={() => handleSurveyUsageChange(false)}
+                disabled={
+                  recruitData?.data?.application_type === 1 ? true : false
+                }
               />
               <label
                 htmlFor="useSurvey_no"

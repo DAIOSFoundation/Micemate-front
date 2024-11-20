@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const JoinFormWrap = styled.div`
   padding: 94px 0 57px;
-  background-color: #0b0c37;
+  background-color: #000;
   @media (max-width: 400px) {
     padding: 50px 16px 40px;
   }

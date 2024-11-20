@@ -48,6 +48,7 @@ export const dateStringFormat = (str: string) => {
 };
 
 export const dateStringFormatB = (dateString: string) => {
+  console.log(dateString);
   const date = dayjs(dateString);
   const formattedDate = date.format("MM월DD일(ddd) HH:mm");
 
