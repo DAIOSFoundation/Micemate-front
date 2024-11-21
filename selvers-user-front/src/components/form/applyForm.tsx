@@ -16,6 +16,7 @@ import {
   useState,
 } from "react";
 // import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { useMyInformationQuery } from "@/api/users/users.query";
 import {
   FieldErrors,
   FieldValues,
@@ -67,15 +68,22 @@ const ApplyForm = ({
   const [surveyType2, setSurveyType2] = useState<{ [key: number]: string[] }>(
     {}
   );
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("user_id");
+  const { data: userData } = useMyInformationQuery({
+    token: token,
+    user_id: userId,
+  });
 
   useEffect(() => {
     setValue("type", applyType);
+    if (userData) {
+      setValue("name", userData?.data?.name);
+      setValue("email", userData?.data?.email);
+      setValue("contact", userData?.data?.contact);
+    }
     if (isEdit) {
       setValue("type", editData?.type);
-      setValue("name", editData?.name);
-      setValue("email", editData?.email);
-      setValue("contact", editData?.contact);
-      setValue("contact", editData?.contact);
       if (editData?.information) {
         editData.information.forEach((field) => {
           setValue(`${field.name}`, field.answer);
@@ -100,7 +108,7 @@ const ApplyForm = ({
         });
       }
     }
-  }, [editData, isEdit, applyType]);
+  }, [editData, userData, isEdit, applyType]);
 
   // 핸드폰번호 문자금지 하이픈 추가
   const handleTelChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -237,7 +245,8 @@ const ApplyForm = ({
           );
         })}
       </div>
-      {EventApplyInformation?.data?.surveys.length > 0 && (
+      {/* {EventApplyInformation?.data?.surveys.length > 0 && ( */}
+      {applyType !== 1 && EventApplyInformation?.data?.surveys.length > 0 && (
         <>
           <h3>사전 설문</h3>
           <div className="field">
@@ -249,7 +258,7 @@ const ApplyForm = ({
                       <SelectBoxD
                         id={data.id}
                         label={data.title}
-                        required={data.required}
+                        required={applyType !== 1 ? data.required : false}
                         optionList={data.options}
                         setTarget={setSurveyOption}
                         surveyType={surveyType}
@@ -266,7 +275,7 @@ const ApplyForm = ({
                     <div key={data.id} className="input_box">
                       <SelectBoxC
                         label={data.title}
-                        required={data.required}
+                        required={applyType !== 1 ? data.required : false}
                         multipleSelect={multipleSelect}
                       >
                         {data.options.map((option, index) => (
@@ -304,7 +313,7 @@ const ApplyForm = ({
                   <div key={data.id} className="input_box">
                     <InputTextAreaB
                       label={data.title}
-                      required={data.required}
+                      required={applyType !== 1 ? data.required : false}
                       keyId={data.id} // 고유 키 전달
                       value={setApplyLong[data.id] || surveyType2[data.id]} // 현재 값 전달
                       onChange={handleTextChange} // 값 변경 시 호출될 함수 전달
@@ -323,7 +332,6 @@ const ApplyForm = ({
       {applyType === 1 && (
         <>
           <h3>단체신청</h3>
-
           <ExcelArea>
             <div className="input_box">
               <InputTextD
@@ -374,6 +382,7 @@ const ApplyForm = ({
                 label="네, 제3자 제공 동의를 받은 개인 정보입니다."
                 id="excel_agree"
                 register={register}
+                required={true}
                 onChange={(e) => {
                   const target = e.target as HTMLInputElement;
                   setExcelAgree(target.checked);
