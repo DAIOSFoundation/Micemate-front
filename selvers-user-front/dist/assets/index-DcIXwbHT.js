@@ -4,7 +4,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 99;
+  z-index: 100;
   background-color: #000;
 `,Is=u.div`
   display: flex;
@@ -341,9 +341,13 @@
     right: 20px;
     color: rgba(255, 255, 255, 0.5);
     @media (max-width: 1024px) {
+      display: flex;
+      flex-wrap: wrap;
       top: 0;
       right: 0;
       bottom: auto;
+      padding-left: 80px;
+      justify-content: end;
     }
   }
   & .btn_area::after {
@@ -362,6 +366,10 @@
   & .btn_area button {
     color: rgba(255, 255, 255, 0.5);
     padding: 0 12px;
+    @media (max-width: 1024px) {
+      font-size: 15px;
+      padding: 0 5px;
+    }
   }
   & ul {
     display: flex;
@@ -3943,7 +3951,7 @@
     background-color: rgba(61, 139, 253, 1);
   }
   & .booth_list.wish > li {
-    background-color: rgba(245, 103, 103, 1);
+    background-color: #3d8bfd;
     display: flex;
     gap: 8px;
     align-items: center;
