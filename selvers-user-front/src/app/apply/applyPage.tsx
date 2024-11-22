@@ -173,7 +173,17 @@ const ApplyPage = () => {
       ...multipleOption,
       ...applyLong,
     };
-    const surveysList = EventApplyInformation?.data?.surveys || [];
+    // const surveysList = EventApplyInformation?.data?.surveys || [];
+
+    let surveysList = [];
+    if (EventApplyInformation?.data?.surveys.lenght > 0) {
+      surveysList = EventApplyInformation?.data?.surveys;
+    } else if (applyType === 1) {
+      surveysList = [];
+    } else {
+      surveysList = [];
+    }
+
     const errArr = [];
     for (const survey of surveysList) {
       if (survey.required && !surveys[survey.id]) {
@@ -184,7 +194,9 @@ const ApplyPage = () => {
       setSurveyErr(errArr);
       return;
     }
+
     setSurveyErr([]);
+
     const transformedSurveys = Object.fromEntries(
       Object.entries(surveys).map(([key, value]) => {
         if (Array.isArray(value)) {

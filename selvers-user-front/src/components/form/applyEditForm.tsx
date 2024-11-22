@@ -58,20 +58,23 @@ const ApplyEditForm = ({
   const [excelFile, setExcelFile] = useState<File>();
 
   useEffect(() => {
-    setValue("type", applyType);
+    // setValue("type", applyType);
     if (isEdit) {
-      setValue("type", editData?.type);
+      setApplyType(editData?.type);
       setValue("name", editData?.name);
       setValue("email", editData?.email);
       setValue("contact", editData?.contact);
-      setValue("contact", editData?.contact);
+      if (editData?.group !== null) {
+        setValue("group", editData?.group);
+      }
+
       if (editData?.information) {
         editData.information.forEach((field) => {
           setValue(`${field.name}`, field.answer);
         });
       }
     }
-  }, [editData, isEdit, applyType]);
+  }, [editData, isEdit]);
 
   // 핸드폰번호 문자금지 하이픈 추가
   const handleTelChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +128,7 @@ const ApplyEditForm = ({
             required={false}
             optionList={applyList}
             setTarget={setApplyType}
+            applyType={applyType}
           />
           <div className="requird mt_16">
             {payableInfo(
@@ -191,7 +195,7 @@ const ApplyEditForm = ({
           );
         })}
       </div>
-      {EventApplyInformation?.data?.surveys.length > 0 && (
+      {applyType !== 1 && EventApplyInformation?.data?.surveys.length > 0 && (
         <>
           <h3>사전 설문</h3>
           <div className="field">
@@ -199,21 +203,19 @@ const ApplyEditForm = ({
               if (data.type === 0) {
                 const value = surveyOption[data.id];
                 return (
-                  <>
-                    <div key={data.id} className="input_box">
-                      <SelectBoxD
-                        id={data.id}
-                        label={data.title}
-                        required={data.required}
-                        optionList={data.options}
-                        setTarget={setSurveyOption}
-                        value={value?.toString() || ""}
-                      />
-                      {surveyErr?.includes(data.id) && (
-                        <p className="err_msg">필수값 입니다.</p>
-                      )}
-                    </div>
-                  </>
+                  <div key={data.id} className="input_box">
+                    <SelectBoxD
+                      id={data.id}
+                      label={data.title}
+                      required={applyType !== 1 ? data.required : false}
+                      optionList={data.options}
+                      setTarget={setSurveyOption}
+                      value={value?.toString() || ""}
+                    />
+                    {surveyErr?.includes(data.id) && (
+                      <p className="err_msg">필수값 입니다.</p>
+                    )}
+                  </div>
                 );
               } else if (data.type === 1) {
                 const value = surveyOption[data.id] || [];
@@ -223,43 +225,41 @@ const ApplyEditForm = ({
                     : "옵션을 선택해주세요.";
 
                 return (
-                  <>
-                    <div key={data.id} className="input_box">
-                      <SelectBoxC
-                        label={data.title}
-                        required={data.required}
-                        targetText={targetText}
-                      >
-                        {data.options.map((option, index) => {
-                          return (
-                            <InputCheckboxA
-                              key={index} // 각 옵션의 고유한 값 사용
-                              label={option} // 실제 옵션 값 사용
-                              id={index.toString()} // 실제 옵션 값 사용
-                              checked={value?.includes(index.toString())}
-                              onChange={() => {
-                                setSurveyOption((prev) => {
-                                  return {
-                                    ...prev,
-                                    [data.id]: prev[data.id]
-                                      ? prev[data.id].includes(index.toString())
-                                        ? prev[data.id].filter(
-                                            (item) => item !== index.toString()
-                                          )
-                                        : [...prev[data.id], index.toString()]
-                                      : [index.toString()],
-                                  };
-                                });
-                              }}
-                            />
-                          );
-                        })}
-                      </SelectBoxC>
-                      {surveyErr?.includes(data.id) && (
-                        <p className="err_msg">필수값 입니다.</p>
-                      )}
-                    </div>
-                  </>
+                  <div key={data.id} className="input_box">
+                    <SelectBoxC
+                      label={data.title}
+                      required={applyType !== 1 ? data.required : false}
+                      targetText={targetText}
+                    >
+                      {data.options.map((option, index) => {
+                        return (
+                          <InputCheckboxA
+                            key={index} // 각 옵션의 고유한 값 사용
+                            label={option} // 실제 옵션 값 사용
+                            id={index.toString()} // 실제 옵션 값 사용
+                            checked={value?.includes(index.toString())}
+                            onChange={() => {
+                              setSurveyOption((prev) => {
+                                return {
+                                  ...prev,
+                                  [data.id]: prev[data.id]
+                                    ? prev[data.id].includes(index.toString())
+                                      ? prev[data.id].filter(
+                                          (item) => item !== index.toString()
+                                        )
+                                      : [...prev[data.id], index.toString()]
+                                    : [index.toString()],
+                                };
+                              });
+                            }}
+                          />
+                        );
+                      })}
+                    </SelectBoxC>
+                    {surveyErr?.includes(data.id) && (
+                      <p className="err_msg">필수값 입니다.</p>
+                    )}
+                  </div>
                 );
               } else if (data.type === 2) {
                 const value = surveyOption[data.id] || [];
@@ -268,7 +268,7 @@ const ApplyEditForm = ({
                   <div key={data.id} className="input_box">
                     <InputTextAreaB
                       label={data.title}
-                      required={data.required}
+                      required={applyType !== 1 ? data.required : false}
                       keyId={data.id} // 고유 키 전달
                       value={value?.toString() || ""} // 현재 값 전달
                       onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -345,6 +345,7 @@ const ApplyEditForm = ({
                 label="네, 제3자 제공 동의를 받은 개인 정보입니다."
                 id="excel_agree"
                 register={register}
+                required={true}
                 onChange={(e) => {
                   const target = e.target as HTMLInputElement;
                   setExcelAgree(target.checked);

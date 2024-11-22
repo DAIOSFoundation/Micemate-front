@@ -31,6 +31,7 @@ type SelectProps = {
 interface SelectBProps extends SelectProps {
   optionList: { type: number; value: string }[];
   setTarget: Dispatch<SetStateAction<number>>;
+  applyType?: number;
 }
 
 interface SelectDProps extends SelectProps {

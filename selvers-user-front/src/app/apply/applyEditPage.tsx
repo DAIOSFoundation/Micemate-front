@@ -21,19 +21,6 @@ import {
 } from "./applyPageStyle";
 import ApplyEditForm from "@components/form/applyEditForm";
 
-const applyOption = (type: number) => {
-  if (type === 0) {
-    return [{ type: 0, value: "개인 신청" }];
-  } else if (type === 1) {
-    return [{ type: 1, value: "단체 신청" }];
-  } else if (type === 2) {
-    return [
-      { type: 0, value: "개인 신청" },
-      { type: 1, value: "단체 신청" },
-    ];
-  }
-};
-
 const getApplySchema = (applyType: number, EventApplyInformation) => {
   const baseSchema = {
     type: z.number().default(0),
@@ -95,7 +82,7 @@ const ApplyEditPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const token = localStorage.getItem("token");
-  const [applyType, setApplyType] = useState(0);
+  const [applyType, setApplyType] = useState(null);
   const [applyList, setApplyList] = useState([]);
   const [applySurvey, setApplySurvey] = useState<{
     [key: number]: (number | string)[];
@@ -112,6 +99,30 @@ const ApplyEditPage = () => {
   const isEdit = true;
   const { data: editData } = useApplyEditQuery(id, token);
   const applySchema = getApplySchema(applyType, EventApplyInformation);
+
+  const applyOption = (type: number) => {
+    if (type === 0) {
+      return [{ type: 0, value: "개인 신청" }];
+    } else if (type === 1) {
+      return [{ type: 1, value: "단체 신청" }];
+    } else if (type === 2 && applyType === 0) {
+      return [
+        { type: 0, value: "개인 신청" },
+        { type: 1, value: "단체 신청" },
+      ];
+    } else if (type === 2 && applyType === 1) {
+      return [
+        { type: 1, value: "단체 신청" },
+        { type: 0, value: "개인 신청" },
+      ];
+    } else {
+      return [
+        { type: 1, value: "단체 신청" },
+        { type: 0, value: "개인 신청" },
+      ];
+    }
+  };
+
   const {
     setValue,
     register,
@@ -124,30 +135,79 @@ const ApplyEditPage = () => {
 
   useEffect(() => {
     if (EventApplyInformation) {
-      setApplyType(EventApplyInformation?.data?.application_type);
+      // setApplyType(EventApplyInformation?.data?.application_type);
       setApplyList(applyOption(EventApplyInformation?.data?.application_type));
     }
-  }, [EventApplyInformation]);
+  }, [EventApplyInformation, applyType]);
 
   const {
     data: detailData,
     isLoading: isLoadingDetail,
     isError: isErrorDetail,
   } = useEventDetail(id, token);
-
+  // console.log(EventApplyInformation);
+  // console.log(editData?.data?.surveys);
   // 사전 질문 값 세팅
   useEffect(() => {
-    if (editData && EventApplyInformation) {
-      const surveys = EventApplyInformation?.data?.surveys || [];
-      const newApplySurvey = surveys.reduce((acc, survey, i) => {
-        acc[survey.id] = Array.isArray(editData.data.surveys[i].answer)
-          ? editData.data.surveys[i].answer
-          : [editData.data.surveys[i].answer];
-        return acc;
-      }, {});
-      setApplySurvey(newApplySurvey);
+    if (
+      applyType === 0 &&
+      editData.data.surveys.length > 0 &&
+      EventApplyInformation
+    ) {
+      // const surveys = EventApplyInformation?.data?.surveys || [];
+      let surveys = [];
+      if (EventApplyInformation?.data?.surveys.length > 0) {
+        surveys = EventApplyInformation?.data?.surveys;
+      } else {
+        surveys = [];
+      }
+
+      console.log(surveys);
+
+      const newApplySurvey = (arr1, arr2) => {
+        const result = {};
+
+        arr1.forEach((item1) => {
+          const match = arr2.find((item2) => item1.title === item2.title);
+          if (match) {
+            result[item1.id] = match.answer;
+          }
+        });
+
+        return result;
+      };
+
+      const serveyResult = newApplySurvey(surveys, editData.data.surveys);
+
+      console.log(serveyResult);
+
+      setApplySurvey(serveyResult);
+
+      // const newApplySurvey = surveys.reduce((acc, survey) => {
+      //   const titleMatch = editData.data.surveys.find(
+      //     (edit) => survey.title === edit.title
+      //   );
+
+      //   if (titleMatch) {
+      //     acc.push({ ...survey, ...titleMatch });
+      //   }
+      //   return acc;
+      // }, []);
+
+      // console.log(newApplySurvey);
+      // setApplySurvey(newApplySurvey);
+
+      // const newApplySurvey = surveys.reduce((acc, survey, i) => {
+      //   acc[survey.id] = Array.isArray(editData.data.surveys[i].answer)
+      //     ? editData.data.surveys[i]?.answer
+      //     : [editData.data.surveys[i]?.answer];
+      //   return acc;
+      // }, {});
+      // setApplySurvey(newApplySurvey);
     }
-  }, [editData, EventApplyInformation]);
+  }, [applyType, editData, EventApplyInformation]);
+
+  console.log(applySurvey);
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
@@ -161,18 +221,33 @@ const ApplyEditPage = () => {
       }
     };
 
-    appendIfDefined("type", data?.type);
+    appendIfDefined("type", applyType);
     appendIfDefined("name", data?.name);
     appendIfDefined("email", data?.email);
     appendIfDefined("contact", data?.contact);
     appendIfDefined("group", data?.group);
-    appendIfDefined("xlsx", data?.xlsx ? data.xlsx[0] : undefined);
+    appendIfDefined("xlsx", data.xlsx);
 
     const information = {};
-    const surveys = {
-      ...applySurvey,
-    };
-    const surveysList = EventApplyInformation?.data?.surveys || [];
+    let surveys = {};
+    // const surveys = {
+    //   ...applySurvey,
+    // };
+
+    if (applyType !== 1) {
+      surveys = { ...applySurvey };
+    } else {
+      surveys = [];
+    }
+    // const surveysList = EventApplyInformation?.data?.surveys || [];
+    let surveysList = [];
+    if (EventApplyInformation?.data?.surveys.lenght > 0) {
+      surveysList = EventApplyInformation?.data?.surveys;
+    } else if (applyType === 1) {
+      surveysList = [];
+    } else {
+      surveysList = [];
+    }
     const errArr = [];
 
     // 빈 값 체크 로직 추가
