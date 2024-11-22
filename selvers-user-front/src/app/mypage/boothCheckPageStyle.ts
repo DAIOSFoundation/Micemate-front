@@ -91,7 +91,7 @@ export const SelectBoothList = styled.div`
     background-color: rgba(61, 139, 253, 1);
   }
   & .booth_list.wish > li {
-    background-color: rgba(245, 103, 103, 1);
+    background-color: #3d8bfd;
     display: flex;
     gap: 8px;
     align-items: center;

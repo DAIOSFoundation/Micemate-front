@@ -128,9 +128,13 @@ export const SearchHistory = styled.div`
     right: 20px;
     color: rgba(255, 255, 255, 0.5);
     @media (max-width: 1024px) {
+      display: flex;
+      flex-wrap: wrap;
       top: 0;
       right: 0;
       bottom: auto;
+      padding-left: 80px;
+      justify-content: end;
     }
   }
   & .btn_area::after {
@@ -149,6 +153,10 @@ export const SearchHistory = styled.div`
   & .btn_area button {
     color: rgba(255, 255, 255, 0.5);
     padding: 0 12px;
+    @media (max-width: 1024px) {
+      font-size: 15px;
+      padding: 0 5px;
+    }
   }
   & ul {
     display: flex;
