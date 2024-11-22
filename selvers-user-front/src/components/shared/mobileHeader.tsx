@@ -81,7 +81,7 @@ const MobileHeader = () => {
         </LogoImg>
         <BtnArea>
           <DescBtn>
-            <Link to="/host/main" className="btn1">
+            <Link to="/host-main" className="btn1">
               행사등록
             </Link>
             {/* <button className="btn2">AI챗봇</button> */}

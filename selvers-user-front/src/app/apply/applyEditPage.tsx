@@ -145,7 +145,8 @@ const ApplyEditPage = () => {
     isLoading: isLoadingDetail,
     isError: isErrorDetail,
   } = useEventDetail(id, token);
-
+  // console.log(EventApplyInformation);
+  // console.log(editData?.data?.surveys);
   // 사전 질문 값 세팅
   useEffect(() => {
     if (
@@ -161,15 +162,52 @@ const ApplyEditPage = () => {
         surveys = [];
       }
 
-      const newApplySurvey = surveys.reduce((acc, survey, i) => {
-        acc[survey.id] = Array.isArray(editData.data.surveys[i].answer)
-          ? editData.data.surveys[i].answer
-          : [editData.data.surveys[i].answer];
-        return acc;
-      }, {});
-      setApplySurvey(newApplySurvey);
+      console.log(surveys);
+
+      const newApplySurvey = (arr1, arr2) => {
+        const result = {};
+
+        arr1.forEach((item1) => {
+          const match = arr2.find((item2) => item1.title === item2.title);
+          if (match) {
+            result[item1.id] = match.answer;
+          }
+        });
+
+        return result;
+      };
+
+      const serveyResult = newApplySurvey(surveys, editData.data.surveys);
+
+      console.log(serveyResult);
+
+      setApplySurvey(serveyResult);
+
+      // const newApplySurvey = surveys.reduce((acc, survey) => {
+      //   const titleMatch = editData.data.surveys.find(
+      //     (edit) => survey.title === edit.title
+      //   );
+
+      //   if (titleMatch) {
+      //     acc.push({ ...survey, ...titleMatch });
+      //   }
+      //   return acc;
+      // }, []);
+
+      // console.log(newApplySurvey);
+      // setApplySurvey(newApplySurvey);
+
+      // const newApplySurvey = surveys.reduce((acc, survey, i) => {
+      //   acc[survey.id] = Array.isArray(editData.data.surveys[i].answer)
+      //     ? editData.data.surveys[i]?.answer
+      //     : [editData.data.surveys[i]?.answer];
+      //   return acc;
+      // }, {});
+      // setApplySurvey(newApplySurvey);
     }
   }, [applyType, editData, EventApplyInformation]);
+
+  console.log(applySurvey);
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
