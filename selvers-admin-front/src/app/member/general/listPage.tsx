@@ -73,7 +73,7 @@ const Page = () => {
     if (confirmValue.confirm === true && checkedList.length > 0) {
       useDeleteUser.mutate(
         {
-          delete: confirmValue.confirm === true ? true : false,
+          delete: confirmValue.okBtn === "탈퇴" ? false : true,
           ids: checkedList,
         },
         {
