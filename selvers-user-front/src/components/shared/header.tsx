@@ -43,7 +43,7 @@ const Header = () => {
       const alretData = {
         text: "토큰이 만료되어 로그아웃 되었습니다.\n 메인화면으로 돌아갑니다.",
         callback: () => {
-          navigate("/", { replace: true });
+          navigate("/login", { replace: true });
         },
       };
       openAlret(alretData);

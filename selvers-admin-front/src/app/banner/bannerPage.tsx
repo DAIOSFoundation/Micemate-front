@@ -65,7 +65,11 @@ const BannerPage = () => {
           <div className="tit_wrap mt_30">
             <div>
               <h3 className="tit">
-                <span>전체</span>
+                <span>
+                  {queryParams.get("search")
+                    ? `${queryParams.get("search")}`
+                    : "전체"}{" "}
+                </span>
                 <span className="col_gray">검색결과</span>
                 <span className="fs_16">[총 {data?.data.total}개]</span>
               </h3>
