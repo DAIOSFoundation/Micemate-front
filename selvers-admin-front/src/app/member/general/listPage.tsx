@@ -146,7 +146,7 @@ const Page = () => {
           <SearchFilter
             setFilterData={setFilterData}
             resetFilter={resetFilter}
-            resetDate={"7days"}
+            resetDate={"all"}
             userType={[
               { value: "회원유형", type: "none" },
               { value: "일반회원", type: 1 },
