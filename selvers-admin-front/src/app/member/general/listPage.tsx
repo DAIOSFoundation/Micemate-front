@@ -14,6 +14,7 @@ import {
   useDeleteUserMutation,
   useUserListQuery,
 } from "@/api/users/users.query";
+import useQueryParams from "@/hook/useSearchParams";
 
 const Page = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Page = () => {
   const [filterQueryString, setFilterQueryString] = useState<string>();
   const [checkedList, setCheckedList] = useState([]);
   const [page, setPage] = useState(1);
+  const queryParams = useQueryParams();
 
   const { data: userListData } = useUserListQuery();
   const useDeleteUser = useDeleteUserMutation();
@@ -155,7 +157,11 @@ const Page = () => {
           <div className="tit_wrap mt_30">
             <div>
               <h3 className="tit">
-                <span>전체 </span>
+                <span>
+                  {queryParams.get("search")
+                    ? `${queryParams.get("search")}`
+                    : "전체"}{" "}
+                </span>
                 <span className="col_gray">검색결과 </span>
                 <span className="fs_16">
                   [총 회원수{" "}
