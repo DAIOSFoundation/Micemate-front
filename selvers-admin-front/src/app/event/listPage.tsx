@@ -15,6 +15,7 @@ import ListTable from "@components/page/event/listTable";
 import { useAlret } from "@/hook/useAlret";
 import { useConfirm } from "@/hook/useConfirm";
 import { confirmState } from "@/store/modalState";
+import useQueryParams from "@/hook/useSearchParams";
 
 const Page = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Page = () => {
   const [filterQueryString, setFilterQueryString] = useState<string>();
   const [checkedList, setCheckedList] = useState([]);
   const [page, setPage] = useState(1);
-
+  const queryParams = useQueryParams();
   const { data: eventManageData } = useEventManageQuery();
   const useEventManageDelete = useEventManageDeleteMutation();
 
@@ -130,7 +131,12 @@ const Page = () => {
           />
 
           <div className="tit_wrap mt_30">
-            <h3 className="fs_18">전체 검색결과</h3>
+            <h3 className="fs_18">
+              {queryParams.get("search")
+                ? `${queryParams.get("search")}`
+                : "전체"}{" "}
+              검색결과
+            </h3>
             <button type="button" className="pr_30" onClick={onDelete}>
               삭제
             </button>

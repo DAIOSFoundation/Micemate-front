@@ -32,6 +32,7 @@ const EventSearchFilterSection = ({
   });
   const [filterOn, setFilterOn] = useState(false);
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const search = queryParams.get("search") ?? "";
 
   const filterHandler = () => {
     setFilterOn((prev) => !prev);
@@ -115,7 +116,14 @@ const EventSearchFilterSection = ({
 
   return (
     <PageInfo className="maxframe">
-      <h2>검색결과</h2>
+      {search !== "" ? (
+        <h2>
+          {search}
+          <span style={{ opacity: 0.4 }}> 검색결과</span>
+        </h2>
+      ) : (
+        <h2>검색결과</h2>
+      )}
       <FilterWrap $filterOn={filterOn}>
         <button onClick={filterHandler} className="filter_btn">
           <FilterIcon />

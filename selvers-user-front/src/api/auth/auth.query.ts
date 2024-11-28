@@ -89,6 +89,7 @@ export const useTokenValidationQuery = (token: string) => {
       });
       return response.data;
     },
+    retry: false,
     //로그인 유지 선택 안했을떄 토큰 유효기간 3시간
     //3시간 마다 한번씩 실행
     refetchInterval: 10800000,

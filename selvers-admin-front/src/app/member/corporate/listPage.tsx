@@ -14,6 +14,7 @@ import {
   useCoporateListQuery,
   useDeleteUserMutation,
 } from "@/api/users/users.query";
+import useQueryParams from "@/hook/useSearchParams";
 
 const Page = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const Page = () => {
 
   const { data: userListData } = useCoporateListQuery();
   const useDeleteUser = useDeleteUserMutation();
+  const queryParams = useQueryParams();
 
   const resetFilter = () => {
     setFilterData({});
@@ -146,7 +148,7 @@ const Page = () => {
           <SearchFilter
             setFilterData={setFilterData}
             resetFilter={resetFilter}
-            resetDate={"7days"}
+            resetDate={"all"}
             userType={[
               { value: "회원유형", type: "none" },
               { value: "승인대기", type: 1 },
@@ -158,7 +160,11 @@ const Page = () => {
           <div className="tit_wrap mt_30">
             <div>
               <h3 className="tit">
-                <span>전체</span>
+                <span>
+                  {queryParams.get("search")
+                    ? `${queryParams.get("search")}`
+                    : "전체"}{" "}
+                </span>
                 <span className="col_gray">검색결과</span>
                 <span className="fs_16">
                   [총 회원수
