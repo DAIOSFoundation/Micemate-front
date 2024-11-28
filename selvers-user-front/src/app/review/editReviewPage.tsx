@@ -31,7 +31,6 @@ const EditReviewPage = () => {
   const { id } = useParams();
   const { data: DetailData } = useEventDetail(id, token);
   const [score, setScore] = useState(0);
-  // const [desc, setDesc] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { openAlret } = useAlret();
 
@@ -46,7 +45,9 @@ const EditReviewPage = () => {
   useEffect(() => {
     //토큰 없거나 토큰있으면 토큰 검증 후 로그인 페이지 이동
     if (!token || (TokenVailError && TokenVail === undefined)) {
-      navigate("/login", { state: { from: location }, replace: true });
+      console.log(location.pathname);
+      localStorage.setItem("review_url", location.pathname);
+      navigate("/login", { replace: true });
       resetUserState();
       return;
     }
@@ -76,6 +77,7 @@ const EditReviewPage = () => {
       },
       {
         onSuccess: () => {
+          localStorage.removeItem("review_url");
           const alretData = {
             text: "리뷰작성이 완료되었습니다.",
             callback: () => {

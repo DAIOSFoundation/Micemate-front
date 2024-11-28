@@ -16,7 +16,7 @@ import {
   SubmitBtn,
 } from "./loginPageStyle";
 import { LoginRequest, CustomError } from "@/type";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import GoogleIcon from "@/assets/icon/round_google.svg?react";
 import NaverIcon from "@/assets/icon/round_naver.svg?react";
 import KakaoIcon from "@/assets/icon/round_kakao.svg?react";
@@ -34,7 +34,6 @@ const LoginPage = () => {
   const user = useRecoilValue(userState);
   const useLogin = useLoginMutation();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const {
     register,
@@ -57,8 +56,8 @@ const LoginPage = () => {
   }, [email, password]);
 
   //location from 값 담기면 해당 경로로 이동(리뷰페이지 사용)
-  const state = location.state as { from?: Location };
-  const from = state?.from?.pathname;
+
+  const review_url = localStorage.getItem("review_url");
 
   const onSubmit = handleSubmit((data) => {
     const loginData: LoginRequest = {
@@ -73,8 +72,8 @@ const LoginPage = () => {
   //로그인 성공
   useEffect(() => {
     if (useLogin.isSuccess) {
-      if (from) {
-        navigate(from, { replace: true });
+      if (review_url) {
+        navigate(review_url, { replace: true });
       } else {
         if (user.data.is_company === true) {
           navigate("/host-main", { replace: true });
@@ -83,7 +82,7 @@ const LoginPage = () => {
         }
       }
     }
-  }, [useLogin.isSuccess, navigate, user.data.is_company, from]);
+  }, [useLogin.isSuccess, navigate, user.data.is_company]);
 
   //로그인 실패
   useEffect(() => {
