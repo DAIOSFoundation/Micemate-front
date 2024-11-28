@@ -50,6 +50,7 @@ export const userState = atom<UserStateType>({
           localStorage.removeItem("user_id");
           localStorage.removeItem("user_type");
           localStorage.removeItem("name");
+          localStorage.removeItem("review_url");
         } else {
           localStorage.setItem(
             "user_id",

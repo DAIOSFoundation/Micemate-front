@@ -29,19 +29,24 @@ const SocialTokenVaild = () => {
     }
   }, [TokenVail]);
 
+  const review_url = localStorage.getItem("review_url");
   //로그인 성공시
   useEffect(() => {
-    if (TokenVailSuccess) {
-      if (user.data.is_company === true) {
-        navigate("/host-main", { replace: true });
+    if (user.isLogin === true && TokenVailSuccess) {
+      if (review_url) {
+        navigate(review_url, { replace: true });
       } else {
-        navigate("/", { replace: true });
+        if (user.data.is_company === true) {
+          navigate("/host-main", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
       }
       localStorage.removeItem("social_provider");
       localStorage.removeItem("social_provider_id");
       localStorage.removeItem("social_token");
     }
-  }, [TokenVailSuccess]);
+  }, [user.isLogin, TokenVailSuccess]);
 
   return <LoadingScreen />;
 };

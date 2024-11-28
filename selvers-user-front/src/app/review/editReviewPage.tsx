@@ -8,14 +8,16 @@ import StarRatings from "react-star-ratings";
 import { starPath } from "@/styles/iconPath";
 import { InputTextAreaA } from "@components/form/inputTextArea";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { userState } from "@/store/userState";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useTokenValidationQuery } from "@/api/auth/auth.query";
+// import { useTokenValidationQuery } from "@/api/auth/auth.query";
 import {
   useEventDetail,
   useReviewPostMutation,
 } from "@/api/events/events.query";
-import { useResetRecoilState } from "recoil";
-import { userState } from "@/store/userState";
+// import { useResetRecoilState } from "recoil";
+// import { userState } from "@/store/userState";
 import { useAlret } from "@/hook/useAlret";
 import { AxiosError } from "axios";
 
@@ -25,15 +27,16 @@ const EditReviewPage = () => {
   const name = localStorage.getItem("name");
   const navigate = useNavigate();
   const location = useLocation();
-  const resetUserState = useResetRecoilState(userState);
-  const { data: TokenVail, isError: TokenVailError } =
-    useTokenValidationQuery(token);
+  // const resetUserState = useResetRecoilState(userState);
+  // const { data: TokenVail, isError: TokenVailError } =
+  //   useTokenValidationQuery(token);
   const { id } = useParams();
   const { data: DetailData } = useEventDetail(id, token);
   const [score, setScore] = useState(0);
-  // const [desc, setDesc] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { openAlret } = useAlret();
+
+  const user = useRecoilValue(userState);
 
   const useReviewPost = useReviewPostMutation();
 
@@ -44,13 +47,14 @@ const EditReviewPage = () => {
   } = useForm();
 
   useEffect(() => {
-    //토큰 없거나 토큰있으면 토큰 검증 후 로그인 페이지 이동
-    if (!token || (TokenVailError && TokenVail === undefined)) {
-      navigate("/login", { state: { from: location }, replace: true });
-      resetUserState();
+    //토큰 없으면 로그인 페이지 이동
+    if (!token && user.isLogin === false) {
+      localStorage.setItem("review_url", location.pathname);
+      navigate("/login", { replace: true });
+      // resetUserState();
       return;
     }
-  }, []);
+  }, [token, user.isLogin]);
 
   const changeStarHandler = (rating) => {
     setScore(rating);
@@ -76,6 +80,7 @@ const EditReviewPage = () => {
       },
       {
         onSuccess: () => {
+          localStorage.removeItem("review_url");
           const alretData = {
             text: "리뷰작성이 완료되었습니다.",
             callback: () => {
